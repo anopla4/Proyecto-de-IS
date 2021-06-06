@@ -19,21 +19,22 @@ namespace Cine__backend.Repositories
             modelBuilder.Entity<Genre>()
                 .HasData(new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" });
 
+            modelBuilder.Entity<FilmScreening>().HasOne(c => c.Film).WithMany().
+                                                OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<FilmScreening>().HasOne(c => c.Room).WithMany().
+                                                OnDelete(DeleteBehavior.Restrict);
 
         }
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Seat> Seats { get; set; }
-
         public DbSet<Room> Rooms { get; set; }
-
         public DbSet<Section> Sections { get; set; }
-
         public DbSet<Level> Levels { get; set; }
-
-        public DbSet<Price_Modification> Price_Modifications { get; set; }
-
-        public DbSet<Film_Rol> Film_Rols { get; set; }
+        public DbSet<PriceModification> PriceModifications { get; set; }
+        public DbSet<FilmRol> FilmRols { get; set; }
+        public DbSet<Film> Films { get; set; }
+        public DbSet<FilmScreening> FilmScreenings { get; set; }
 
     }
 }
