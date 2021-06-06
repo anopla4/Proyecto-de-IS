@@ -9,6 +9,8 @@ namespace Cine__backend.Models
 {
     public class PurchaseOrder
     {
+        [Key]
+        public Guid Id { get; set; }
         [Required]
         [ForeignKey("User")]
         public Guid UserId { get; set; }

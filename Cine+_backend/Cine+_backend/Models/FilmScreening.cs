@@ -12,11 +12,14 @@ namespace Cine__backend.Models
         [Key]
         public Guid Id { get; set; }
         [Required]
+        [ForeignKey("Room")]
+        public Guid RoomId { get; set; }
         public Room Room { get; set; }
         [Required]
+        [ForeignKey("Film")]
+        public Guid FilmId { get; set; }
         public Film Film { get; set; }
         [Required]
-        [Column(TypeName="date")]
-        public DateTime StarTime { get; set; }
+        public string StarTime { get; set; }
     }
 }

@@ -9,17 +9,17 @@ namespace Cine__backend.Models
     public class SeatSectionLevelRoom
     {
         [ForeignKey("Seat")]
-        public Guid SeatId { get; set; }
+        public int SeatId { get; set; }
         public Seat Seat { get; set; }
         [ForeignKey("Section")]
         public Guid SectionId { get; set; }
-        public Seat Section { get; set; }
+        public Section Section { get; set; }
         [ForeignKey("Level")]
         public Guid LevelId { get; set; }
-        public Seat Level { get; set; }
+        public Level Level { get; set; }
         [ForeignKey("Room")]
         public Guid RoomId { get; set; }
-        public Seat Room { get; set; }
+        public Room Room { get; set; }
 
     }
 }
