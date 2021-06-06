@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace Cine__backend.Models
 {
-    public class Reservation
+    public class Reservation:Item
     {
+        
     }
 }
