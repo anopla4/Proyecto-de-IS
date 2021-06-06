@@ -38,6 +38,9 @@ namespace Cine__backend
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cine__backend", Version = "v1" });
             });
+            services.AddScoped<IRoomRepository,RoomRepository>();
+            services.AddScoped<ILevelRepository, LevelRepository>();
+            services.AddScoped<IFilmRepository, FilmRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

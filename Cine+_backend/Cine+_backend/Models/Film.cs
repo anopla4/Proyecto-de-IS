@@ -16,8 +16,6 @@ namespace Cine__backend.Models
         public string Name { get; set; }
         [Required]
         public string Year { get; set; }
-        //[Required]
-        //public Genre Genre { get; set; } Para Film/Genre
         [Required]
         public string Country { get; set; }
         public string ImgPath { get; set; }
