@@ -36,6 +36,20 @@ namespace Cine__backend.Repositories
             modelBuilder.Entity<FilmScreening>().HasOne(c => c.Room).WithMany().
                                                 OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<FilmGenre>().HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FilmGenre>().HasOne(c => c.Genre).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserFilm>().HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserFilm>().HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FilmScreeningPriceModification>().HasOne(c => c.FilmScreening).WithMany().
+                                                                    OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FilmScreeningPriceModification>().HasOne(c => c.PriceModification).WithMany().
+                                                                    OnDelete(DeleteBehavior.Restrict);
+
         }
 
         public DbSet<Genre> Genres { get; set; }
@@ -53,6 +67,11 @@ namespace Cine__backend.Repositories
         public DbSet<FilmRol> FilmRols { get; set; }
         public DbSet<Film> Films { get; set; }
         public DbSet<FilmScreening> FilmScreenings { get; set; }
+        public DbSet<FilmGenre> FilmGenres { get; set; }
+        public DbSet<UserFilm> UserFilms { get; set; }
+        public DbSet<FilmScreeningPriceModification> FilmScreeningPriceModifications { get; set; }
+
+
 
     }
 }
