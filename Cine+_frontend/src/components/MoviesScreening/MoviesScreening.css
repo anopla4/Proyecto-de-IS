@@ -1,0 +1,16 @@
+.my-button {
+  background-color: palevioletred;
+  border-color: transparent;
+  color: white;
+  border-radius: 8px;
+}
+
+.my-button:hover {
+  background-color: white;
+  border-color: palevioletred;
+  color: palevioletred;
+}
+
+.center-date {
+  align-self: center;
+}
