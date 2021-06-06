@@ -31,8 +31,6 @@ namespace Cine__backend.Repositories
                     v => v.ToString(),
                     v => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), v));
 
-                .HasData(new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" });
-
             modelBuilder.Entity<FilmScreening>().HasOne(c => c.Film).WithMany().
                                                 OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<FilmScreening>().HasOne(c => c.Room).WithMany().
