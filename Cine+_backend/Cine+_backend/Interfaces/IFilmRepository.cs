@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Models;
+using Cine__backend.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
