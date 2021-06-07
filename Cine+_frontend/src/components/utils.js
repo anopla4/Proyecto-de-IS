@@ -33,6 +33,11 @@ function indexFurther(object, key_path) {
   return object;
 }
 
+function formatDate(date) {
+  let list = date.split("-").reverse();
+  return list.join("/");
+}
+
 let moviesFilter = [
   {
     id: 1,
@@ -92,4 +97,4 @@ function a(moviesFilter) {
 // module.exports.groupBy = groupBy;
 // module.exports.isLoggedIn = isLoggedIn;
 
-module.exports = { groupBy, isLoggedIn, onlyUnique };
+module.exports = { groupBy, isLoggedIn, onlyUnique, formatDate };

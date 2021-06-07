@@ -30,7 +30,7 @@ const navigation = (props) => {
             </Nav.Link>
           </NavItem>
           <NavItem>
-            <Nav.Link href="/reserve">Reservar</Nav.Link>
+            <Nav.Link href="/films">Películas</Nav.Link>
           </NavItem>
           <NavItem>
             <Nav.Link href="/myReservations">Mis reservas</Nav.Link>

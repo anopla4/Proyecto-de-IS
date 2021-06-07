@@ -8,6 +8,7 @@ import Login from "../../components/Login/Login";
 import Reserve from "../../components/Reserve/Reserve";
 import FilmScreenings from "../../components/FilmScreenings/FilmScreenings";
 import MoviesScreening from "../../components/MoviesScreening/MoviesScreening";
+import Films from "../../components/Films/Films";
 
 class App extends Component {
   // logginUserCallback = (username, password, jwt_token) => {
@@ -37,6 +38,7 @@ class App extends Component {
             <Route path="/myReservations" component={Home} />
             <Route path="/filmScreenings" component={FilmScreenings} />
             <Route path="/movieScreenings" component={MoviesScreening} />
+            <Route path="/films" component={Films} />
           </Switch>
         </Layout>
       </BrowserRouter>
