@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cine__backend.Repositories
+namespace Cine__backend.Interfaces
 {
     public interface ILevelRepository
     {

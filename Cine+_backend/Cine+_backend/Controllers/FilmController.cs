@@ -1,4 +1,5 @@
-﻿using Cine__backend.Models;
+﻿using Cine__backend.Interfaces;
+using Cine__backend.Models;
 using Cine__backend.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
