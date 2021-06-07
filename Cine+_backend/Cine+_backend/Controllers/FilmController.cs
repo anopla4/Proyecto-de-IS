@@ -82,7 +82,7 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPatch("{id}")]
-        public IActionResult UpdateFilm(Guid id, Film film, [FromForm] List<Genre> genres, [FromForm] List<DTOMemberRol> membersRol)
+        public IActionResult UpdateFilm(Guid id,[FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
             try
             {

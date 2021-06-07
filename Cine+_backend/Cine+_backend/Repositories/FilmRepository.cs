@@ -21,15 +21,14 @@ namespace Cine__backend.Repositories
         {
             film.Id = Guid.NewGuid();
             _context.Films.Add(film);
-            //
             foreach (var genre in genres)
                 _context.FilmGenres.Add(new FilmGenre() { FilmId = film.Id, GenreId = genre.Id });
-
             foreach (var member_rol in membersRol)
                 _context.FilmFilmRols.Add(new FilmFilmRol() { 
                     FilmId = film.Id, 
                     FilmRolId = member_rol.Rol.Id,
                     MemberRol = member_rol.Member});
+            _context.SaveChanges();
             var dtoFilmStaff = new DTOFilmStaff
             {
                 Film = film,
@@ -83,13 +82,48 @@ namespace Cine__backend.Repositories
             return dTOFilms;
         }
 
-        public DTOFilm UpdateFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol)
+        private Tuple<bool,string> Comparer(List<DTOMemberRol> membersRol)
+        {
+            HashSet<DTOMemberRol> set_comparer = new HashSet<DTOMemberRol>();
+            foreach(var mr in membersRol)
+            {
+                foreach(var agregado in set_comparer)
+                {
+                    if(agregado.Member == mr.Member && agregado.Rol.Id == mr.Rol.Id)
+                    {
+                        return new Tuple<bool, string>(false,
+                            $"Se recibió duplicado el miembro {mr.Member}, con rol {mr.Rol.Name}");
+                    }
+                }
+                set_comparer.Add(mr);
+            }
+            return new Tuple<bool, string>(true, "");
+        }
+        public DTOFilmStaff UpdateFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol)
         {
             var oldFilm = _context.Films.Find(film.Id);
             if (oldFilm is null)
             {
                 throw new KeyNotFoundException($"No se encuentra el filme especificado con id:{film.Id}.");
             }
+            var comparer = this.Comparer(membersRol);
+            if (!comparer.Item1)
+            {
+                throw new InvalidOperationException(comparer.Item2);
+            }
+            foreach (var film_genre in _context.FilmGenres.Where(c => c.FilmId == film.Id))
+                _context.FilmGenres.Remove(film_genre);
+            foreach (var genre in genres)
+                _context.FilmGenres.Add(new FilmGenre() { FilmId = film.Id, GenreId = genre.Id });
+            foreach (var film_filmRol in _context.FilmFilmRols.Where(c => c.FilmId == film.Id))
+                _context.FilmFilmRols.Remove(film_filmRol);
+            foreach (var member_rol in membersRol)
+                _context.FilmFilmRols.Add(new FilmFilmRol()
+                {
+                    FilmId = film.Id,
+                    FilmRolId = member_rol.Rol.Id,
+                    MemberRol = member_rol.Member
+                });
             oldFilm.Name = film.Name;
             oldFilm.Country = film.Country;
             oldFilm.Img = film.Img;
@@ -97,14 +131,14 @@ namespace Cine__backend.Repositories
             oldFilm.Year = film.Year;
             _context.Films.Update(oldFilm);
             _context.SaveChanges();
-            var filmGenres = _context.FilmGenres.Include(c => c.Genre).
-                            Where(c => c.FilmId == oldFilm.Id).Select(c => c.Genre).ToList();
-            var dtoFilm = new DTOFilm
+            var dtoFilmStaff = new DTOFilmStaff
             {
                 Film = oldFilm,
-                Genres = filmGenres
+                Genres = genres,
+                Staff = membersRol
             };
-            return dtoFilm;
+            
+            return dtoFilmStaff;
         }
     }
 }
