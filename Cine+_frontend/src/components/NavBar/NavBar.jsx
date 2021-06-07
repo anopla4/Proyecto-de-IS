@@ -1,7 +1,7 @@
 import React from "react";
 import "./NavBar.css";
 import { Navbar, Nav, NavItem } from "react-bootstrap";
-import isLoggedIn from "../utils";
+import { isLoggedIn } from "../utils";
 import logo from "../../static/logo.png";
 
 const navigation = (props) => {
