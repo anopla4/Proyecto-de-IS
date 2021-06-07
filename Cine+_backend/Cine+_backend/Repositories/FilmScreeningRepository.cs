@@ -1,5 +1,6 @@
 ﻿using Cine__backend.Interfaces;
 using Cine__backend.Models;
+using Cine__backend.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,19 +40,28 @@ namespace Cine__backend.Repositories
             return;
         }
 
-        public FilmScreening GetFilmScreening(Guid filmScreeningId)
+        public DTOFilmScreening GetFilmScreening(Guid filmScreeningId)
         {
             var filmScreening = _context.FilmScreenings.Include(c => c.Film).Include(c => c.Room).SingleOrDefault(c => c.Id == filmScreeningId);
             if (filmScreening == null)
             {
                 throw new KeyNotFoundException("No fue encontrada la puesta en escena especificada");
             }
-            return filmScreening;
+            List<Genre> genres = _context.FilmGenres.Include(c => c.Genre).Where(c => c.FilmId == filmScreening.FilmId).Select(c => c.Genre).ToList();
+            DTOFilmScreening filmScreeningDTO = new DTOFilmScreening { FilmScreeningId = filmScreeningId, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.StarTime };
+            return filmScreeningDTO;
         }
 
-        public List<FilmScreening> GetFilmScreenings()
+        public List<DTOFilmScreening> GetFilmScreenings()
         {
-            return _context.FilmScreenings.ToList();
+            var filmsSreenings = _context.FilmScreenings.Include(c => c.Film).Include(c => c.Room).ToList();
+            List<DTOFilmScreening> filmScreeningsDTO = new List<DTOFilmScreening>();
+            foreach(var filmScreening in filmsSreenings)
+            {
+                List<Genre> genres = _context.FilmGenres.Include(c => c.Genre).Where(c => c.FilmId == filmScreening.FilmId).Select(c => c.Genre).ToList();
+                filmScreeningsDTO.Add(new DTOFilmScreening { FilmScreeningId = filmScreening.Id, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.StarTime });
+            }
+            return filmScreeningsDTO;
         }
 
         public FilmScreening UpdateFilmScreening(FilmScreening filmScreening)

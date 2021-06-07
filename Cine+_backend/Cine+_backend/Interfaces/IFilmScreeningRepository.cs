@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Models;
+using Cine__backend.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ namespace Cine__backend.Interfaces
 {
     public interface IFilmScreeningRepository
     {
-        List<FilmScreening> GetFilmScreenings();
-        FilmScreening GetFilmScreening(Guid filmScreeningId);
+        List<DTOFilmScreening> GetFilmScreenings();
+        DTOFilmScreening GetFilmScreening(Guid filmScreeningId);
         FilmScreening AddFilmScreening(FilmScreening filmScreening);
         FilmScreening UpdateFilmScreening(FilmScreening filmScreening);
         void RemoveFilmScreening(Guid filmScreeningId);
