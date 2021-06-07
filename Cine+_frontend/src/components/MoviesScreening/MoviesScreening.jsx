@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
   Card,
-  CardDeck,
+  FormControl,
   Row,
   Col,
   ListGroup,
@@ -36,13 +36,75 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        date: "6/6/2021",
+        time: "8:00",
+      },
+      {
+        movie: {
+          id: 1,
+          name: "Cinema Paradiso",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/cinemaParadiso.jpg",
+        },
         date: "5/6/2021",
         time: "10:00",
       },
       {
         movie: {
           id: 2,
-          name: "Cinema",
+          name: "G",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/cinemaParadiso.jpg",
+        },
+        date: "5/6/2021",
+        time: "10:00",
+      },
+    ],
+    moviesFilter: [
+      {
+        movie: {
+          id: 1,
+          name: "Cinema Paradiso",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/cinemaParadiso.jpg",
+        },
+        date: "5/6/2021",
+        time: "8:00",
+      },
+      {
+        movie: {
+          id: 1,
+          name: "Cinema Paradiso",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/cinemaParadiso.jpg",
+        },
+        date: "6/6/2021",
+        time: "8:00",
+      },
+      {
+        movie: {
+          id: 1,
+          name: "Cinema Paradiso",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/cinemaParadiso.jpg",
+        },
+        date: "5/6/2021",
+        time: "10:00",
+      },
+      {
+        movie: {
+          id: 2,
+          name: "G",
           year: "1988",
           genre: { name: "Drama" },
           country: "Italia",
@@ -53,6 +115,9 @@ class MoviesScreening extends Component {
       },
     ],
     grouped: [],
+    inputName: "",
+    inputTime: "",
+    inputDate: "",
   };
 
   componentDidMount() {
@@ -76,29 +141,96 @@ class MoviesScreening extends Component {
   }
 
   handleInputChangeTypeahead = (text, e) => {
-    const moviesTempFilter = [
-      ...this.state.movies.filter((c) => {
-        if (c.movie.name.toLowerCase().startsWith(text.toLowerCase()))
-          return true;
+    let moviesTempFilter = [...this.state.movies];
+    moviesTempFilter = moviesTempFilter.filter((c) => {
+      if (c.movie.name.toLowerCase().match(text.toLowerCase())) return true;
+      return false;
+    });
+    if (this.state.inputTime !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.time === this.state.inputTime) return true;
         return false;
-      }),
-    ];
+      });
+    }
+    if (this.state.inputDate !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.date === this.state.inputDate) return true;
+        return false;
+      });
+    }
     const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
-    this.setState({ grouped: movies });
+    console.log(text);
+    this.setState({
+      inputName: text,
+      moviesFilter: moviesTempFilter,
+      grouped: movies,
+    });
+    console.log(this.state.inputName + "+++++++++++++");
   };
 
   handleChangeTypeahead = (e) => {
     let text = "";
-    if (e.length !== 0) text = e[0];
-    const moviesTempFilter = [
-      ...this.state.movies.filter((c) => {
-        if (c.movie.name.toLowerCase().startsWith(text.toLowerCase()))
+    let moviesTempFilter = [...this.state.movies];
+
+    if (e.length !== 0) {
+      text = e[0];
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.movie.name.toLowerCase().match(text.toLowerCase())) return true;
+        return false;
+      });
+    }
+    if (this.state.inputTime !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.time === this.state.inputTime) return true;
+        return false;
+      });
+    }
+    if (this.state.inputDate !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.date === this.state.inputDate) return true;
+        return false;
+      });
+    }
+    const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
+    this.setState({
+      inputName: text,
+      moviesFilter: moviesTempFilter,
+      grouped: movies,
+    });
+  };
+
+  handleChangeTime = (e) => {
+    let time = e.target.value;
+    let moviesTempFilter = [...this.state.movies];
+    if (time !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.time === time) return true;
+        return false;
+      });
+    }
+    console.log(this.state.inputName + "+++++++++++++");
+
+    if (this.state.inputName !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (
+          c.movie.name.toLowerCase().match(this.state.inputName.toLowerCase())
+        )
           return true;
         return false;
-      }),
-    ];
+      });
+    }
+    if (this.state.inputDate !== "") {
+      moviesTempFilter = moviesTempFilter.filter((c) => {
+        if (c.date === this.state.inputDate) return true;
+        return false;
+      });
+    }
     const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
-    this.setState({ grouped: movies });
+    this.setState({
+      inputTime: time,
+      moviesFilter: moviesTempFilter,
+      grouped: movies,
+    });
   };
 
   render() {
@@ -172,6 +304,19 @@ class MoviesScreening extends Component {
                 .filter(onlyUnique)}
               placeholder="Elija una película..."
             />
+            <FormControl
+              onChange={this.handleChangeTime}
+              as="select"
+              style={{ width: "60%", float: "right" }}
+            >
+              <option id={-1}></option>
+              {this.state.movies
+                .map((item) => item.time)
+                .filter(onlyUnique)
+                .map((time) => (
+                  <option id={time}>{time}</option>
+                ))}
+            </FormControl>
           </Col>
         </Row>
       </Container>

@@ -14,7 +14,7 @@ class FilmScreenings extends Component {
     return (
       <Container>
         <Row style={{ paddingTop: "30px" }} className="justify-content-end">
-          <Button
+          {/* <Button
             variant="outline-secondary"
             // bsPrefix="my-button"
             className="mb-2 ml-2"
@@ -37,11 +37,11 @@ class FilmScreenings extends Component {
             onClick={() => this.handleOnClick(3)}
           >
             Por salas
-          </Button>
+          </Button> */}
         </Row>
-        <Row className="mt-5">
-          {this.state.page === 1 && <MovieScreenings />}
-        </Row>
+        {/* <Row className="mt-5"> */}
+        <MovieScreenings />
+        {/* </Row> */}
       </Container>
 
       // <Tab.Container>
