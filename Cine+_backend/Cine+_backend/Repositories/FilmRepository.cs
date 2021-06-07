@@ -1,5 +1,6 @@
 ﻿using Cine__backend.Interfaces;
 using Cine__backend.Models;
+using Cine__backend.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,18 +17,26 @@ namespace Cine__backend.Repositories
         {
             this._context = context;
         }
-        public DTOFilm AddFilm(Film film)
+        public DTOFilmStaff AddFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol)
         {
             film.Id = Guid.NewGuid();
             _context.Films.Add(film);
-            var filmGenres = _context.FilmGenres.Include(c => c.Genre).
-                            Where(c => c.FilmId == film.Id).Select(c => c.Genre).ToList();
-            var dtoFilm = new DTOFilm
+            //
+            foreach (var genre in genres)
+                _context.FilmGenres.Add(new FilmGenre() { FilmId = film.Id, GenreId = genre.Id });
+
+            foreach (var member_rol in membersRol)
+                _context.FilmFilmRols.Add(new FilmFilmRol() { 
+                    FilmId = film.Id, 
+                    FilmRolId = member_rol.Rol.Id,
+                    MemberRol = member_rol.Member});
+            var dtoFilmStaff = new DTOFilmStaff
             {
                 Film = film,
-                Genres = filmGenres
+                Genres = genres,
+                Staff = membersRol
             };
-            return dtoFilm;
+            return dtoFilmStaff;
         }
 
         public void DeleteFilm(Film film)
@@ -74,7 +83,7 @@ namespace Cine__backend.Repositories
             return dTOFilms;
         }
 
-        public DTOFilm UpdateFilm(Film film)
+        public DTOFilm UpdateFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol)
         {
             var oldFilm = _context.Films.Find(film.Id);
             if (oldFilm is null)

@@ -35,25 +35,32 @@ namespace Cine__backend.Repositories
                     v => v.ToString(),
                     v => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), v));
             //FilmScreening
-            modelBuilder.Entity<FilmScreening>().HasOne(c => c.Film).WithMany().
-                                                OnDelete(DeleteBehavior.SetNull);
-            modelBuilder.Entity<FilmScreening>().HasOne(c => c.Room).WithMany().
-                                                OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<FilmScreening>()
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<FilmScreening>()
+                .HasOne(c => c.Room).WithMany().OnDelete(DeleteBehavior.SetNull);
             //FilmGenre
             modelBuilder.Entity<FilmGenre>()
                 .HasKey(c => new { c.FilmId, c.GenreId });
-            modelBuilder.Entity<FilmGenre>().HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
-           
-            modelBuilder.Entity<FilmGenre>().HasOne(c => c.Genre).WithMany().OnDelete(DeleteBehavior.SetNull);
-
+            modelBuilder.Entity<FilmGenre>()
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<FilmGenre>()
+                .HasOne(c => c.Genre).WithMany().OnDelete(DeleteBehavior.SetNull);
+            //FilmFilmRol
+            modelBuilder.Entity<FilmFilmRol>()
+               .HasKey(c => new { c.FilmId, c.FilmRolId });
+            modelBuilder.Entity<FilmFilmRol>()
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<FilmFilmRol>()
+                .HasOne(c => c.FilmRol).WithMany().OnDelete(DeleteBehavior.SetNull);
             //UserFilm
             modelBuilder.Entity<UserFilm>()
                 .HasKey(c => new { c.UserId, c.FilmId });
 
-            modelBuilder.Entity<UserFilm>().HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<UserFilm>().HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
-
+            modelBuilder.Entity<UserFilm>()
+                .HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<UserFilm>()
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
             //FilmScreeningPriceModification
             modelBuilder.Entity<FilmScreeningPriceModification>()
                 .HasKey(c => new { c.FilmScreeningId, c.PriceModificationId });
@@ -136,6 +143,7 @@ namespace Cine__backend.Repositories
         public DbSet<PriceModification> PriceModifications { get; set; }
         public DbSet<FilmRol> FilmRols { get; set; }
         public DbSet<Film> Films { get; set; }
+        public DbSet<FilmFilmRol> FilmFilmRols { get; set; }
         public DbSet<FilmScreening> FilmScreenings { get; set; }
         public DbSet<FilmGenre> FilmGenres { get; set; }
         public DbSet<UserFilm> UserFilms { get; set; }

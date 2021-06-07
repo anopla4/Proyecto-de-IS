@@ -11,8 +11,8 @@ namespace Cine__backend.Interfaces
     {
         public DTOFilm GetFilm(Guid id);
         public List<DTOFilm> GetFilms();
-        public DTOFilm AddFilm(Film film);
-        public DTOFilm UpdateFilm(Film film);
+        public DTOFilmStaff AddFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol);
+        public DTOFilm UpdateFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol);
         public void DeleteFilm(Film film);
     }
 }
