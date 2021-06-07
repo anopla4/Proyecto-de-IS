@@ -63,7 +63,7 @@ class Films extends Component {
   };
   handleOnDelete = (id) => {};
   handleOnEdit = (film) => {
-    this.props.history.push({ pathname: "/filmForm", state: film });
+    this.props.history.push({ pathname: "/filmForm", state: { film: film } });
   };
 
   render() {

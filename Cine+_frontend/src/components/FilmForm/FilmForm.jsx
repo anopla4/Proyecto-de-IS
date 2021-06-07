@@ -56,12 +56,13 @@ class FilmForm extends Component {
   };
 
   componentWillMount() {
+    console.log(this.props.location.state.film);
     if (this.props.location.state.film) {
       this.setState({
         edit: true,
         filmEdit: this.props.location.state.film,
-        file: this.props.location.film.film.img,
-        fileTmpURL: this.props.location.film.film.imgPath,
+        // file: this.props.location.state.film.film.img,
+        fileTmpURL: this.props.location.state.film.film.imgPath,
         selectedGenres: this.props.location.state.film.film.genres,
         selectedRols: this.props.location.state.film.staff,
       });
@@ -97,69 +98,54 @@ class FilmForm extends Component {
   onFormSubmit = (e) => {
     let formElements = e.target.elements;
     const name = formElements.name.value;
-    const positions = [
-      ...this.state.positions.filter((c) =>
-        this.state.selectedPositions.includes(c.id)
-      ),
-    ];
-    const current_Team = formElements.current_Team;
-    const current_TeamId = current_Team.children[current_Team.selectedIndex].id;
-    const age = formElements.age.value;
-    const year_Experience = formElements.year_Experience.value;
-    const deffAverage = formElements.deffAverage.value;
-    const era = formElements.era.value;
-    const hand = formElements.hand.value;
-    const average = formElements.average.value;
-    let player = {
+    const year = formElements.year.value;
+    const country = formElements.country.value;
+    let film = {
       name,
-      positions,
-      current_TeamId,
-      age,
-      year_Experience,
-      deffAverage,
-      average,
+      year,
+      country,
     };
 
     var formdata = new FormData();
-    formdata.append("name", player.name);
-    formdata.append("age", player.age);
-    formdata.append("current_TeamId", player.current_TeamId);
-    formdata.append("year_Experience", player.year_Experience);
-    formdata.append("deffAverage", player.deffAverage);
-    if (player.era) formdata.append("era", player.era);
-    if (player.hand) formdata.append("hand", player.hand);
-    if (player.average) formdata.append("average", player.average);
-    formdata.append("img", this.state.file, this.state.file.name);
-    for (let i = 0; i < player.positions.length; i++) {
-      formdata.append(`positions[${i}].id`, player.positions[i].id);
-      formdata.append(
-        `positions[${i}].positionName`,
-        player.positions[i].positionName
-      );
+    formdata.append("film.name", film.name);
+    formdata.append("film.country", film.country);
+    formdata.append("film.year", film.year);
+    if (this.state.file)
+      formdata.append("film.img", this.state.file, this.state.file.name);
+    for (let i = 0; i < this.state.selectedGenres.length; i++) {
+      formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
+      formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
     }
-    console.log(this.state.playerEdit.id);
+    for (let i = 0; i < this.state.selectedRols.length; i++) {
+      formdata.append(`staff[${i}].rol.id`, this.state.selectedRols[i].rol.id);
+      formdata.append(
+        `staff[${i}].rol.name`,
+        this.state.selectedRols[i].rol.name
+      );
+      formdata.append(`staff[${i}].member`, this.state.selectedRols[i].member);
+    }
     let postUrl =
-      "https://localhost:44334/api/Movie" +
-      (this.state.edit ? `/${this.state.playerEdit.id}` : "");
-    fetch(postUrl, {
-      mode: "cors",
-      headers: {
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: this.state.edit ? "PATCH" : "POST",
-      body: formdata,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
-      })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
-    this.props.history.push({ pathname: "/players", state: { edited: true } });
+      "https://localhost:44334/api/Film" +
+      (this.state.edit ? `/${this.state.filmEdit.id}` : "");
+    // fetch(postUrl, {
+    //   mode: "cors",
+    //   headers: {
+    //     Authorization:
+    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+    //   },
+    //   method: this.state.edit ? "PATCH" : "POST",
+    //   body: formdata,
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw Error(response.statusText);
+    //     }
+    //     return response.json();
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
+    //   });
+    this.props.history.push({ pathname: "/films", state: { edited: true } });
   };
 
   addNewGenre = (e) => {
@@ -231,7 +217,7 @@ class FilmForm extends Component {
   };
 
   render() {
-    const { film, staff } = {
+    const { film } = {
       ...this.props.location.state.film,
     };
     return (
