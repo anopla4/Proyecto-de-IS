@@ -12,7 +12,7 @@ class Add extends Component {
         className="mr-3"
         style={{ float: "right" }}
         onClick={this.props.onClick}
-        variant="primary"
+        variant={this.props.variant ? this.props.variant : "primary"}
       >
         <PlusLg />
         {this.props.text}

@@ -7,7 +7,6 @@ import { groupBy } from "../utils";
 
 class Films extends Component {
   state = {
-    grouped: [],
     films: [
       {
         film: {
@@ -17,21 +16,12 @@ class Films extends Component {
           genre: { name: "Drama" },
           country: "Italia",
           imgPath: "src/images/pulpFiction.jpg",
+          genres: [{ name: "Thriller" }],
         },
-        member: { name: "John Travolta" },
-        rol: { name: "Actor" },
-      },
-      {
-        film: {
-          id: 1,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-        },
-        member: { name: "Quentin Tarantino" },
-        rol: { name: "Director" },
+        staff: [
+          { rol: { name: "Actor" }, member: "John Travolta" },
+          { rol: { name: "Director" }, member: "Quentin Tarantino" },
+        ],
       },
       {
         film: {
@@ -41,41 +31,17 @@ class Films extends Component {
           genre: { name: "Drama" },
           country: "Italia",
           imgPath: "src/images/pulpFiction.jpg",
+          genres: [{ name: "Thriller" }],
         },
-        member: { name: "John Travolta" },
-        rol: { name: "Actor" },
-      },
-      {
-        film: {
-          id: 3,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-        },
-        member: { name: "John Travolta" },
-        rol: { name: "Actor" },
-      },
-      {
-        film: {
-          id: 4,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-        },
-        member: { name: "John Travolta" },
-        rol: { name: "Actor" },
+        staff: [
+          { rol: { name: "Actor" }, member: "John Travolta" },
+          { rol: { name: "Director" }, member: "Quentin Tarantino" },
+        ],
       },
     ],
   };
 
   componentDidMount() {
-    let grouped = groupBy(this.state.films, ["film.id"]);
-    console.log(grouped);
-    this.setState({ grouped: grouped });
     // fetch("https://localhost:44334/api/FilmScreening/WithTimes", {
     //   mode: "cors",
     // })
@@ -93,11 +59,11 @@ class Films extends Component {
     //   });
   }
   handleAdd = () => {
-    this.state.push("/filmForm");
+    this.props.history.push({ pathname: "/filmForm", state: {} });
   };
   handleOnDelete = (id) => {};
   handleOnEdit = (film) => {
-    this.state.push({ pathname: "/filmForm", state: film });
+    this.props.history.push({ pathname: "/filmForm", state: film });
   };
 
   render() {
@@ -105,7 +71,7 @@ class Films extends Component {
       <Row>
         <Col>
           <CardDeck>
-            {this.state.grouped.map((film) => (
+            {this.state.films.map((film) => (
               <Col md={3}>
                 <Card className="mb-3">
                   <Card.Img
@@ -114,17 +80,24 @@ class Films extends Component {
                   />
                   <Card.Body>
                     <Card.Text>
-                      {film._items.map((member) => (
+                      <Container>
+                        <p style={{ display: "inline" }} className="bold">
+                          Géneros:{" "}
+                        </p>
+                        {film.film.genres.map((genre) => genre.name).join(", ")}
+                        .
+                      </Container>
+                      {film.staff.map((member) => (
                         <Container>
                           <p style={{ display: "inline" }} className="bold">
                             {member.rol.name}:{" "}
                           </p>
-                          {member.member.name}.
+                          {member.member}.
                         </Container>
                       ))}
                       <DeleteEdit
                         onDelete={() => this.handleOnDelete(film.film.id)}
-                        onEdit={() => this.handleOnEdit(film._items)}
+                        onEdit={() => this.handleOnEdit(film)}
                         delete={true}
                         edit={true}
                       />
