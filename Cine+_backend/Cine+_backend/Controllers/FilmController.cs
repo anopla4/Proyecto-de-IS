@@ -27,12 +27,12 @@ namespace Cine__backend.Controllers
         {
             return Ok(_filmRep.GetFilms());
         }
-        [HttpGet("{id}")]
-        public IActionResult GetFilm(Guid id)
+        [HttpGet("{filmId}")]
+        public IActionResult GetFilm(Guid filmId)
         {
             try
             {
-                var dtoFilm = _filmRep.GetFilm(id);
+                var dtoFilm = _filmRep.GetFilm(filmId);
                 return Ok(dtoFilm);
             }
             catch (Exception e)
@@ -72,12 +72,12 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteFilm(Guid id, Film film)
+        [HttpDelete("{filmId}")]
+        public IActionResult DeleteFilm(Guid filmId, Film film)
         {
             try
             {
-                _filmRep.DeleteFilm(film);
+                _filmRep.DeleteFilm(filmId);
                 return Ok();
             }
             catch (Exception e)
@@ -86,12 +86,12 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
-        [HttpPatch("{id}")]
-        public IActionResult UpdateFilm(Guid id,[FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
+        [HttpPatch("{filmId}")]
+        public IActionResult UpdateFilm(Guid filmId,[FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
             try
             {
-                var currentFilm = _filmRep.GetFilm(id).Film;
+                var currentFilm = _filmRep.GetFilm(filmId).Film;
                 if (currentFilm.ImgPath != null)
                     System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), currentFilm.ImgPath));
                 this.SaveFile(film);

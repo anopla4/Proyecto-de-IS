@@ -24,12 +24,12 @@ namespace Cine__backend.Controllers
         {
             return Ok(_roomRep.GetRooms());
         }
-        [HttpGet("{id}")]
-        public IActionResult GetRoom(Guid id)
+        [HttpGet("{roomId}")]
+        public IActionResult GetRoom(Guid roomId)
         {
             try
             {
-                var room = _roomRep.GetRoom(id);
+                var room = _roomRep.GetRoom(roomId);
                 return Ok(room);
             }
             catch (Exception e)
@@ -50,12 +50,12 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteRoom(Guid id, Room room)
+        [HttpDelete("{roomId}")]
+        public IActionResult DeleteRoom(Guid roomId)
         {
             try
             {
-                _roomRep.DeleteRoom(room);
+                _roomRep.DeleteRoom(roomId);
                 return Ok();
             }
             catch (Exception e)
@@ -64,12 +64,12 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
-        [HttpPatch("{id}")]
-        public IActionResult RoomUpdate(Guid id, Room room)
+        [HttpPatch("{roomId}")]
+        public IActionResult RoomUpdate(Guid roomId, Room room)
         {
             try
             {
-                var currentRoom = _roomRep.GetRoom(id);
+                var currentRoom = _roomRep.GetRoom(roomId);
                 room.Id = currentRoom.Id;
                 _roomRep.UpdateRoom(room);
                 return Ok(room);

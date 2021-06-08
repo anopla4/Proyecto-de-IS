@@ -24,23 +24,23 @@ namespace Cine__backend.Repositories
             return room;
         }
 
-        public void DeleteRoom(Room room)
+        public void DeleteRoom(Guid roomId)
         {
-            var oldRoom = _context.Rooms.Find(room.Id);
+            var oldRoom = _context.Rooms.Find(roomId);
             if(oldRoom is null)
             {
-                throw new KeyNotFoundException($"No se encuentra la Sala especificada con id:{room.Id}.");
+                throw new KeyNotFoundException($"No se encuentra la Sala especificada con id:{roomId}.");
             }
             _context.Rooms.Remove(oldRoom);
             _context.SaveChanges();
         }
 
-        public Room GetRoom(Guid id)
+        public Room GetRoom(Guid roomId)
         {
-            var room = _context.Rooms.Find(id);
+            var room = _context.Rooms.Find(roomId);
             if(room is null)
             {
-                throw new KeyNotFoundException($"No se encuentra la Sala especificada con id:{id}.");
+                throw new KeyNotFoundException($"No se encuentra la Sala especificada con id:{roomId}.");
             }
             return room;
         }

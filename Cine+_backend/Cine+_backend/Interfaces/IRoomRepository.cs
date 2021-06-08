@@ -9,9 +9,9 @@ namespace Cine__backend.Interfaces
     public interface IRoomRepository
     {
         public List<Room> GetRooms();
-        public Room GetRoom(Guid id);
+        public Room GetRoom(Guid roomId);
         public Room AddRoom(Room room);
         public Room UpdateRoom(Room room);
-        public void DeleteRoom(Room room);
+        public void DeleteRoom(Guid roomId);
     }
 }

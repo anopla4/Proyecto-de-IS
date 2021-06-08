@@ -24,12 +24,12 @@ namespace Cine__backend.Controllers
         {
             return Ok(_levelRep.GetLevels());
         }
-        [HttpGet("{id}")]
-        public IActionResult GetLevel(Guid id)
+        [HttpGet("{levelId}")]
+        public IActionResult GetLevel(Guid levelId)
         {
             try
             {
-                var level = _levelRep.GetLevel(id);
+                var level = _levelRep.GetLevel(levelId);
                 return Ok(level);
             }
             catch (Exception e)
@@ -50,12 +50,12 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteLevel(Guid id, Level level)
+        [HttpDelete("{levelId}")]
+        public IActionResult DeleteLevel(Guid levelId)
         {
             try
             {
-                _levelRep.DeleteLevel(level);
+                _levelRep.DeleteLevel(levelId);
                 return Ok();
             }
             catch (Exception e)
@@ -64,12 +64,12 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
-        [HttpPatch("{id}")]
-        public IActionResult LevelUpdate(Guid id, Level level)
+        [HttpPatch("{levelId}")]
+        public IActionResult LevelUpdate(Guid levelId, Level level)
         {
             try
             {
-                var currentLevel = _levelRep.GetLevel(id);
+                var currentLevel = _levelRep.GetLevel(levelId);
                 level.Id = currentLevel.Id;
                 _levelRep.UpdateLevel(level);
                 return Ok(level);

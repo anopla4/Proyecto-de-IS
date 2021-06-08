@@ -23,12 +23,12 @@ namespace Cine__backend.Controllers
         {
             return Ok(_bookEntryRep.GetBookEntries());
         }
-        [HttpGet("{id}")]
-        public IActionResult GetBookEntry(Guid id)
+        [HttpGet("{bookEntryId}")]
+        public IActionResult GetBookEntry(Guid bookEntryId)
         {
             try
             {
-                var bookEntry = _bookEntryRep.GetBookEntry(id);
+                var bookEntry = _bookEntryRep.GetBookEntry(bookEntryId);
                 return Ok(bookEntry);
             }
             catch (Exception e)
@@ -49,12 +49,12 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteBookEntry(Guid id, BookEntry bookEntry)
+        [HttpDelete("{bookEntryId}")]
+        public IActionResult DeleteBookEntry(Guid bookEntryId)
         {
             try
             {
-                _bookEntryRep.DeleteBookEntry(id);
+                _bookEntryRep.DeleteBookEntry(bookEntryId);
                 return Ok();
             }
             catch (Exception e)
@@ -62,8 +62,8 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
-        [HttpPatch("{id}")]
-        public IActionResult UpdateBookEntry(Guid id, BookEntry bookEntry)
+        [HttpPatch("{bookEntryId}")]
+        public IActionResult UpdateBookEntry(Guid bookEntryId, BookEntry bookEntry)
         {
             try
             {

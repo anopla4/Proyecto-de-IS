@@ -23,23 +23,23 @@ namespace Cine__backend.Repositories
             return level;
         }
 
-        public void DeleteLevel(Level level)
+        public void DeleteLevel(Guid levelId)
         {
-            var oldLevel = _context.Levels.Find(level.Id);
+            var oldLevel = _context.Levels.Find(levelId);
             if (oldLevel is null)
             {
-                throw new KeyNotFoundException($"No se encuentra el Nivel especificado con id:{level.Id}.");
+                throw new KeyNotFoundException($"No se encuentra el Nivel especificado con id:{levelId}.");
             }
             _context.Levels.Remove(oldLevel);
             _context.SaveChanges();
         }
 
-        public Level GetLevel(Guid id)
+        public Level GetLevel(Guid levelId)
         {
-            var level = _context.Levels.Find(id);
+            var level = _context.Levels.Find(levelId);
             if (level is null)
             {
-                throw new KeyNotFoundException($"No se encuentra el Nivel especificado con id:{id}.");
+                throw new KeyNotFoundException($"No se encuentra el Nivel especificado con id:{levelId}.");
             }
             return level;
         }

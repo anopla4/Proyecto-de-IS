@@ -38,26 +38,26 @@ namespace Cine__backend.Repositories
             return dtoFilmStaff;
         }
 
-        public void DeleteFilm(Film film)
+        public void DeleteFilm(Guid filmId)
         {
-            var oldFilm = _context.Films.Find(film.Id);
+            var oldFilm = _context.Films.Find(filmId);
             if (oldFilm is null)
             {
-                throw new KeyNotFoundException($"No se encuentra el filme especificado con id:{film.Id}.");
+                throw new KeyNotFoundException($"No se encuentra el filme especificado con id:{filmId}.");
             }
             _context.Films.Remove(oldFilm);
             _context.SaveChanges();
         }
 
-        public DTOFilm GetFilm(Guid id)
+        public DTOFilm GetFilm(Guid filmId)
         {
-            var film = _context.Films.Find(id);
+            var film = _context.Films.Find(filmId);
             if (film is null)
             {
-                throw new KeyNotFoundException($"No se encuentra el filme especificado con id:{id}.");
+                throw new KeyNotFoundException($"No se encuentra el filme especificado con id:{filmId}.");
             }
             var filmGenres = _context.FilmGenres.Include(c => c.Genre).
-                            Where(c => c.FilmId == id).Select(c => c.Genre).ToList();
+                            Where(c => c.FilmId == filmId).Select(c => c.Genre).ToList();
             var dtoFilm = new DTOFilm
             {
                 Film = film,
