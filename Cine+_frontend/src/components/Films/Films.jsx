@@ -3,7 +3,6 @@ import { Container, Card, Row, Col, CardDeck } from "react-bootstrap";
 import "../../containers/App/App.css";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
-import { groupBy } from "../utils";
 
 class Films extends Component {
   state = {
@@ -61,7 +60,30 @@ class Films extends Component {
   handleAdd = () => {
     this.props.history.push({ pathname: "/filmForm", state: {} });
   };
-  handleOnDelete = (id) => {};
+
+  handleOnDelete = (id, index) => {
+    // fetch(`https://localhost:44334/api/Film/${id}`, {
+    //   mode: "cors",
+    //   method: "DELETE",
+    //   headers: {
+    //     Authorization:
+    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+    //   },
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw Error(response.statusText);
+    //     }
+    //     return response.json();
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
+    //   });
+    // let n_films = [...this.state.films];
+    // n_films.splice(index, 1);
+    // this.setState({ films: n_films });
+  };
+
   handleOnEdit = (film) => {
     this.props.history.push({ pathname: "/filmForm", state: { film: film } });
   };
@@ -71,7 +93,7 @@ class Films extends Component {
       <Row>
         <Col>
           <CardDeck>
-            {this.state.films.map((film) => (
+            {this.state.films.map((film, index) => (
               <Col md={3}>
                 <Card className="mb-3">
                   <Card.Img
@@ -96,7 +118,9 @@ class Films extends Component {
                         </Container>
                       ))}
                       <DeleteEdit
-                        onDelete={() => this.handleOnDelete(film.film.id)}
+                        onDelete={() =>
+                          this.handleOnDelete(film.film.id, index)
+                        }
                         onEdit={() => this.handleOnEdit(film)}
                         delete={true}
                         edit={true}

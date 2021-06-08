@@ -56,13 +56,12 @@ class FilmForm extends Component {
   };
 
   componentWillMount() {
-    console.log(this.props.location.state.film);
     if (this.props.location.state.film) {
       this.setState({
         edit: true,
         filmEdit: this.props.location.state.film,
         // file: this.props.location.state.film.film.img,
-        fileTmpURL: this.props.location.state.film.film.imgPath,
+        // fileTmpURL: this.props.location.state.film.film.imgPath,
         selectedGenres: this.props.location.state.film.film.genres,
         selectedRols: this.props.location.state.film.staff,
       });
@@ -242,16 +241,27 @@ class FilmForm extends Component {
               <Col>
                 <Form.Group>
                   <Form.Label>Imagen de la película:</Form.Label>
-                  <Form.File onChange={this.setFile} id="img" label="" />
-                  <Image
-                    src={
-                      this.state.edit
-                        ? `https://localhost:44334/${film.imgPath}`
-                        : this.state.fileTmpURL
-                    }
-                    className="mt-2"
-                    style={{ width: "100px" }}
-                  />
+                  <Row>
+                    <Col>
+                      <Form.File
+                        onChange={this.setFile}
+                        id="img"
+                        label=""
+                        custom
+                      />
+                    </Col>
+                    <Col>
+                      <Image
+                        src={
+                          this.state.fileTmpURL
+                            ? this.state.fileTmpURL
+                            : `http://localhost:8000/${this.state.filmEdit.film.imgPath}`
+                        }
+                        className="mt-2"
+                        style={{ width: "100px" }}
+                      />
+                    </Col>
+                  </Row>
                 </Form.Group>
               </Col>
             </Row>
