@@ -9,6 +9,8 @@ import {
   ListGroup,
   ListGroupItem,
   Toast,
+  Navbar,
+  Nav,
 } from "react-bootstrap";
 import "./FilmForm.css";
 import { TrashFill } from "react-bootstrap-icons";
@@ -17,6 +19,8 @@ import Add from "../Add/Add";
 class FilmForm extends Component {
   state = {
     edit: false,
+    addRol: false,
+    addGenre: false,
     filmEdit: {},
     genres: [
       { name: "Drama", id: 1 },
@@ -35,33 +39,12 @@ class FilmForm extends Component {
     file: undefined,
     fileTmpURL: undefined,
   };
-  onChange = (e) => {
-    e.preventDefault();
-    if (this.state.selectedPositions.includes(e.target.value)) {
-      this.setState((prevState) => ({
-        selectedPositions: [
-          ...prevState.selectedPositions.filter(
-            (item) => item !== e.target.value
-          ),
-        ],
-      }));
-    } else {
-      let index = e.target.selectedIndex;
-      let el = e.target.childNodes[index];
-      let option = el.getAttribute("id");
-      this.setState((prevState) => ({
-        selectedPositions: [...prevState.selectedPositions, option],
-      }));
-    }
-  };
 
   componentWillMount() {
     if (this.props.location.state.film) {
       this.setState({
         edit: true,
         filmEdit: this.props.location.state.film,
-        // file: this.props.location.state.film.film.img,
-        // fileTmpURL: this.props.location.state.film.film.imgPath,
         selectedGenres: this.props.location.state.film.film.genres,
         selectedRols: this.props.location.state.film.staff,
       });
@@ -215,209 +198,351 @@ class FilmForm extends Component {
     this.setState({ showToast: false });
   };
 
+  onFormSubmitGenre = (e) => {
+    let formElements = e.target.elements;
+    const name = formElements.name.value;
+    let genre = {
+      name,
+    };
+    fetch("https://localhost:44334/api/Genre", {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "POST",
+      body: JSON.stringify(genre),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+    this.setState({ addGenre: false });
+  };
+
+  onFormSubmitRol = (e) => {
+    let formElements = e.target.elements;
+    const name = formElements.name.value;
+    let rol = {
+      name,
+    };
+    fetch("https://localhost:44334/api/Rol", {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "POST",
+      body: JSON.stringify(rol),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+    this.setState({ addRol: false });
+  };
+
+  handleCloseAdd = () => {
+    this.setState({ addRol: false, addGenre: false });
+  };
+
+  onClickAddRol = () => {
+    this.setState({ addGenre: true, addRol: false });
+  };
+
+  onClickAddGenre = () => {
+    this.setState({ addGenre: false, addRol: true });
+  };
+
   render() {
     const { film } = {
       ...this.props.location.state.film,
     };
     return (
-      <Container alignSelf="center" className="mt-4">
+      <Container>
         <h1 className="mb-5 my-style-header">Película</h1>
+        <Row alignSelf="center" className="mt-4">
+          <Col className="center">
+            <Form
+              onSubmit={this.onFormSubmit}
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              <Row>
+                <Col>
+                  <Form.Group style={{ width: "100%" }} controlId="name">
+                    <Form.Label>Nombre:</Form.Label>
+                    <Form.Control
+                      type="text"
+                      defaultValue={film ? film.name : ""}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Imagen de la película:</Form.Label>
+                    <Row>
+                      <Col>
+                        <Form.File
+                          onChange={this.setFile}
+                          id="img"
+                          label=""
+                          custom
+                        />
+                      </Col>
+                      <Col>
+                        <Image
+                          src={
+                            this.state.fileTmpURL || !this.state.edit
+                              ? this.state.fileTmpURL
+                              : `http://localhost:8000/${this.state.filmEdit.film.imgPath}`
+                          }
+                          className="mt-2"
+                          style={{ width: "100px" }}
+                        />
+                      </Col>
+                    </Row>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group controlId="year">
+                    <Form.Label>Año:</Form.Label>
+                    <Form.Control
+                      defaultValue={film ? film.year : ""}
+                      type="text"
+                      name="year"
+                    />
+                    <Form.Text id="yearValid" muted>
+                      El año debe tener el siguiente formato: YYYY.
+                    </Form.Text>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="age">
+                    <Form.Label>País:</Form.Label>
+                    <Form.Control
+                      defaultValue={film ? film.country : ""}
+                      type="text"
+                      name="country"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-        <Col className="center">
-          <Form
-            onSubmit={this.onFormSubmit}
-            style={{ width: "100%", alignItems: "center" }}
-          >
-            <Row>
-              <Col>
-                <Form.Group style={{ width: "100%" }} controlId="name">
-                  <Form.Label>Nombre:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    defaultValue={film ? film.name : ""}
+              <Row>
+                <Col>
+                  <Form.Group controlId="genres">
+                    <Form.Label>Géneros:</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={this.addNewGenre}
+                      custom
+                    >
+                      <option>{""}</option>
+                      {this.state.genres.map((genre) => (
+                        <option id={genre.id}>{genre.name}</option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col md={1} style={{ marginTop: "30px" }}>
+                  <Add
+                    className="btnFormSend "
+                    variant="outline-secondary"
+                    onClick={this.handleAddGenre}
                   />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Imagen de la película:</Form.Label>
-                  <Row>
-                    <Col>
-                      <Form.File
-                        onChange={this.setFile}
-                        id="img"
-                        label=""
-                        custom
-                      />
-                    </Col>
-                    <Col>
-                      <Image
-                        src={
-                          this.state.fileTmpURL
-                            ? this.state.fileTmpURL
-                            : `http://localhost:8000/${this.state.filmEdit.film.imgPath}`
+                </Col>
+                <Col>
+                  <ListGroup style={{ marginTop: "20px" }}>
+                    {this.state.selectedGenres.map((genre, index) => (
+                      <ListGroupItem>
+                        {genre.name}
+                        {
+                          // isLoggedIn() &&
+                          <Button
+                            className="ml-3"
+                            style={{ padding: "0px", float: "right" }}
+                            onClick={() => this.handleDeleteGenre(genre.id)}
+                            variant="danger"
+                          >
+                            <TrashFill style={{ width: "100%" }} />
+                          </Button>
                         }
-                        className="mt-2"
-                        style={{ width: "100px" }}
-                      />
-                    </Col>
-                  </Row>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group controlId="year">
-                  <Form.Label>Año:</Form.Label>
-                  <Form.Control
-                    defaultValue={film ? film.year : ""}
-                    type="text"
-                    name="year"
-                  />
-                  <Form.Text id="yearValid" muted>
-                    El año debe tener el siguiente formato: YYYY.
-                  </Form.Text>
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group controlId="age">
-                  <Form.Label>País:</Form.Label>
-                  <Form.Control
-                    defaultValue={film ? film.country : ""}
-                    type="text"
-                    name="country"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col>
-                <Form.Group controlId="genres">
-                  <Form.Label>Géneros:</Form.Label>
-                  <Form.Control as="select" onChange={this.addNewGenre} custom>
-                    <option>{""}</option>
-                    {this.state.genres.map((genre) => (
-                      <option id={genre.id}>{genre.name}</option>
+                      </ListGroupItem>
                     ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col md={1} style={{ marginTop: "30px" }}>
-                <Add
-                  className="btnFormSend "
-                  variant="outline-secondary"
-                  onClick={this.handleAddGenre}
-                />
-              </Col>
-              <Col>
-                <ListGroup style={{ marginTop: "20px" }}>
-                  {this.state.selectedGenres.map((genre, index) => (
-                    <ListGroupItem>
-                      {genre.name}
-                      {
-                        // isLoggedIn() &&
-                        <Button
-                          className="ml-3"
-                          style={{ padding: "0px", float: "right" }}
-                          onClick={() => this.handleDeleteGenre(genre.id)}
-                          variant="danger"
-                        >
-                          <TrashFill style={{ width: "100%" }} />
-                        </Button>
-                      }
-                    </ListGroupItem>
-                  ))}
-                </ListGroup>
-              </Col>
-            </Row>
-            <Row style={{ paddingTop: "20px" }}>
-              <Col>
-                <Form.Group controlId="staff">
-                  <Form.Label>Rol:</Form.Label>
-                  <Form.Control
-                    as="select"
-                    onChange={this.addNewMemberRol}
-                    custom
-                  >
-                    <option>{""}</option>
-                    {this.state.rols.map((rol) => (
-                      <option id={rol.id}>{rol.name}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group controlId="memberName">
-                  <Form.Label>Nombre:</Form.Label>
-                  <Form.Control
-                    onChange={this.addNewMemberName}
-                    type="text"
-                    name="memberName"
+                  </ListGroup>
+                </Col>
+              </Row>
+              <Row style={{ paddingTop: "20px" }}>
+                <Col>
+                  <Form.Group controlId="staff">
+                    <Form.Label>Rol:</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={this.addNewMemberRol}
+                      custom
+                    >
+                      <option>{""}</option>
+                      {this.state.rols.map((rol) => (
+                        <option id={rol.id}>{rol.name}</option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="memberName">
+                    <Form.Label>Nombre:</Form.Label>
+                    <Form.Control
+                      onChange={this.addNewMemberName}
+                      type="text"
+                      name="memberName"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={1} style={{ marginTop: "30px" }}>
+                  <Add
+                    className="btnFormSend "
+                    variant="outline-secondary"
+                    onClick={this.handleAddRol}
                   />
-                </Form.Group>
-              </Col>
-              <Col md={1} style={{ marginTop: "30px" }}>
-                <Add
-                  className="btnFormSend "
-                  variant="outline-secondary"
-                  onClick={this.handleAddRol}
-                />
-              </Col>
+                </Col>
 
-              <Col>
-                <ListGroup style={{ marginTop: "20px" }}>
-                  {this.state.selectedRols.map((rol, index) => (
-                    <ListGroupItem>
-                      {rol.member} ({rol.rol.name})
-                      {
-                        // isLoggedIn() &&
-                        <Button
-                          className="ml-3"
-                          style={{ padding: "0px", float: "right" }}
-                          onClick={() => this.handleDeleteRol(rol)}
-                          variant="danger"
-                        >
-                          <TrashFill style={{ width: "100%" }} />
-                        </Button>
-                      }
-                    </ListGroupItem>
-                  ))}
-                </ListGroup>
-              </Col>
-              {/* <Col> */}
-              <Toast
-                show={this.state.showToast}
-                onClose={this.handleCloseToast}
+                <Col>
+                  <ListGroup style={{ marginTop: "20px" }}>
+                    {this.state.selectedRols.map((rol, index) => (
+                      <ListGroupItem>
+                        {rol.member} ({rol.rol.name})
+                        {
+                          // isLoggedIn() &&
+                          <Button
+                            className="ml-3"
+                            style={{ padding: "0px", float: "right" }}
+                            onClick={() => this.handleDeleteRol(rol)}
+                            variant="danger"
+                          >
+                            <TrashFill style={{ width: "100%" }} />
+                          </Button>
+                        }
+                      </ListGroupItem>
+                    ))}
+                  </ListGroup>
+                </Col>
+                {/* <Col> */}
+                <Toast
+                  show={this.state.showToast}
+                  onClose={this.handleCloseToast}
+                >
+                  <Toast.Header>
+                    <strong className="mr-auto">¡Atención!</strong>
+                  </Toast.Header>
+                  <Toast.Body>
+                    Ya existe un miembro de la película con ese nombre y ese
+                    rol.
+                  </Toast.Body>
+                </Toast>
+                {/* </Col> */}
+              </Row>
+              <Button
+                style={{ float: "right" }}
+                className="mt-3 ml-3"
+                variant="secondary"
+                type="reset"
               >
-                <Toast.Header>
-                  <strong className="mr-auto">¡Atención!</strong>
-                </Toast.Header>
-                <Toast.Body>
-                  Ya existe un miembro de la película con ese nombre y ese rol.
-                </Toast.Body>
-              </Toast>
-              {/* </Col> */}
-            </Row>
-            <Button
-              style={{ float: "right" }}
-              className="mt-3 ml-3"
-              variant="secondary"
-              type="reset"
-            >
-              Reiniciar
-            </Button>
-            <Button
-              style={{ float: "right" }}
-              className="mt-3 ml-3"
-              variant="primary"
-              type="submit"
-              // onClick = {this.onFormSubmit}
-            >
-              Aceptar
-            </Button>
-          </Form>
-        </Col>
+                Reiniciar
+              </Button>
+              <Button
+                style={{ float: "right" }}
+                className="mt-3 ml-3"
+                variant="primary"
+                type="submit"
+                // onClick = {this.onFormSubmit}
+              >
+                Aceptar
+              </Button>
+            </Form>
+          </Col>
+          {!this.state.addRol && !this.state.addGenre && (
+            <Col md={2}>
+              <Row className="mb-3">
+                <Add text={"Agregar rol"} onClick={this.onClickAddRol} />
+              </Row>
+              <Row>
+                <Add text={"Agregar género"} onClick={this.onClickAddGenre} />
+              </Row>
+            </Col>
+          )}
+          {this.state.addRol && (
+            <Col md={3}>
+              <Navbar fixed="right">
+                <Nav.Item>
+                  <Form onSubmit={this.onFormSubmitRol}>
+                    <Form.Group controlId="name">
+                      <Form.Label>Nombre:</Form.Label>
+                      <Form.Control type="text" />
+                    </Form.Group>
+                    <Button
+                      className="mr-2"
+                      style={{ float: "left" }}
+                      variant="primary"
+                      type="submit"
+                    >
+                      Aceptar
+                    </Button>
+                    <Button
+                      style={{ float: "right" }}
+                      onClick={this.handleCloseAdd}
+                      variant="secondary"
+                    >
+                      Cancelar
+                    </Button>
+                  </Form>
+                </Nav.Item>
+              </Navbar>
+            </Col>
+          )}
+          {this.state.addGenre && (
+            <Col md={3}>
+              <Navbar fixed="right">
+                <Nav.Item>
+                  <Form onSubmit={this.onFormSubmitGenre}>
+                    <Form.Group controlId="name">
+                      <Form.Label>Nombre:</Form.Label>
+                      <Form.Control type="text" />
+                    </Form.Group>
+                    <Button
+                      className="mr-2"
+                      style={{ float: "left" }}
+                      variant="primary"
+                      type="submit"
+                    >
+                      Aceptar
+                    </Button>
+                    <Button
+                      style={{ float: "right" }}
+                      onClick={this.handleCloseAdd}
+                      variant="secondary"
+                    >
+                      Cancelar
+                    </Button>
+                  </Form>
+                </Nav.Item>
+              </Navbar>
+            </Col>
+          )}
+        </Row>
       </Container>
     );
   }

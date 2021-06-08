@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Card, Row, Col, CardDeck } from "react-bootstrap";
 import "../../containers/App/App.css";
+import "./Films.css";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
 
@@ -130,7 +131,6 @@ class Films extends Component {
                 </Card>
               </Col>
             ))}
-            ;
           </CardDeck>
         </Col>
         <Col md={1}>
