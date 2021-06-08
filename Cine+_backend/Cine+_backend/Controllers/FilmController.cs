@@ -71,7 +71,6 @@ namespace Cine__backend.Controllers
             {
                 return BadRequest(e.Message);
             }
-
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteFilm(Guid id, Film film)

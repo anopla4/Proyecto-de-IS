@@ -25,7 +25,7 @@ namespace Cine__backend.Repositories
             {
                 if (_context.PriceModifications.Find(priceModification.Id) == null)
                 {
-                    throw new KeyNotFoundException($"No se encuentra la moddificación de precios de nombre {priceModification.Name}");
+                    throw new KeyNotFoundException($"No se encuentra la modificación de precios de nombre {priceModification.Name}");
                 }
                 _context.FilmScreeningPriceModifications.Add(new FilmScreeningPriceModification { FilmScreeningId = filmScreening.Id, PriceModificationId = priceModification.Id });
             }
@@ -55,7 +55,7 @@ namespace Cine__backend.Repositories
             if (filmScreeningPriceModification == null)
             {
                 if (_context.FilmScreenings.Find(filmScreeningId) == null)
-                    throw new KeyNotFoundException("No se encuentra la pélicula especificada");
+                    throw new KeyNotFoundException("No se encuentra la película especificada");
                 throw new KeyNotFoundException("No se encuentra la modificación de precio especificada en esta película");
             }
             return filmScreeningPriceModification;
@@ -79,7 +79,7 @@ namespace Cine__backend.Repositories
         {
             if(!_context.FilmScreenings.Any(c => c.Id == filmScreening.Id))
             {
-                throw new KeyNotFoundException("No se encuentra la puesta en escena especcificada");
+                throw new KeyNotFoundException("No se encuentra la puesta en escena especificada");
             }
             foreach(var fsPriceMod in _context.FilmScreeningPriceModifications.Where(c => c.FilmScreeningId == filmScreening.Id))
             {
@@ -89,7 +89,7 @@ namespace Cine__backend.Repositories
             {
                 if (_context.PriceModifications.Find(priceModification.Id) == null)
                 {
-                    throw new KeyNotFoundException($"No se encuentra la moddificación de precios de nombre {priceModification.Name}");
+                    throw new KeyNotFoundException($"No se encuentra la modificación de precios de nombre {priceModification.Name}");
                 }
                 _context.FilmScreeningPriceModifications.Add(new FilmScreeningPriceModification { FilmScreeningId = filmScreening.Id, PriceModificationId = priceModification.Id });
             }

@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Interfaces;
+using Cine__backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,6 +17,91 @@ namespace Cine__backend.Controllers
         public UserFilmController(IUserFilmRepository userFilmRepository)
         {
             this._userFilmRep = userFilmRepository;
+        }
+        [HttpGet("allUserFilms")]
+        public IActionResult GetUserFilms()
+        {
+            return Ok(_userFilmRep.GetUserFilms());
+        }
+        [HttpGet("allFilmsRatings")]
+        public IActionResult GetFilmsRatings()
+        {
+            return Ok(_userFilmRep.GetFilmsRatings());
+        }
+        [HttpGet("{userId}/{filmId}")]
+        public IActionResult GetUserFilm(Guid userId, Guid filmId)
+        {
+            try
+            {
+                var userFilm = _userFilmRep.GetUserFilm(userId, filmId);
+                return Ok(userFilm);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+        [HttpGet("{filmId}/rating")]
+        public IActionResult GetRatingForFilm(Guid filmId)
+        {
+            try
+            {
+                var rating = _userFilmRep.GetRatingForFilm(filmId);
+                return Ok(rating);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult AddRating(User user, Film film, int rating)
+        {
+            try
+            {
+                _userFilmRep.AddUserFilm(user, film, rating);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var t = e.GetType();
+                if (t == typeof(ArgumentOutOfRangeException) || t == typeof(InvalidOperationException))
+                {
+                    return BadRequest(e.Message);
+                }
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpDelete("{userId}/{filmId}")]
+        public IActionResult DeleteUserFilm(Guid userId, Guid filmId)
+        {
+            try
+            {
+                _userFilmRep.DeleteUserFilm(userId, filmId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+                throw;
+            }
+        }
+        [HttpPatch("{userid}/{filmId}")]
+        public IActionResult UpdateFilm(Guid userId, Guid filmId, int rating)
+        {
+            try
+            {
+                _userFilmRep.UpdateUserFilm(userId, filmId, rating);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                if(e.GetType() == typeof(ArgumentOutOfRangeException))
+                {
+                    return BadRequest(e.Message);
+                }
+                return NotFound(e.Message);
+            }
         }
     }
 }
