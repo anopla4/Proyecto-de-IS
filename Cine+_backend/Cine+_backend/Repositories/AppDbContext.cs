@@ -43,16 +43,16 @@ namespace Cine__backend.Repositories
             modelBuilder.Entity<FilmGenre>()
                 .HasKey(c => new { c.FilmId, c.GenreId });
             modelBuilder.Entity<FilmGenre>()
-                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FilmGenre>()
-                .HasOne(c => c.Genre).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Genre).WithMany().OnDelete(DeleteBehavior.Cascade);
             //FilmFilmRol
             modelBuilder.Entity<FilmFilmRol>()
-               .HasKey(c => new { c.FilmId, c.FilmRolId });
+               .HasKey(c => new { c.FilmId, c.FilmRolId, c.MemberRol });
             modelBuilder.Entity<FilmFilmRol>()
-                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FilmFilmRol>()
-                .HasOne(c => c.FilmRol).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.FilmRol).WithMany().OnDelete(DeleteBehavior.Cascade);
             //UserFilm
             modelBuilder.Entity<UserFilm>()
                 .HasKey(c => new { c.UserId, c.FilmId });

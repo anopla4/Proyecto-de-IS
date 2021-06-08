@@ -82,22 +82,18 @@ namespace Cine__backend.Repositories
             return dTOFilms;
         }
 
-        private Tuple<bool,string> Comparer(List<DTOMemberRol> membersRol)
+        private bool AllDitinctMembers(List<DTOMemberRol> membersRol, out DTOMemberRol firstDuplicate)
         {
-            HashSet<DTOMemberRol> set_comparer = new HashSet<DTOMemberRol>();
-            foreach(var mr in membersRol)
+            var checkBuffer = new HashSet<DTOMemberRol>();
+            foreach (var m_r in membersRol)
             {
-                foreach(var agregado in set_comparer)
-                {
-                    if(agregado.Member == mr.Member && agregado.Rol.Id == mr.Rol.Id)
-                    {
-                        return new Tuple<bool, string>(false,
-                            $"Se recibió duplicado el miembro {mr.Member}, con rol {mr.Rol.Name}");
-                    }
-                }
-                set_comparer.Add(mr);
+                if (checkBuffer.Add(m_r))
+                    continue;
+                firstDuplicate = m_r;
+                return false;
             }
-            return new Tuple<bool, string>(true, "");
+            firstDuplicate = default(DTOMemberRol);
+            return true;
         }
         public DTOFilmStaff UpdateFilm(Film film, List<Genre> genres, List<DTOMemberRol> membersRol)
         {
@@ -106,10 +102,10 @@ namespace Cine__backend.Repositories
             {
                 throw new KeyNotFoundException($"No se encuentra el filme especificado con id:{film.Id}.");
             }
-            var comparer = this.Comparer(membersRol);
-            if (!comparer.Item1)
+            var first_duplicated = new DTOMemberRol();
+            if (!this.AllDitinctMembers(membersRol,out first_duplicated))
             {
-                throw new InvalidOperationException(comparer.Item2);
+                throw new InvalidOperationException($"Se recibió por duplicado el miembro con nombre {first_duplicated.Member} en el rol {first_duplicated.Rol.Name}.");
             }
             foreach (var film_genre in _context.FilmGenres.Where(c => c.FilmId == film.Id))
                 _context.FilmGenres.Remove(film_genre);
@@ -136,8 +132,7 @@ namespace Cine__backend.Repositories
                 Film = oldFilm,
                 Genres = genres,
                 Staff = membersRol
-            };
-            
+            };           
             return dtoFilmStaff;
         }
     }
