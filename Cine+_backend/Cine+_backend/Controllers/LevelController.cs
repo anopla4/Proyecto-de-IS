@@ -40,10 +40,15 @@ namespace Cine__backend.Controllers
         [HttpPost]
         public IActionResult AddLevel(Level level)
         {
-            var newLevel = _levelRep.AddLevel(level);
-            if (newLevel == null)
-                return BadRequest("No se creó el nuevo Nivel.");
-            return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newLevel.Id, newLevel);
+            try
+            {
+                level = _levelRep.AddLevel(level);
+                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + level.Id, level);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteLevel(Guid id, Level level)

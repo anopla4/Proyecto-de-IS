@@ -40,10 +40,15 @@ namespace Cine__backend.Controllers
         [HttpPost]
         public IActionResult AddRoom(Room room)
         {
-            var newRoom = _roomRep.AddRoom(room);
-            if (newRoom == null)
-                return BadRequest("No se creó la nueva Sala.");
-            return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newRoom.Id, newRoom);
+            try
+            {
+                room = _roomRep.AddRoom(room);
+                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + room.Id, room);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteRoom(Guid id, Room room)

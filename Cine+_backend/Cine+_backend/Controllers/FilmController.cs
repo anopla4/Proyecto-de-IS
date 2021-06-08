@@ -61,11 +61,17 @@ namespace Cine__backend.Controllers
         [HttpPost]
         public IActionResult AddFilm([FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
-            this.SaveFile(film);
-            var newDTOFilm = _filmRep.AddFilm(film, genres, membersRol);
-            if (newDTOFilm == null)
-                return BadRequest("No se creó el nuevo Nivel.");
-            return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newDTOFilm.Film.Id, newDTOFilm);
+            try
+            {
+                this.SaveFile(film);
+                var newDTOFilm = _filmRep.AddFilm(film, genres, membersRol);
+                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newDTOFilm.Film.Id, newDTOFilm);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteFilm(Guid id, Film film)
