@@ -12,7 +12,7 @@ namespace Cine__backend.Models
         public Guid FilmId { get; set; }
         public Film Film { get; set; }
         [ForeignKey("FilmRol")]
-        public Guid FilmRolId { get; set; }
+        public Guid? FilmRolId { get; set; }
         public FilmRol FilmRol { get; set; }
         public string MemberRol { get; set; }
     }
