@@ -21,7 +21,6 @@ namespace Cine__backend.Repositories
             _context.SaveChanges();
             return user;
         }
-
         public User GetUser(Guid userId)
         {
             var user = _context.Users.Find(userId);
@@ -31,12 +30,10 @@ namespace Cine__backend.Repositories
             }
             return user;
         }
-
         public List<User> GetUsers()
         {
             return _context.Users.ToList();
         }
-
         public void RemoveUser(Guid userId)
         {
             var user = _context.Users.Find(userId);
@@ -48,6 +45,5 @@ namespace Cine__backend.Repositories
             _context.SaveChanges();
             return;
         }
-
     }
 }
