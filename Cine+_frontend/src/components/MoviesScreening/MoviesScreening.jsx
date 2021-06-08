@@ -165,7 +165,6 @@ class MoviesScreening extends Component {
       moviesFilter: moviesTempFilter,
       grouped: movies,
     });
-    console.log(this.state.inputName + "+++++++++++++");
   };
 
   handleChangeTypeahead = (e) => {
@@ -268,7 +267,7 @@ class MoviesScreening extends Component {
     return (
       <Container>
         <Row>
-          <Col md={7}>
+          <Col md={8}>
             {this.state.grouped.map((item) => (
               <Card className="mb-3">
                 <Row>
@@ -326,7 +325,7 @@ class MoviesScreening extends Component {
               onInputChange={this.handleInputChangeTypeahead}
               onChange={this.handleChangeTypeahead}
               className="mb-5"
-              style={{ width: "60%", float: "right" }}
+              style={{ width: "90%", float: "right" }}
               clearButton
               id="selections-example"
               options={this.state.movies
@@ -339,7 +338,7 @@ class MoviesScreening extends Component {
               onChange={this.handleChangeTime}
               className="mb-5"
               as="select"
-              style={{ width: "60%", float: "right" }}
+              style={{ width: "90%", float: "right" }}
             >
               <option id={-1}></option>
               {this.state.movies
@@ -352,7 +351,7 @@ class MoviesScreening extends Component {
             <FormControl
               onChange={this.handleChangeDate}
               type="date"
-              style={{ width: "60%", float: "right" }}
+              style={{ width: "90%", float: "right" }}
             />
           </Col>
         </Row>

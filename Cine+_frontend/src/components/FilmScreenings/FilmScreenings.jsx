@@ -1,72 +1,44 @@
 import React, { Component } from "react";
-import { Container, Nav, Row, Card, Tabs, Tab, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import MovieScreenings from "../MoviesScreening/MoviesScreening";
 import "./FilmScreenings.css";
+import Add from "../Add/Add";
 
 class FilmScreenings extends Component {
-  state = { page: 1 };
+  state = { movieScreenings: [] };
 
-  handleOnClick = (p) => {
-    this.setState({ page: p });
-  };
+  handleOnAdd = () => {};
+
+  componentWillMount() {
+    // fetch("https://localhost:44334/api/FilmScreening", {
+    //   mode: "cors",
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw Error(response.statusText);
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((response) => {
+    //     this.setState({ movieScreenings: response});
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
+    //   });
+  }
 
   render() {
     return (
       <Container>
         <Row style={{ paddingTop: "30px" }} className="justify-content-end">
-          {/* <Button
-            variant="outline-secondary"
-            // bsPrefix="my-button"
-            className="mb-2 ml-2"
-            onClick={() => this.handleOnClick(1)}
-          >
-            Por películas
-          </Button>
-          <Button
-            variant="outline-secondary"
-            // bsPrefix="my-button"
-            className="mb-2 ml-2"
-            onClick={() => this.handleOnClick(2)}
-          >
-            Por fecha/horarios
-          </Button>
-          <Button
-            variant="outline-secondary"
-            // bsPrefix="my-button"
-            className="mb-2 ml-2"
-            onClick={() => this.handleOnClick(3)}
-          >
-            Por salas
-          </Button> */}
+          <Col>
+            <MovieScreenings />
+          </Col>
+          <Col style={{ padding: "0px" }} md={1}>
+            <Add className="mr-0" onClick={this.handleOnAdd} />
+          </Col>
         </Row>
-        {/* <Row className="mt-5"> */}
-        <MovieScreenings />
-        {/* </Row> */}
       </Container>
-
-      // <Tab.Container>
-      //   <Row className="justify-content-end">
-      // <Tabs className="myClass" defaultActiveKey={1}>
-      //   <Tab eventKey={1} title="Por películas">
-      //     <MovieScreenings />
-      //   </Tab>
-      //   <Tab eventKey={2} title="Por fechas/horarios"></Tab>
-      //   <Tab eventKey={3} title="Por salas"></Tab>
-      // </Tabs>
-      // </Row>
-      // <Row>
-      //   <Tab.Content className="mt-5" style={{ width: "100%" }}>
-      //     <Tab.Pane eventKey={1} title="Por películas"></Tab.Pane>
-      //     <Tab.Pane eventKey={2} title="Por fechas/horarios"></Tab.Pane>
-      //     <Tab.Pane eventKey={3} title="Por salas"></Tab.Pane>
-      //   </Tab.Content>
-      // </Row>
-      // </Tab.Container>
-      // <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-      //   <Tab eventKey="home" title="Home"></Tab>
-      //   <Tab eventKey="profile" title="Profile"></Tab>
-      //   <Tab eventKey="contact" title="Contact" disabled></Tab>
-      // </Tabs>
     );
   }
 }
