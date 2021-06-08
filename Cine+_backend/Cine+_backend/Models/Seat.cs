@@ -9,6 +9,6 @@ namespace Cine__backend.Models
     public class Seat
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

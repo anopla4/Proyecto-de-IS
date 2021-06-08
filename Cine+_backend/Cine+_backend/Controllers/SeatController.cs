@@ -10,54 +10,53 @@ namespace Cine__backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class SeatController : ControllerBase
     {
-        private IUserRepository _rep;
-        public UserController(IUserRepository repo)
+        private ISeatRepository _seatRep;
+        public SeatController(ISeatRepository seatRepository)
         {
-            _rep = repo;
+            this._seatRep = seatRepository;
         }
-
         [HttpGet]
-        public IActionResult GetUsers()
+        public IActionResult GetSeats()
         {
-            return Ok(_rep.GetUsers());
+            return Ok(_seatRep.GetSeats());
         }
-        [HttpGet("{userId}")]
-        public IActionResult GetUser(Guid userId)
+        [HttpGet("{seatId}")]
+        public IActionResult GetSeat(Guid seatId)
         {
             try
             {
-                var user = _rep.GetUser(userId);
-                return Ok(user);
+                var seat = _seatRep.GetSeat(seatId);
+                return Ok(seat);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return NotFound(e.Message);
             }
         }
         [HttpPost]
-        public IActionResult AddUser()
+        public IActionResult AddSeat()
         {
             try
             {
-                var user = _rep.AddUser();
-                return Ok(user);
+                var seat = _seatRep.AddSeat();
+                return Ok(seat);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
-        [HttpDelete("{userId}")]
-        public IActionResult RemoveUser(Guid userId)
+        [HttpDelete("{seatId}")]
+        public IActionResult RemoveSeat(Guid seatId)
         {
             try
             {
-                _rep.RemoveUser(userId);
+                _seatRep.RemoveSeat(seatId);
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return NotFound(e.Message);
             }
