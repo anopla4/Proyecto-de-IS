@@ -20,6 +20,10 @@ namespace Cine__backend.Models
         public Guid FilmId { get; set; }
         public Film Film { get; set; }
         [Required]
-        public string StarTime { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Date { get; set; }
+        [Required]
+        public string Time { get; set; }
+
     }
 }

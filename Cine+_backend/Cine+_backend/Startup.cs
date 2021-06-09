@@ -39,19 +39,20 @@ namespace Cine__backend
             services.AddScoped<IRoomRepository,RoomRepository>();
             services.AddScoped<ILevelRepository, LevelRepository>();
             services.AddScoped<IFilmRepository, FilmRepository>();
+            services.AddScoped<IUserFilmRepository, UserFilmRepository>();
             services.AddScoped<IFilmScreeningRepository, FilmScreeningRepository>();
             services.AddScoped<IFilmScreeningPriceModificationRepository, FilmScreeningPriceModificationRepository>();
             services.AddScoped<IPriceModificationRepository, PriceModificationRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            
+            services.AddScoped<IFilmRolRepository, FilmRolRepository>();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.SetIsOriginAllowed(_ => true).
-                        AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                        builder.
+                        AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                     });
             });
 
@@ -88,10 +89,10 @@ namespace Cine__backend
 
             app.UseAuthorization();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

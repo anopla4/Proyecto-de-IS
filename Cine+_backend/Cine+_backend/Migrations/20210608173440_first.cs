@@ -3,35 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Cine__backend.Migrations
 {
-    public partial class second : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("6195ebc3-2717-4c5a-9bb8-412e329ca9dd"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("75fb3cd7-94bf-4dde-8e56-2e2a0d91a261"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("c8693cb0-09ab-4eb1-9945-c0f389ba539a"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("db683059-0055-40ee-98aa-a413b80bd677"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("fccdc11b-7a19-4bbb-9ad7-ae5d378131c1"));
-
             migrationBuilder.CreateTable(
                 name: "BookEntries",
                 columns: table => new
@@ -92,7 +67,7 @@ namespace Cine__backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FilmStaffMembers",
+                name: "Genres",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -100,7 +75,7 @@ namespace Cine__backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FilmStaffMembers", x => x.Id);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -143,6 +118,18 @@ namespace Cine__backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Seats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seats", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sections",
                 columns: table => new
                 {
@@ -163,6 +150,31 @@ namespace Cine__backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FilmFilmRols",
+                columns: table => new
+                {
+                    FilmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FilmRolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberRol = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FilmFilmRols", x => new { x.FilmId, x.FilmRolId, x.MemberRol });
+                    table.ForeignKey(
+                        name: "FK_FilmFilmRols_FilmRols_FilmRolId",
+                        column: x => x.FilmRolId,
+                        principalTable: "FilmRols",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FilmFilmRols_Films_FilmId",
+                        column: x => x.FilmId,
+                        principalTable: "Films",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,44 +216,13 @@ namespace Cine__backend.Migrations
                         column: x => x.FilmId,
                         principalTable: "Films",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FilmGenres_Genres_GenreId",
                         column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FilmFilmStaffMemberFilmRols",
-                columns: table => new
-                {
-                    FilmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FilmStaffMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FilmRolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FilmFilmStaffMemberFilmRols", x => new { x.FilmId, x.FilmStaffMemberId, x.FilmRolId });
-                    table.ForeignKey(
-                        name: "FK_FilmFilmStaffMemberFilmRols_FilmRols_FilmRolId",
-                        column: x => x.FilmRolId,
-                        principalTable: "FilmRols",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_FilmFilmStaffMemberFilmRols_Films_FilmId",
-                        column: x => x.FilmId,
-                        principalTable: "Films",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_FilmFilmStaffMemberFilmRols_FilmStaffMembers_FilmStaffMemberId",
-                        column: x => x.FilmStaffMemberId,
-                        principalTable: "FilmStaffMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -261,13 +242,13 @@ namespace Cine__backend.Migrations
                         column: x => x.FilmId,
                         principalTable: "Films",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FilmScreenings_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -287,25 +268,25 @@ namespace Cine__backend.Migrations
                         column: x => x.LevelId,
                         principalTable: "Levels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SeatSectionLevelRooms_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SeatSectionLevelRooms_Seats_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SeatSectionLevelRooms_Sections_SectionId",
                         column: x => x.SectionId,
                         principalTable: "Sections",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -327,7 +308,7 @@ namespace Cine__backend.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -346,13 +327,13 @@ namespace Cine__backend.Migrations
                         column: x => x.FilmId,
                         principalTable: "Films",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserFilms_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -371,13 +352,13 @@ namespace Cine__backend.Migrations
                         column: x => x.FilmScreeningId,
                         principalTable: "FilmScreenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FilmScreeningPriceModifications_PriceModifications_PriceModificationId",
                         column: x => x.PriceModificationId,
                         principalTable: "PriceModifications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -400,19 +381,34 @@ namespace Cine__backend.Migrations
                         column: x => x.FilmSreeningId,
                         principalTable: "FilmScreenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Items_PurchaseOrders_PurchaseOrderId",
                         column: x => x.PurchaseOrderId,
                         principalTable: "PurchaseOrders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Items_Seats_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "FilmRols",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("0aebe5dc-f434-4d90-a0c6-56633b2548a0"), "Actor" },
+                    { new Guid("467a57d2-a478-4dcc-bb2e-0bdce570bedc"), "Director" },
+                    { new Guid("e2a37e14-6568-457e-9ba2-2fa8728dd38a"), "Productor" },
+                    { new Guid("cc0d1d05-eb0c-4f85-aaa4-c69692f6e419"), "Asistente de dirección" },
+                    { new Guid("90028982-7c11-445d-873d-58d62e06f291"), "Productor Ejecutivo" },
+                    { new Guid("6ce98246-0381-42ed-af08-62fbe8438028"), "Guionista" },
+                    { new Guid("8987b25c-812f-4aac-bef5-ceb9f775c720"), "Diseñador de Vestuario" },
+                    { new Guid("a549a375-6ee0-47d8-9660-d2ee900c916c"), "Técnico de Sonido" }
                 });
 
             migrationBuilder.InsertData(
@@ -420,11 +416,19 @@ namespace Cine__backend.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("779e3a84-ec60-47af-8970-f12e88322805"), "Drama" },
-                    { new Guid("751337ed-731f-4a79-b2e7-0423a0f75bf9"), "Comedia" },
-                    { new Guid("94eab560-61bb-41fb-a7d0-399eeb1f7058"), "Romántica" },
-                    { new Guid("ba8d2e11-8837-4f44-ad8d-086f681d6be4"), "Suspenso" },
-                    { new Guid("7ea09a3f-2f24-43aa-b6d2-2b33b3edd2d2"), "Terror" }
+                    { new Guid("0d5ee7c4-c1ae-4bce-82bc-f9d3c413e7a0"), "Aventura" },
+                    { new Guid("823e7646-6013-4b16-9141-d41ef00e4092"), "Ciencia Ficción" },
+                    { new Guid("26e8ddf5-3bba-4943-aa9e-318eb0e3d578"), "Ficción" },
+                    { new Guid("4f35d70b-0348-4ae4-9a19-8bee077d58e4"), "Documental" },
+                    { new Guid("ce0d061e-a46d-4818-b82f-b097d191f45d"), "Hístorico" },
+                    { new Guid("1726faa4-9a5d-4c73-955e-3158f4c68867"), "Romántica" },
+                    { new Guid("d0f80de4-f257-409b-bd4b-81b442ae97ed"), "Terror" },
+                    { new Guid("bb470b9f-e073-41bf-9200-b49aff0a3725"), "Suspenso" },
+                    { new Guid("355a4e39-442c-4a4f-ab65-50414ea971fe"), "Musical" },
+                    { new Guid("90d25f73-b702-46a1-8490-af10a4b54c65"), "Comedia" },
+                    { new Guid("84eeee98-c73d-4883-9c63-79f824b0ae65"), "Drama" },
+                    { new Guid("5e3564c2-4435-4e82-a7a4-5736c62d57a5"), "Tragicomedia" },
+                    { new Guid("2f63347a-9aa5-4f41-909e-5ac15e434c4a"), "Erótico" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -433,14 +437,9 @@ namespace Cine__backend.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilmFilmStaffMemberFilmRols_FilmRolId",
-                table: "FilmFilmStaffMemberFilmRols",
+                name: "IX_FilmFilmRols_FilmRolId",
+                table: "FilmFilmRols",
                 column: "FilmRolId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FilmFilmStaffMemberFilmRols_FilmStaffMemberId",
-                table: "FilmFilmStaffMemberFilmRols",
-                column: "FilmStaffMemberId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FilmGenres_GenreId",
@@ -512,7 +511,7 @@ namespace Cine__backend.Migrations
                 name: "clubMemberGenres");
 
             migrationBuilder.DropTable(
-                name: "FilmFilmStaffMemberFilmRols");
+                name: "FilmFilmRols");
 
             migrationBuilder.DropTable(
                 name: "FilmGenres");
@@ -536,7 +535,7 @@ namespace Cine__backend.Migrations
                 name: "FilmRols");
 
             migrationBuilder.DropTable(
-                name: "FilmStaffMembers");
+                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "PriceModifications");
@@ -551,6 +550,9 @@ namespace Cine__backend.Migrations
                 name: "Levels");
 
             migrationBuilder.DropTable(
+                name: "Seats");
+
+            migrationBuilder.DropTable(
                 name: "Sections");
 
             migrationBuilder.DropTable(
@@ -561,43 +563,6 @@ namespace Cine__backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("751337ed-731f-4a79-b2e7-0423a0f75bf9"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("779e3a84-ec60-47af-8970-f12e88322805"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("7ea09a3f-2f24-43aa-b6d2-2b33b3edd2d2"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("94eab560-61bb-41fb-a7d0-399eeb1f7058"));
-
-            migrationBuilder.DeleteData(
-                table: "Genres",
-                keyColumn: "Id",
-                keyValue: new Guid("ba8d2e11-8837-4f44-ad8d-086f681d6be4"));
-
-            migrationBuilder.InsertData(
-                table: "Genres",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { new Guid("db683059-0055-40ee-98aa-a413b80bd677"), "Drama" },
-                    { new Guid("75fb3cd7-94bf-4dde-8e56-2e2a0d91a261"), "Comedia" },
-                    { new Guid("c8693cb0-09ab-4eb1-9945-c0f389ba539a"), "Romántica" },
-                    { new Guid("fccdc11b-7a19-4bbb-9ad7-ae5d378131c1"), "Suspenso" },
-                    { new Guid("6195ebc3-2717-4c5a-9bb8-412e329ca9dd"), "Terror" }
-                });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Cine__backend.Interfaces;
 using Cine__backend.Models;
+using Cine__backend.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -40,12 +41,17 @@ namespace Cine__backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddFilmScreening(FilmScreening filmScreening)
+        public IActionResult AddFilmScreening([FromForm]Film film, [FromForm]DateTime date, [FromForm]List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModification> priceModifications)
         {
             try
             {
-                filmScreening = _rep.AddFilmScreening(filmScreening);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + filmScreening.Id, filmScreening);
+                foreach( var roomTime in roomTimes)
+                {
+                    var filmScreening = new FilmScreening { FilmId = film.Id, RoomId = roomTime.Room.Id, Time = roomTime.Time, Date = date };
+                    filmScreening = _rep.AddFilmScreening(filmScreening, priceModifications);
+                }
+                
+                return Ok();
             }
             catch (Exception e)
             {
@@ -53,11 +59,11 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPatch("{filmScreeningId}")]
-        public IActionResult UpdateFilmScreening(Guid filmScreeningId,FilmScreening filmScreening)
+        public IActionResult UpdateFilmScreening( Guid filmScreeningId,[FromForm]FilmScreening filmScreening, [FromForm] List<DTOPriceModification> priceModifications)
         {
             try
             {
-                filmScreening = _rep.UpdateFilmScreening(filmScreening);
+                filmScreening = _rep.UpdateFilmScreening(filmScreening, priceModifications);
                 return Ok(filmScreening);
             }
             catch (Exception e)

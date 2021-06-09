@@ -11,5 +11,6 @@ namespace Cine__backend.Models.DTOs
         public DTOFilm Film { get; set; }
         public Room Room { get; set; }
         public string StartTime { get; set; }
+        public List<DTOPriceModification> priceModifications { get; set; }
     }
 }

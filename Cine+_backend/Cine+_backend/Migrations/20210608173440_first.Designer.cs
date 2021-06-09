@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cine__backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210606155211_second")]
-    partial class second
+    [Migration("20210608173440_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -116,24 +116,22 @@ namespace Cine__backend.Migrations
                     b.ToTable("Films");
                 });
 
-            modelBuilder.Entity("Cine__backend.Models.FilmFilmStaffMemberFilmRol", b =>
+            modelBuilder.Entity("Cine__backend.Models.FilmFilmRol", b =>
                 {
                     b.Property<Guid>("FilmId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FilmStaffMemberId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FilmRolId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("FilmId", "FilmStaffMemberId", "FilmRolId");
+                    b.Property<string>("MemberRol")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FilmId", "FilmRolId", "MemberRol");
 
                     b.HasIndex("FilmRolId");
 
-                    b.HasIndex("FilmStaffMemberId");
-
-                    b.ToTable("FilmFilmStaffMemberFilmRols");
+                    b.ToTable("FilmFilmRols");
                 });
 
             modelBuilder.Entity("Cine__backend.Models.FilmGenre", b =>
@@ -164,6 +162,48 @@ namespace Cine__backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FilmRols");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0aebe5dc-f434-4d90-a0c6-56633b2548a0"),
+                            Name = "Actor"
+                        },
+                        new
+                        {
+                            Id = new Guid("467a57d2-a478-4dcc-bb2e-0bdce570bedc"),
+                            Name = "Director"
+                        },
+                        new
+                        {
+                            Id = new Guid("e2a37e14-6568-457e-9ba2-2fa8728dd38a"),
+                            Name = "Productor"
+                        },
+                        new
+                        {
+                            Id = new Guid("cc0d1d05-eb0c-4f85-aaa4-c69692f6e419"),
+                            Name = "Asistente de dirección"
+                        },
+                        new
+                        {
+                            Id = new Guid("90028982-7c11-445d-873d-58d62e06f291"),
+                            Name = "Productor Ejecutivo"
+                        },
+                        new
+                        {
+                            Id = new Guid("6ce98246-0381-42ed-af08-62fbe8438028"),
+                            Name = "Guionista"
+                        },
+                        new
+                        {
+                            Id = new Guid("8987b25c-812f-4aac-bef5-ceb9f775c720"),
+                            Name = "Diseñador de Vestuario"
+                        },
+                        new
+                        {
+                            Id = new Guid("a549a375-6ee0-47d8-9660-d2ee900c916c"),
+                            Name = "Técnico de Sonido"
+                        });
                 });
 
             modelBuilder.Entity("Cine__backend.Models.FilmScreening", b =>
@@ -209,21 +249,6 @@ namespace Cine__backend.Migrations
                     b.ToTable("FilmScreeningPriceModifications");
                 });
 
-            modelBuilder.Entity("Cine__backend.Models.FilmStaffMember", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FilmStaffMembers");
-                });
-
             modelBuilder.Entity("Cine__backend.Models.Genre", b =>
                 {
                     b.Property<Guid>("Id")
@@ -241,28 +266,68 @@ namespace Cine__backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("779e3a84-ec60-47af-8970-f12e88322805"),
+                            Id = new Guid("84eeee98-c73d-4883-9c63-79f824b0ae65"),
                             Name = "Drama"
                         },
                         new
                         {
-                            Id = new Guid("751337ed-731f-4a79-b2e7-0423a0f75bf9"),
+                            Id = new Guid("90d25f73-b702-46a1-8490-af10a4b54c65"),
                             Name = "Comedia"
                         },
                         new
                         {
-                            Id = new Guid("94eab560-61bb-41fb-a7d0-399eeb1f7058"),
+                            Id = new Guid("1726faa4-9a5d-4c73-955e-3158f4c68867"),
                             Name = "Romántica"
                         },
                         new
                         {
-                            Id = new Guid("ba8d2e11-8837-4f44-ad8d-086f681d6be4"),
+                            Id = new Guid("bb470b9f-e073-41bf-9200-b49aff0a3725"),
                             Name = "Suspenso"
                         },
                         new
                         {
-                            Id = new Guid("7ea09a3f-2f24-43aa-b6d2-2b33b3edd2d2"),
+                            Id = new Guid("d0f80de4-f257-409b-bd4b-81b442ae97ed"),
                             Name = "Terror"
+                        },
+                        new
+                        {
+                            Id = new Guid("5e3564c2-4435-4e82-a7a4-5736c62d57a5"),
+                            Name = "Tragicomedia"
+                        },
+                        new
+                        {
+                            Id = new Guid("ce0d061e-a46d-4818-b82f-b097d191f45d"),
+                            Name = "Hístorico"
+                        },
+                        new
+                        {
+                            Id = new Guid("4f35d70b-0348-4ae4-9a19-8bee077d58e4"),
+                            Name = "Documental"
+                        },
+                        new
+                        {
+                            Id = new Guid("26e8ddf5-3bba-4943-aa9e-318eb0e3d578"),
+                            Name = "Ficción"
+                        },
+                        new
+                        {
+                            Id = new Guid("823e7646-6013-4b16-9141-d41ef00e4092"),
+                            Name = "Ciencia Ficción"
+                        },
+                        new
+                        {
+                            Id = new Guid("0d5ee7c4-c1ae-4bce-82bc-f9d3c413e7a0"),
+                            Name = "Aventura"
+                        },
+                        new
+                        {
+                            Id = new Guid("355a4e39-442c-4a4f-ab65-50414ea971fe"),
+                            Name = "Musical"
+                        },
+                        new
+                        {
+                            Id = new Guid("2f63347a-9aa5-4f41-909e-5ac15e434c4a"),
+                            Name = "Erótico"
                         });
                 });
 
@@ -497,31 +562,23 @@ namespace Cine__backend.Migrations
                     b.Navigation("Genre");
                 });
 
-            modelBuilder.Entity("Cine__backend.Models.FilmFilmStaffMemberFilmRol", b =>
+            modelBuilder.Entity("Cine__backend.Models.FilmFilmRol", b =>
                 {
                     b.HasOne("Cine__backend.Models.Film", "Film")
                         .WithMany()
                         .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.FilmRol", "FilmRol")
                         .WithMany()
                         .HasForeignKey("FilmRolId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Cine__backend.Models.FilmStaffMember", "FilmStaffMember")
-                        .WithMany()
-                        .HasForeignKey("FilmStaffMemberId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Film");
 
                     b.Navigation("FilmRol");
-
-                    b.Navigation("FilmStaffMember");
                 });
 
             modelBuilder.Entity("Cine__backend.Models.FilmGenre", b =>
@@ -529,13 +586,13 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.Film", "Film")
                         .WithMany()
                         .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.Genre", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Film");
@@ -548,13 +605,13 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.Film", "Film")
                         .WithMany()
                         .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Film");
@@ -567,13 +624,13 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.FilmScreening", "FilmScreening")
                         .WithMany()
                         .HasForeignKey("FilmScreeningId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.PriceModification", "PriceModification")
                         .WithMany()
                         .HasForeignKey("PriceModificationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FilmScreening");
@@ -586,7 +643,7 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.PurchaseOrder", null)
                         .WithMany("Items")
                         .HasForeignKey("PurchaseOrderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Cine__backend.Models.PurchaseOrder", b =>
@@ -594,7 +651,7 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -605,25 +662,25 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.Level", "Level")
                         .WithMany()
                         .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.Section", "Section")
                         .WithMany()
                         .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Level");
@@ -640,13 +697,13 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.Film", "Film")
                         .WithMany()
                         .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Film");
@@ -659,13 +716,13 @@ namespace Cine__backend.Migrations
                     b.HasOne("Cine__backend.Models.FilmScreening", "FilmScreening")
                         .WithMany()
                         .HasForeignKey("FilmSreeningId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Cine__backend.Models.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FilmScreening");

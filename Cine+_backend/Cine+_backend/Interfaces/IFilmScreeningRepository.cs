@@ -11,8 +11,8 @@ namespace Cine__backend.Interfaces
     {
         List<DTOFilmScreening> GetFilmScreenings();
         DTOFilmScreening GetFilmScreening(Guid filmScreeningId);
-        FilmScreening AddFilmScreening(FilmScreening filmScreening);
-        FilmScreening UpdateFilmScreening(FilmScreening filmScreening);
+        FilmScreening AddFilmScreening(FilmScreening filmScreening, List<DTOPriceModification> priceModifications);
+        FilmScreening UpdateFilmScreening(FilmScreening filmScreening, List<DTOPriceModification> priceModifications);
         void RemoveFilmScreening(Guid filmScreeningId);
     }
 }

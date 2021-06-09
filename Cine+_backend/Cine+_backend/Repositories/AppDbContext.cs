@@ -18,7 +18,10 @@ namespace Cine__backend.Repositories
         {
             //Genre
             modelBuilder.Entity<Genre>()
-                .HasData(new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" });
+                .HasData(new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" }, new Genre { Id = Guid.NewGuid(), Name = "Tragicomedia" }, new Genre { Id = Guid.NewGuid(), Name = "Hístorico" }, new Genre { Id = Guid.NewGuid(), Name = "Documental" }, new Genre { Id = Guid.NewGuid(), Name = "Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Ciencia Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Aventura" }, new Genre { Id = Guid.NewGuid(), Name = "Musical" }, new Genre { Id = Guid.NewGuid(), Name = "Erótico" });
+            //FilmRol
+            modelBuilder.Entity<FilmRol>()
+                .HasData(new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" });
             //Item
             modelBuilder.Entity<Item>()
                 .Property(e => e.State)
@@ -36,9 +39,9 @@ namespace Cine__backend.Repositories
                     v => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), v));
             //FilmScreening
             modelBuilder.Entity<FilmScreening>()
-                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FilmScreening>()
-                .HasOne(c => c.Room).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Room).WithMany().OnDelete(DeleteBehavior.Cascade);
             //FilmGenre
             modelBuilder.Entity<FilmGenre>()
                 .HasKey(c => new { c.FilmId, c.GenreId });
@@ -58,69 +61,69 @@ namespace Cine__backend.Repositories
                 .HasKey(c => new { c.UserId, c.FilmId });
 
             modelBuilder.Entity<UserFilm>()
-                .HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.User).WithMany().OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<UserFilm>()
-                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.SetNull);
+                .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Cascade);
             //FilmScreeningPriceModification
             modelBuilder.Entity<FilmScreeningPriceModification>()
                 .HasKey(c => new { c.FilmScreeningId, c.PriceModificationId });
             modelBuilder.Entity<FilmScreeningPriceModification>().HasOne(c => c.FilmScreening).WithMany().
-                                                                    OnDelete(DeleteBehavior.SetNull);
+                                                                    OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FilmScreeningPriceModification>().HasOne(c => c.PriceModification).WithMany().
-                                                                    OnDelete(DeleteBehavior.SetNull);
+                                                                    OnDelete(DeleteBehavior.Cascade);
             //SeatSectionLevelRoom
             modelBuilder.Entity<SeatSectionLevelRoom>()
                 .HasKey(c => new { c.SeatId, c.SectionId, c.LevelId, c.RoomId });
             modelBuilder.Entity<SeatSectionLevelRoom>()
                 .HasOne(c => c.Seat)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<SeatSectionLevelRoom>()
                 .HasOne(c => c.Section)
                 .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<SeatSectionLevelRoom>()
                 .HasOne(c => c.Level)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<SeatSectionLevelRoom>()
                 .HasOne(c => c.Room)
                 .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             //FilmFilmStaffMemberFilmRol
-            modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-                .HasKey(c => new { c.FilmId, c.FilmStaffMemberId, c.FilmRolId});
-            modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-                .HasOne(c => c.Film)
-                .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
-            modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-                .HasOne(c => c.FilmStaffMember)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-                .HasOne(c => c.FilmRol)
-                .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
+            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
+            //    .HasKey(c => new { c.FilmId, c.FilmStaffMemberId, c.FilmRolId});
+            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
+            //    .HasOne(c => c.Film)
+            //    .WithMany()
+            //    .OnDelete(DeleteBehavior.SetNull);
+            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
+            //    .HasOne(c => c.FilmStaffMember)
+            //    .WithMany()
+            //    .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
+            //    .HasOne(c => c.FilmRol)
+            //    .WithMany()
+            //    .OnDelete(DeleteBehavior.SetNull);
             //Reservation
             modelBuilder.Entity<Reservation>()
                 .HasOne(c => c.FilmScreening)
                 .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Reservation>()
                 .HasOne(c => c.Seat)
                 .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             //PurchaseOrder
             modelBuilder.Entity<PurchaseOrder>()
                 .HasMany(c => c.Items)
                 .WithOne()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<PurchaseOrder>()
                 .HasOne(c => c.User)
                 .WithMany()
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<PurchaseOrder>()
                 .Property(e => e.State)
                 .HasConversion(
@@ -131,11 +134,11 @@ namespace Cine__backend.Repositories
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Seat> Seats { get; set; }
-        public DbSet<FilmStaffMember> FilmStaffMembers { get; set; }
+        //public DbSet<FilmStaffMember> FilmStaffMembers { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ClubMember> ClubMembers { get; set; }
-        public DbSet<ClubMemberGenre> clubMemberGenres { get; set; }
+        public DbSet<ClubMemberGenre> ClubMemberGenres { get; set; }
         public DbSet<BookEntry> BookEntries { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Section> Sections { get; set; }
@@ -149,7 +152,7 @@ namespace Cine__backend.Repositories
         public DbSet<UserFilm> UserFilms { get; set; }
         public DbSet<FilmScreeningPriceModification> FilmScreeningPriceModifications { get; set; }
         public DbSet<SeatSectionLevelRoom> SeatSectionLevelRooms { get; set; }
-        public DbSet<FilmFilmStaffMemberFilmRol> FilmFilmStaffMemberFilmRols { get; set; }
+        //public DbSet<FilmFilmStaffMemberFilmRol> FilmFilmStaffMemberFilmRols { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
 
