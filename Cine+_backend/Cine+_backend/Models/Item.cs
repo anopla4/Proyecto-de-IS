@@ -12,6 +12,8 @@ namespace Cine__backend.Models
         public Guid Id { get; set; }
         [Required]
         public double Price { get; set; }
+        [Required]
+        public int Points { get; set; }
         //public State? State { get; set; }
     }
     //public enum State
