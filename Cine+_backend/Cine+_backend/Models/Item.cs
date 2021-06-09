@@ -12,11 +12,11 @@ namespace Cine__backend.Models
         public Guid Id { get; set; }
         [Required]
         public double Price { get; set; }
-        public State? State { get; set; }
+        //public State? State { get; set; }
     }
-    public enum State
-    {
-        bought,
-        canceled
-    }
+    //public enum State
+    //{
+    //    bought,
+    //    canceled
+    //}
 }
