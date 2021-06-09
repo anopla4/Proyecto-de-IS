@@ -46,6 +46,8 @@ namespace Cine__backend
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFilmRolRepository, FilmRolRepository>();
+            services.AddScoped<IBookEntryRepository, BookEntryRepository>();
+            services.AddScoped<ISeatSectionLevelRoomRepository, SeatSectionLevelRoomRepository>();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
