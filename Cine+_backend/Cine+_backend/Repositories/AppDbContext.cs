@@ -133,7 +133,11 @@ namespace Cine__backend.Repositories
                 .HasConversion(
                     v => v.ToString(),
                     v => (StatePurchaseOrder)Enum.Parse(typeof(StatePurchaseOrder), v));
-
+            //Top10
+            modelBuilder.Entity<Top10Film>()
+                .HasOne(c => c.Film)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Genre> Genres { get; set; }
@@ -159,6 +163,7 @@ namespace Cine__backend.Repositories
         //public DbSet<FilmFilmStaffMemberFilmRol> FilmFilmStaffMemberFilmRols { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<Top10Film> Top10 { get; set; }
 
 
 

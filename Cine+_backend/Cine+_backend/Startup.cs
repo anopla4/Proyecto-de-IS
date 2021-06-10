@@ -54,6 +54,7 @@ namespace Cine__backend
             services.AddScoped<IBookEntryRepository, BookEntryRepository>();
             services.AddScoped<ISeatSectionLevelRoomRepository, SeatSectionLevelRoomRepository>();
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+            services.AddScoped<ITop10Repository, Top10Repository>();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
