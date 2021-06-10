@@ -7,16 +7,20 @@ import {
   ListGroup,
   Container,
   Button,
+  Popover,
+  OverlayTrigger,
 } from "react-bootstrap";
 import "./MoviesScreening.css";
-import { groupBy, onlyUnique, formatDate } from "../utils";
+import { groupBy, onlyUnique, formatDateRequest } from "../utils";
 import { Typeahead } from "react-bootstrap-typeahead";
+import DeleteEdit from "../DeleteEdit/DeleteEdit";
+import { withRouter } from "react-router-dom";
 
 class MoviesScreening extends Component {
   state = {
     movies: [
       {
-        movie: {
+        film: {
           id: 1,
           name: "Cinema Paradiso",
           year: "1988",
@@ -24,11 +28,20 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        price: 20,
+        points: 20,
         date: "05/06/2021",
-        time: "8:00",
+        time: "8:00 PM",
+        room: { name: "Sala A" },
+        priceModifications: [
+          {
+            priceModification: { id: "1", name: "Día de las madres" },
+            optional: false,
+          },
+        ],
       },
       {
-        movie: {
+        film: {
           id: 1,
           name: "Cinema Paradiso",
           year: "1988",
@@ -36,11 +49,15 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        price: 20,
+        points: 20,
         date: "06/06/2021",
-        time: "8:00",
+        time: "8:00 PM",
+        room: { name: "Sala B" },
+        priceModifications: [],
       },
       {
-        movie: {
+        film: {
           id: 1,
           name: "Cinema Paradiso",
           year: "1988",
@@ -48,11 +65,20 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        price: 20,
+        points: 20,
         date: "05/06/2021",
-        time: "10:00",
+        time: "10:00 PM",
+        room: { name: "Sala A" },
+        priceModifications: [
+          {
+            priceModification: { id: "1", name: "Día de las madres" },
+            optional: false,
+          },
+        ],
       },
       {
-        movie: {
+        film: {
           id: 2,
           name: "Pulp Fiction",
           year: "1988",
@@ -60,13 +86,22 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/pulpFiction.jpg",
         },
+        price: 20,
+        points: 20,
         date: "05/06/2021",
-        time: "10:00",
+        priceModifications: [
+          {
+            priceModification: { id: "1", name: "Día de las madres" },
+            optional: false,
+          },
+        ],
+        time: "10:00 PM",
+        room: { name: "Sala B" },
       },
     ],
     moviesFilter: [
       {
-        movie: {
+        film: {
           id: 1,
           name: "Cinema Paradiso",
           year: "1988",
@@ -74,11 +109,20 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        price: 20,
+        points: 20,
         date: "05/06/2021",
-        time: "8:00",
+        time: "8:00 PM",
+        room: { name: "Sala A" },
+        priceModifications: [
+          {
+            priceModification: { id: "1", name: "Día de las madres" },
+            optional: false,
+          },
+        ],
       },
       {
-        movie: {
+        film: {
           id: 1,
           name: "Cinema Paradiso",
           year: "1988",
@@ -86,11 +130,16 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        price: 20,
+        points: 20,
         date: "06/06/2021",
-        time: "8:00",
+        time: "8:00 PM",
+        room: { name: "Sala B" },
+
+        priceModifications: [],
       },
       {
-        movie: {
+        film: {
           id: 1,
           name: "Cinema Paradiso",
           year: "1988",
@@ -98,11 +147,21 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/cinemaParadiso.jpg",
         },
+        price: 20,
+        points: 20,
         date: "05/06/2021",
-        time: "10:00",
+        time: "10:00 PM",
+        room: { name: "Sala A" },
+
+        priceModifications: [
+          {
+            priceModification: { id: "1", name: "Día de las madres" },
+            optional: false,
+          },
+        ],
       },
       {
-        movie: {
+        film: {
           id: 2,
           name: "Pulp Fiction",
           year: "1988",
@@ -110,8 +169,18 @@ class MoviesScreening extends Component {
           country: "Italia",
           imgPath: "src/images/pulpFiction.jpg",
         },
+        price: 20,
+        points: 20,
         date: "05/06/2021",
-        time: "10:00",
+        time: "10:00 PM",
+        room: { name: "Sala B" },
+
+        priceModifications: [
+          {
+            priceModification: { id: "1", name: "Día de las madres" },
+            optional: false,
+          },
+        ],
       },
     ],
     grouped: [],
@@ -121,7 +190,7 @@ class MoviesScreening extends Component {
   };
 
   componentDidMount() {
-    let grouped = groupBy(this.state.movies, ["movie.id", "date"]);
+    let grouped = groupBy(this.state.movies, ["film.id", "date"]);
     this.setState({ grouped: grouped });
     // fetch("https://localhost:44334/api/FilmScreening/WithTimes", {
     //   mode: "cors",
@@ -158,7 +227,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
     console.log(text);
     this.setState({
       inputName: text,
@@ -190,7 +259,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
     this.setState({
       inputName: text,
       moviesFilter: moviesTempFilter,
@@ -222,7 +291,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
     this.setState({
       inputTime: time,
       moviesFilter: moviesTempFilter,
@@ -232,7 +301,7 @@ class MoviesScreening extends Component {
 
   handleChangeDate = (e) => {
     console.log(e.target.value);
-    let date = formatDate(e.target.value);
+    let date = formatDateRequest(e.target.value);
     let moviesTempFilter = [...this.state.movies];
     if (date !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
@@ -255,11 +324,34 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["movie.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
     this.setState({
       inputDate: date,
       moviesFilter: moviesTempFilter,
       grouped: movies,
+    });
+  };
+
+  handleOnEdit = (filmScreenings) => {
+    let roomTimes = [];
+    let date = filmScreenings[0].date;
+    let film = filmScreenings[0].film;
+    let price = filmScreenings[0].price;
+    let points = filmScreenings[0].points;
+    let priceModifications = filmScreenings[0].priceModifications;
+    filmScreenings.forEach((element) => {
+      roomTimes.push({ room: element.room, time: element.time });
+    });
+    this.props.history.push({
+      pathname: "/filmScreeningForm",
+      state: {
+        date: date,
+        film: film,
+        price: price,
+        points: points,
+        roomTimes: roomTimes,
+        selectedPriceMod: priceModifications,
+      },
     });
   };
 
@@ -275,30 +367,65 @@ class MoviesScreening extends Component {
                     <Card.Img
                       fluid
                       variant="top"
-                      src={`http://localhost:8000/${item.movie.imgPath}`}
+                      src={`http://localhost:8000/${item.film.imgPath}`}
                     />
                   </Col>
                   <Col>
                     <Card.Body>
                       <Card.Title>
-                        {item.movie.name} ({item.movie.year})
+                        {item.film.name} ({item.film.year})
                       </Card.Title>
                       <Card.Subtitle>
-                        Género: {item.movie.genre.name}
+                        Género: {item.film.genre.name}
                       </Card.Subtitle>
                     </Card.Body>
                     {item._items.map((date) => (
                       <ListGroup
-                        key={item.movie.id}
+                        key={item.film.id}
                         className="list-group-flush"
                       >
                         <Row>
-                          <Col md={3} style={{ margin: "10px" }}>
-                            <h6 className="center-date">{date.date}</h6>
+                          <Col md={1} style={{ padding: "0px" }}>
+                            <DeleteEdit
+                              edit={true}
+                              onEdit={() => this.handleOnEdit(date._items)}
+                            />
+                          </Col>
+                          <Col md={3}>
+                            <OverlayTrigger
+                              key={`priceMod-${item.film.id}-${date.date}`}
+                              placement="top"
+                              overlay={
+                                <Popover
+                                  id={`priceMod-${item.film.id}-${date.date}`}
+                                >
+                                  <Popover.Title as="h3">
+                                    {date._items[0].priceModifications.length >
+                                    0
+                                      ? "Modificaciones del precio disponibles"
+                                      : "No hay modificaciones del precio disponibles"}
+                                  </Popover.Title>
+                                  {date._items[0].priceModifications.map(
+                                    (mod) => (
+                                      <Popover.Content>
+                                        <strong>
+                                          {mod.priceModification.name}
+                                        </strong>{" "}
+                                        {mod.optional
+                                          ? "Opcional"
+                                          : "No opcional"}
+                                      </Popover.Content>
+                                    )
+                                  )}
+                                </Popover>
+                              }
+                            >
+                              <Button variant="light">{date.date}</Button>
+                            </OverlayTrigger>
                           </Col>
                           <Col>
                             <Container
-                              style={{ width: "100%", marginTop: "10px" }}
+                              style={{ width: "100%" }}
                               className="center-date"
                             >
                               {date._items.map((time) => (
@@ -329,7 +456,7 @@ class MoviesScreening extends Component {
               clearButton
               id="selections-example"
               options={this.state.movies
-                .map((item) => item.movie)
+                .map((item) => item.film)
                 .map((item) => item.name)
                 .filter(onlyUnique)}
               placeholder="Elija una película..."
@@ -360,4 +487,4 @@ class MoviesScreening extends Component {
   }
 }
 
-export default MoviesScreening;
+export default withRouter(MoviesScreening);

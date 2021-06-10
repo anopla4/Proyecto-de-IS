@@ -7,7 +7,12 @@ import Add from "../Add/Add";
 class FilmScreenings extends Component {
   state = { movieScreenings: [] };
 
-  handleOnAdd = () => {};
+  handleOnAdd = () => {
+    this.props.history.push({
+      pathname: "/filmScreeningForm",
+      state: {},
+    });
+  };
 
   componentWillMount() {
     // fetch("https://localhost:44334/api/FilmScreening", {

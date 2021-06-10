@@ -10,6 +10,7 @@ import FilmScreenings from "../../components/FilmScreenings/FilmScreenings";
 import MoviesScreening from "../../components/MoviesScreening/MoviesScreening";
 import Films from "../../components/Films/Films";
 import FilmForm from "../../components/FilmForm/FilmForm";
+import FilmScreeningForm from "../../components/FilmScreeningForm/FilmScreeningForm";
 
 class App extends Component {
   // logginUserCallback = (username, password, jwt_token) => {
@@ -41,6 +42,7 @@ class App extends Component {
             <Route path="/movieScreenings" component={MoviesScreening} />
             <Route path="/films" component={Films} />
             <Route path="/filmForm" component={FilmForm} />
+            <Route path="/filmScreeningForm" component={FilmScreeningForm} />
           </Switch>
         </Layout>
       </BrowserRouter>

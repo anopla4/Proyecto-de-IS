@@ -7,39 +7,39 @@ import DeleteEdit from "../DeleteEdit/DeleteEdit";
 
 class Films extends Component {
   state = {
-    films: [],
-    // films: [
-    //   {
-    //     film: {
-    //       id: 1,
-    //       name: "Pulp Fiction",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/pulpFiction.jpg",
-    //       genres: [{ name: "Thriller" }],
-    //     },
-    //     staff: [
-    //       { rol: { name: "Actor" }, member: "John Travolta" },
-    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
-    //     ],
-    //   },
-    //   {
-    //     film: {
-    //       id: 2,
-    //       name: "Pulp Fiction",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/pulpFiction.jpg",
-    //       genres: [{ name: "Thriller" }],
-    //     },
-    //     staff: [
-    //       { rol: { name: "Actor" }, member: "John Travolta" },
-    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
-    //     ],
-    //   },
-    // ],
+    // films: [],
+    films: [
+      {
+        film: {
+          id: 1,
+          name: "Pulp Fiction",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/pulpFiction.jpg",
+          genres: [{ name: "Thriller" }],
+        },
+        staff: [
+          { rol: { name: "Actor" }, member: "John Travolta" },
+          { rol: { name: "Director" }, member: "Quentin Tarantino" },
+        ],
+      },
+      {
+        film: {
+          id: 2,
+          name: "Pulp Fiction",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/pulpFiction.jpg",
+          genres: [{ name: "Thriller" }],
+        },
+        staff: [
+          { rol: { name: "Actor" }, member: "John Travolta" },
+          { rol: { name: "Director" }, member: "Quentin Tarantino" },
+        ],
+      },
+    ],
   };
 
   componentDidMount() {
