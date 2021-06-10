@@ -355,6 +355,10 @@ class MoviesScreening extends Component {
     });
   };
 
+  reserve = (film) => {
+    this.props.history.push({ pathname: "/reserve", state: { film } });
+  };
+
   render() {
     return (
       <Container>
@@ -430,6 +434,7 @@ class MoviesScreening extends Component {
                             >
                               {date._items.map((time) => (
                                 <Button
+                                  onClick={() => this.reserve(date._items)}
                                   variant="default"
                                   bsPrefix="my-button"
                                   className="my-button mb-2 ml-2"
