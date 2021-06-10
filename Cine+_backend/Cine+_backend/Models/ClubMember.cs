@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cine__backend.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +12,11 @@ namespace Cine__backend.Models
     {
         [Key]
         public Guid Code { get; set; }
+
+        [Required]
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public User User { get; set; }
         [Required]
         public string Name { get; set; }
         [Column(TypeName = "date")]
