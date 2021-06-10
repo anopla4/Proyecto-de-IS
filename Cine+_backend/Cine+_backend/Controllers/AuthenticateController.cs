@@ -85,7 +85,33 @@ namespace Cine__backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-
+        }
+        [HttpPatch("{userId}/{rol}")]
+        public async Task<IActionResult> UserAddRol(string userId, string rol)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+            if (!await roleManager.RoleExistsAsync(rol))
+                return NotFound("El rol que desea agregar no existe");
+            if(!await userManager.IsInRoleAsync(user,rol))
+                await userManager.AddToRoleAsync(user, rol);
+            return Ok();
+        }
+        [HttpDelete("{userId}/{rolId}")]
+        public async Task<IActionResult> UserRemoveRol(string userId, string rol)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "El usuario no existe!" });
+            if (!await roleManager.RoleExistsAsync(rol))
+                return NotFound("El rol especificado no existe");
+            if (await userManager.IsInRoleAsync(user, rol))
+            {
+                await userManager.RemoveFromRoleAsync(user, rol);
+                return Ok();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "El usuario no posee ese rol!" });
 
         }
     }
