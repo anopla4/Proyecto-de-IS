@@ -1,17 +1,15 @@
-﻿using Cine__backend.Models;
+﻿using Cine__backend.Authentication;
+using Cine__backend.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cine__backend.Repositories
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,12 +20,17 @@ namespace Cine__backend.Repositories
             //FilmRol
             modelBuilder.Entity<FilmRol>()
                 .HasData(new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" });
+            
+            ////---------------->>
             //Item
             //modelBuilder.Entity<Item>()
             //    .Property(e => e.State)
             //    .HasConversion(
             //        v => v.ToString(),
             //        v => (State)Enum.Parse(typeof(State), v));
+            /////---------------------->>
+
+
             //ClubMember
             modelBuilder.Entity<ClubMemberGenre>()
                 .HasKey(c => new { c.ClubMemberId, c.GenreId } );
@@ -136,7 +139,7 @@ namespace Cine__backend.Repositories
         public DbSet<Seat> Seats { get; set; }
         //public DbSet<FilmStaffMember> FilmStaffMembers { get; set; }
         public DbSet<Item> Items { get; set; }
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
         public DbSet<ClubMember> ClubMembers { get; set; }
         public DbSet<ClubMemberGenre> ClubMemberGenres { get; set; }
         public DbSet<BookEntry> BookEntries { get; set; }

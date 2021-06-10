@@ -11,6 +11,5 @@ namespace Cine__backend.Authentication
         public const string Admin = "Admin";
         public const string WebMaster = "WebMaster";
         public const string User = "User";
-        public const string ClubMember = "ClubMember";
     }
 }

@@ -1,4 +1,5 @@
-﻿using Cine__backend.Interfaces;
+﻿using Cine__backend.Authentication;
+using Cine__backend.Interfaces;
 using Cine__backend.Models;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,13 @@ namespace Cine__backend.Repositories
         }   
         public User AddUser()
         {
-            User user = new User { Id = Guid.NewGuid() };
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return user;
+            throw new NotImplementedException();
+            //User user = new User { Id = Guid.NewGuid() };
+            //_context.Users.Add(user);
+            //_context.SaveChanges();
+            //return user;
         }
-        public User GetUser(Guid userId)
+        public User GetUser(string userId)
         {
             var user = _context.Users.Find(userId);
             if(user == null)
@@ -34,7 +36,7 @@ namespace Cine__backend.Repositories
         {
             return _context.Users.ToList();
         }
-        public void RemoveUser(Guid userId)
+        public void RemoveUser(string userId)
         {
             var user = _context.Users.Find(userId);
             if (user == null)

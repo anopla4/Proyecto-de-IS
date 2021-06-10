@@ -1,4 +1,5 @@
-﻿using Cine__backend.Interfaces;
+﻿using Cine__backend.Authentication;
+using Cine__backend.Interfaces;
 using Cine__backend.Models;
 using Cine__backend.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,7 @@ namespace Cine__backend.Repositories
             return;
         }
 
-        public void DeleteUserFilm(Guid userId, Guid filmId)
+        public void DeleteUserFilm(string userId, Guid filmId)
         {
             if (_context.Users.Find(userId) == null)
             {
@@ -93,7 +94,7 @@ namespace Cine__backend.Repositories
             return (int)(rating / count);
         }
 
-        public UserFilm GetUserFilm(Guid userId, Guid filmId)
+        public UserFilm GetUserFilm(string userId, Guid filmId)
         {
             if (_context.Users.Find(userId) == null)
             {
@@ -116,7 +117,7 @@ namespace Cine__backend.Repositories
             return _context.UserFilms.ToList();
         }
 
-        public void UpdateUserFilm(Guid userId, Guid filmId, int rating)
+        public void UpdateUserFilm(string userId, Guid filmId, int rating)
         {
             if (_context.Users.Find(userId) == null)
             {

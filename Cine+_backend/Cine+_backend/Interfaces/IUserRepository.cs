@@ -1,4 +1,4 @@
-﻿using Cine__backend.Models;
+﻿using Cine__backend.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,8 @@ namespace Cine__backend.Interfaces
     public interface IUserRepository
     {
         List<User> GetUsers();
-        User GetUser(Guid userId);
+        User GetUser(string userId);
         User AddUser();
-        void RemoveUser(Guid userId);
+        void RemoveUser(string userId);
     }
 }

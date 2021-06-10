@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cine__backend.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,7 +12,7 @@ namespace Cine__backend.Models
     {
         [Required]
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         [Required]
         [ForeignKey("Film")]

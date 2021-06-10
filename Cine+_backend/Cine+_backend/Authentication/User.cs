@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cine__backend.Authentication
 {
-    public class ApplicationUser : IdentityUser
+    public class User : IdentityUser
     {
     }
 }
