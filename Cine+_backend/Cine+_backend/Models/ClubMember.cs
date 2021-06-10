@@ -17,8 +17,8 @@ namespace Cine__backend.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
-        //[Required]
-        //public string Name { get; set; }
+        [Required]
+        public string Name { get; set; }
         [Column(TypeName = "date")]
         public DateTime? DateOfBirth { get; set; }
         public string Nationality { get; set; }

@@ -10,8 +10,8 @@ namespace Cine__backend.Interfaces
     {
         ClubMember GetClubMember(string userId);
         IList<ClubMember> GetClubMembers();
-        void AddClubMember(string userId, ClubMember clubMember);
-        void UpdateClubMember(ClubMember clubMember);
+        ClubMember AddClubMember(string userId, ClubMember clubMember);
+        ClubMember UpdateClubMember(ClubMember clubMember);
         void RemoveClubMember(string userId);
     }
 }
