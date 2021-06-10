@@ -1,4 +1,5 @@
-﻿using Cine__backend.Interfaces;
+﻿using Cine__backend.Authentication;
+using Cine__backend.Interfaces;
 using Cine__backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace Cine__backend.Controllers
             return Ok(_userFilmRep.GetFilmsRatings());
         }
         [HttpGet("{userId}/{filmId}")]
-        public IActionResult GetUserFilm(Guid userId, Guid filmId)
+        public IActionResult GetUserFilm(string userId, Guid filmId)
         {
             try
             {
@@ -73,7 +74,7 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpDelete("{userId}/{filmId}")]
-        public IActionResult DeleteUserFilm(Guid userId, Guid filmId)
+        public IActionResult DeleteUserFilm(string userId, Guid filmId)
         {
             try
             {
@@ -87,7 +88,7 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPatch("{userid}/{filmId}")]
-        public IActionResult UpdateFilm(Guid userId, Guid filmId, int rating)
+        public IActionResult UpdateFilm(string userId, Guid filmId, int rating)
         {
             try
             {

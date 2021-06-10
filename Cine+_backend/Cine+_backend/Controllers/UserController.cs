@@ -24,7 +24,7 @@ namespace Cine__backend.Controllers
             return Ok(_rep.GetUsers());
         }
         [HttpGet("{userId}")]
-        public IActionResult GetUser(Guid userId)
+        public IActionResult GetUser(string userId)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpDelete("{userId}")]
-        public IActionResult RemoveUser(Guid userId)
+        public IActionResult RemoveUser(string userId)
         {
             try
             {
