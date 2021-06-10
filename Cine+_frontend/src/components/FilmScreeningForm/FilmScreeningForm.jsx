@@ -300,7 +300,7 @@ class FilmScreeningForm extends Component {
   render() {
     console.log(this.props.history.state);
     return (
-      <Container>
+      <Container className="mt-5">
         <h1 className="mb-5 my-style-header">Puesta en escena</h1>
         <Row alignSelf="center" className="mt-4">
           <Col className="center">

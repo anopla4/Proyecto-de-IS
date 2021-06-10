@@ -34,7 +34,7 @@ class FilmScreenings extends Component {
 
   render() {
     return (
-      <Container>
+      <Container className="mt-5">
         <Row style={{ paddingTop: "30px" }} className="justify-content-end">
           <Col>
             <MovieScreenings />

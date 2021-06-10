@@ -4,9 +4,12 @@ import "../../containers/App/App.css";
 import "./Films.css";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
+import Rating from "react-rating";
+import ReactStars from "react-rating-stars-component";
 
 class Films extends Component {
   state = {
+    filmsRated: [],
     // films: [],
     films: [
       {
@@ -63,6 +66,20 @@ class Films extends Component {
     this.props.history.push({ pathname: "/filmForm", state: {} });
   };
 
+  addRated = (newRate, idF) => {
+    let film = this.state.filmsRated.find((c) => c.id === idF);
+    let temp = [...this.state.filmsRated];
+    if (film) {
+      let index = temp.indexOf(film);
+      temp[index].rate = newRate;
+    } else {
+      temp = [...temp, { id: idF, rate: newRate }];
+    }
+    this.setState({ filmsRated: temp });
+  };
+
+  componentWillUnmount() {}
+
   handleOnDelete = (id, index) => {
     // fetch(`https://localhost:44334/api/Film/${id}`, {
     //   mode: "cors",
@@ -92,12 +109,23 @@ class Films extends Component {
 
   render() {
     return (
-      <Row>
+      <Row className="mt-5">
         <Col>
           <CardDeck>
             {this.state.films.map((film, index) => (
               <Col md={3}>
                 <Card className="mb-3">
+                  <Row className="justify-content-center">
+                    <ReactStars
+                      count={5}
+                      onChange={(newRate) =>
+                        this.addRated(newRate, film.film.id)
+                      }
+                      size={24}
+                      activeColor="#ffd700"
+                    />
+                  </Row>
+
                   <Card.Img
                     variant="top"
                     src={`http://localhost:8000/${film.film.imgPath}`}

@@ -8,7 +8,7 @@ const layout = (props) => {
       <Row>
         <Navigation />
       </Row>
-      <main className="mt-5">{props.children}</main>
+      <main>{props.children}</main>
     </Container>
   );
 };
