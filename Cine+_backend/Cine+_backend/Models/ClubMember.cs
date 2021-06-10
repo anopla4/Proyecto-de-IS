@@ -10,19 +10,17 @@ namespace Cine__backend.Models
 {
     public class ClubMember
     {
-        [Key]
+        [Required]
         public Guid Code { get; set; }
-
+        [Key]
         [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
-        [Required]
-        public string Name { get; set; }
+        //[Required]
+        //public string Name { get; set; }
         [Column(TypeName = "date")]
         public DateTime? DateOfBirth { get; set; }
-        [Column(TypeName = "date")]
-        public DateTime? DateOfDeath { get; set; }
         public string Nationality { get; set; }
         public int Points { get; set; }
 

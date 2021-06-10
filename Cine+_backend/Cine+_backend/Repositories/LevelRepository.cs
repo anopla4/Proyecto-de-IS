@@ -57,6 +57,7 @@ namespace Cine__backend.Repositories
                 throw new KeyNotFoundException($"No se encuentra la Sala especificada con id:{level.Id}.");
             }
             oldLevel.Name = level.Name;
+            oldLevel.PercentOfPriceIncrement = level.PercentOfPriceIncrement;
             _context.Levels.Update(oldLevel);
             _context.SaveChanges();
             return oldLevel;
