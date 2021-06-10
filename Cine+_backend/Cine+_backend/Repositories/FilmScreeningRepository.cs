@@ -106,5 +106,20 @@ namespace Cine__backend.Repositories
             currFilmScreening = _context.FilmScreenings.Include(c => c.Film).Include(c => c.Room).SingleOrDefault(c => c.Id == filmScreening.Id);
             return currFilmScreening;
         }
+
+        public List<DTOSeat> GetSeats(Guid filmId, DateTime date, string time)
+        {
+            var filmScreeningsRoomsIDs = _context.FilmScreenings.Where(c => c.FilmId == filmId && c.Date == date && c.Time == time).Select(c => c.RoomId).ToList();
+            if (filmScreeningsRoomsIDs.Count() == 0)
+                throw new KeyNotFoundException($"No se encuentra una puesta en escena para la película seleccionada el día {date} a las {time}");
+            List<SeatSectionLevelRoom> seats = _context.SeatSectionLevelRooms.Include(c => c.Room).Include(c => c.Section).Include(c => c.Level).Include(c => c.Seat).Where(c => filmScreeningsRoomsIDs.Contains(c.RoomId)).ToList();
+            List<DTOSeat> seatsDTO = new List<DTOSeat>();
+
+            foreach(var seat in seats)
+            {
+                seatsDTO.Add(new DTOSeat { Room = seat.Room, Level = seat.Level, Section = seat.Section, Seat = seat.Seat, Available = !(_context.Reservations.Any(c => c.FilmScreening.FilmId == filmId && c.FilmScreening.Date == date && c.FilmScreening.Time == time && c.SeatId == seat.SeatId)) });
+            }
+            return seatsDTO;
+        }
     }
 }

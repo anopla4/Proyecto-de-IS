@@ -26,6 +26,20 @@ namespace Cine__backend.Controllers
             return Ok(_rep.GetFilmScreenings());
         }
 
+        [HttpGet("{filmId}/{date}/{time}")]
+        public IActionResult GetSeats(Guid filmId, DateTime date, string time)
+        {
+            try
+            {
+                var seats = _rep.GetSeats(filmId, date, time);
+                return Ok(seats);
+            }
+            catch(Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
         [HttpGet("{filmScreeningId}")]
         public IActionResult GetFilmScreening(Guid filmScreeningId)
         {

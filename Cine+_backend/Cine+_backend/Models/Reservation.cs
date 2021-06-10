@@ -12,7 +12,7 @@ namespace Cine__backend.Models
         public Guid FilmSreeningId { get; set; }
         public FilmScreening FilmScreening { get; set; }
         [ForeignKey("Seat")]
-        public int SeatId { get; set; }
+        public Guid SeatId { get; set; }
         public Seat Seat { get; set; }
     }
 }
