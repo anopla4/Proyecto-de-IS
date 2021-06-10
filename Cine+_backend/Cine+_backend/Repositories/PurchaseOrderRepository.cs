@@ -33,9 +33,9 @@ namespace Cine__backend.Repositories
                     income += reservation.Price;
                 }
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Income = income, Date = purchaseOrder.Date, Expense = 0, PaymentMethod = PaymentMethod.efectivo, Description = purchaseOrder.BoxOffice });
-                if (_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
-                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                     currMember.Points += pointsAdd;
                     _context.ClubMembers.Update(currMember);
                 }
@@ -44,7 +44,7 @@ namespace Cine__backend.Repositories
             }
             if (purchaseOrder.PaidByPoints)
             {
-                if (!_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if (!_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                     throw new Exception("El usuario no está autorizado a pagar por puntos. Regístrese como ClubMember para acceder a esta opción.");
                 int points = 0;
                 purchaseOrder.State = StatePurchaseOrder.completed;
@@ -54,9 +54,9 @@ namespace Cine__backend.Repositories
                     _context.Items.Add(reservation);
                     points += reservation.Points;
                 }
-                if(points > _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId).Points)
+                if(points > _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId).Points)
                         throw new Exception("No tiene los puntos necesarios para pagar esta orden de compra.");
-                var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                 currMember.Points -= points;
                 _context.ClubMembers.Update(currMember);
                 _context.SaveChanges();
@@ -95,9 +95,9 @@ namespace Cine__backend.Repositories
                 else
                     points += reservation.Points;
             }
-            if (purchaseOrder.PaidByPoints && _context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+            if (purchaseOrder.PaidByPoints && _context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
             {
-                var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                 currMember.Points += points;
                 _context.ClubMembers.Update(currMember);
                 _context.SaveChanges();
@@ -106,9 +106,9 @@ namespace Cine__backend.Repositories
             if (purchaseOrder.BoxOffice.Count() > 0)
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.efectivo, Description = purchaseOrder.BoxOffice });
-                if(_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if(_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
-                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                     currMember.Points -= pointRest;
                     _context.ClubMembers.Update(currMember);
                 }
@@ -118,9 +118,9 @@ namespace Cine__backend.Repositories
             if (purchaseOrder.CredictCard.Count() == 8 && purchaseOrder.State == StatePurchaseOrder.completed)//Ver cantidad del números de una tarjeta
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CredictCard });
-                if (_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
-                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                     currMember.Points -= pointRest;
                     _context.ClubMembers.Update(currMember);
                 }
@@ -178,9 +178,9 @@ namespace Cine__backend.Repositories
             if (purchaseOrder.CredictCard.Count() == 8)//Ver cantidad del números de una tarjeta
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = 0, Date = purchaseOrder.Date, Income = price, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CredictCard });
-                if (_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
-                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                     currMember.Points += pointAdd;
                     _context.ClubMembers.Update(currMember);
                 }
@@ -211,9 +211,9 @@ namespace Cine__backend.Repositories
                 else
                     points += reservation.Points;
             }
-            if (purchaseOrder.PaidByPoints && _context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+            if (purchaseOrder.PaidByPoints && _context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
             {
-                var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                 currMember.Points += points;
                 _context.ClubMembers.Update(currMember);
                 _context.SaveChanges();
@@ -222,9 +222,9 @@ namespace Cine__backend.Repositories
             if (purchaseOrder.BoxOffice.Count() > 0)
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.efectivo, Description = purchaseOrder.BoxOffice });
-                if (_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
-                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                     currMember.Points -= pointsRest;
                     _context.ClubMembers.Update(currMember);
                 }
@@ -234,9 +234,9 @@ namespace Cine__backend.Repositories
             if (purchaseOrder.CredictCard.Count() == 8)//Ver cantidad del números de una tarjeta
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CredictCard });
-                if (_context.ClubMembers.Any(c => c.Code == purchaseOrder.UserId))
+                if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
-                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.Code == purchaseOrder.UserId);
+                    var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                     currMember.Points -= pointsRest;
                     _context.ClubMembers.Update(currMember);
                 }
