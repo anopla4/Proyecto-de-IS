@@ -56,7 +56,7 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddRating(User user, Film film, int rating)
+        public IActionResult AddRating([FromForm] User user, [FromForm] Film film, [FromForm] int rating)
         {
             try
             {

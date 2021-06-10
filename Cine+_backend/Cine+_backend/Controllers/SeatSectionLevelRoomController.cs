@@ -37,7 +37,7 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddSeatSeactionLevelRoom(Seat seat,Section section,Level level,Room room)
+        public IActionResult AddSeatSeactionLevelRoom([FromForm]Seat seat, [FromForm] Section section, [FromForm] Level level, [FromForm] Room room)
         {
             try
             {

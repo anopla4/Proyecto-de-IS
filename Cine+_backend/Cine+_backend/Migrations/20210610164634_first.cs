@@ -8,6 +8,45 @@ namespace Cine__backend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BookEntries",
                 columns: table => new
                 {
@@ -21,22 +60,6 @@ namespace Cine__backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BookEntries", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ClubMembers",
-                columns: table => new
-                {
-                    Code = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: true),
-                    DateOfDeath = table.Column<DateTime>(type: "date", nullable: true),
-                    Nationality = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Points = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ClubMembers", x => x.Code);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +106,8 @@ namespace Cine__backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PercentOfPriceIncrement = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,8 +145,7 @@ namespace Cine__backend.Migrations
                 name: "Seats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,14 +165,154 @@ namespace Cine__backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClubMembers",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Code = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: true),
+                    Nationality = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Points = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClubMembers", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_ClubMembers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PurchaseOrders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PurchaseTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CredictCard = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoxOffice = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaidByPoints = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PurchaseOrders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -178,25 +341,26 @@ namespace Cine__backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "clubMemberGenres",
+                name: "UserFilms",
                 columns: table => new
                 {
-                    ClubMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GenreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FilmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_clubMemberGenres", x => new { x.ClubMemberId, x.GenreId });
+                    table.PrimaryKey("PK_UserFilms", x => new { x.UserId, x.FilmId });
                     table.ForeignKey(
-                        name: "FK_clubMemberGenres_ClubMembers_ClubMemberId",
-                        column: x => x.ClubMemberId,
-                        principalTable: "ClubMembers",
-                        principalColumn: "Code",
+                        name: "FK_UserFilms_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_clubMemberGenres_Genres_GenreId",
-                        column: x => x.GenreId,
-                        principalTable: "Genres",
+                        name: "FK_UserFilms_Films_FilmId",
+                        column: x => x.FilmId,
+                        principalTable: "Films",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -232,7 +396,10 @@ namespace Cine__backend.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FilmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StarTime = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Date = table.Column<DateTime>(type: "date", nullable: false),
+                    Time = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    Points = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -255,7 +422,7 @@ namespace Cine__backend.Migrations
                 name: "SeatSectionLevelRooms",
                 columns: table => new
                 {
-                    SeatId = table.Column<int>(type: "int", nullable: false),
+                    SeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LevelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -290,48 +457,26 @@ namespace Cine__backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PurchaseOrders",
+                name: "ClubMemberGenres",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PurchaseTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CredictCard = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BoxOffice = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClubMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GenreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClubMemberUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PurchaseOrders", x => x.Id);
+                    table.PrimaryKey("PK_ClubMemberGenres", x => new { x.ClubMemberId, x.GenreId });
                     table.ForeignKey(
-                        name: "FK_PurchaseOrders_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserFilms",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FilmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserFilms", x => new { x.UserId, x.FilmId });
+                        name: "FK_ClubMemberGenres_ClubMembers_ClubMemberUserId",
+                        column: x => x.ClubMemberUserId,
+                        principalTable: "ClubMembers",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserFilms_Films_FilmId",
-                        column: x => x.FilmId,
-                        principalTable: "Films",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserFilms_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_ClubMemberGenres_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -367,11 +512,11 @@ namespace Cine__backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Points = table.Column<int>(type: "int", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PurchaseOrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     FilmSreeningId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SeatId = table.Column<int>(type: "int", nullable: true)
+                    SeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -401,14 +546,14 @@ namespace Cine__backend.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("0aebe5dc-f434-4d90-a0c6-56633b2548a0"), "Actor" },
-                    { new Guid("467a57d2-a478-4dcc-bb2e-0bdce570bedc"), "Director" },
-                    { new Guid("e2a37e14-6568-457e-9ba2-2fa8728dd38a"), "Productor" },
-                    { new Guid("cc0d1d05-eb0c-4f85-aaa4-c69692f6e419"), "Asistente de dirección" },
-                    { new Guid("90028982-7c11-445d-873d-58d62e06f291"), "Productor Ejecutivo" },
-                    { new Guid("6ce98246-0381-42ed-af08-62fbe8438028"), "Guionista" },
-                    { new Guid("8987b25c-812f-4aac-bef5-ceb9f775c720"), "Diseñador de Vestuario" },
-                    { new Guid("a549a375-6ee0-47d8-9660-d2ee900c916c"), "Técnico de Sonido" }
+                    { new Guid("c5cc5c27-6402-4cf9-9319-260ce6bc6dfe"), "Actor" },
+                    { new Guid("2af980dd-d30d-4c98-a0a7-8380bd77ed98"), "Director" },
+                    { new Guid("98044a18-cee6-47c0-b8b1-02d230342d5e"), "Productor" },
+                    { new Guid("aeb1766c-eacb-4694-ae15-47c2b9a20bcb"), "Asistente de dirección" },
+                    { new Guid("e9d608e5-b5bf-4cef-a3fe-00b49e2455e6"), "Productor Ejecutivo" },
+                    { new Guid("b9f49af9-4a31-4b62-9282-bb82ad871d69"), "Guionista" },
+                    { new Guid("a7c35ddd-8f9d-4fa3-9566-62a16d2163d2"), "Diseñador de Vestuario" },
+                    { new Guid("302fcedb-4b8d-4f26-a99d-c00cc765a86f"), "Técnico de Sonido" }
                 });
 
             migrationBuilder.InsertData(
@@ -416,24 +561,68 @@ namespace Cine__backend.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("0d5ee7c4-c1ae-4bce-82bc-f9d3c413e7a0"), "Aventura" },
-                    { new Guid("823e7646-6013-4b16-9141-d41ef00e4092"), "Ciencia Ficción" },
-                    { new Guid("26e8ddf5-3bba-4943-aa9e-318eb0e3d578"), "Ficción" },
-                    { new Guid("4f35d70b-0348-4ae4-9a19-8bee077d58e4"), "Documental" },
-                    { new Guid("ce0d061e-a46d-4818-b82f-b097d191f45d"), "Hístorico" },
-                    { new Guid("1726faa4-9a5d-4c73-955e-3158f4c68867"), "Romántica" },
-                    { new Guid("d0f80de4-f257-409b-bd4b-81b442ae97ed"), "Terror" },
-                    { new Guid("bb470b9f-e073-41bf-9200-b49aff0a3725"), "Suspenso" },
-                    { new Guid("355a4e39-442c-4a4f-ab65-50414ea971fe"), "Musical" },
-                    { new Guid("90d25f73-b702-46a1-8490-af10a4b54c65"), "Comedia" },
-                    { new Guid("84eeee98-c73d-4883-9c63-79f824b0ae65"), "Drama" },
-                    { new Guid("5e3564c2-4435-4e82-a7a4-5736c62d57a5"), "Tragicomedia" },
-                    { new Guid("2f63347a-9aa5-4f41-909e-5ac15e434c4a"), "Erótico" }
+                    { new Guid("879733d3-edd2-4dc1-b187-fb0c30286bdb"), "Aventura" },
+                    { new Guid("67f1701c-1faf-4ba7-8dc4-43cad05d5597"), "Ciencia Ficción" },
+                    { new Guid("9a779d25-ccf6-4928-8eee-47045212d19c"), "Ficción" },
+                    { new Guid("959aea22-bbd8-4afc-83c9-a406bfcd1a16"), "Documental" },
+                    { new Guid("4f1ac22c-78f4-4499-86d7-b8ebc2e05c88"), "Hístorico" },
+                    { new Guid("da720276-44d1-4209-b840-d2556670bb16"), "Romántica" },
+                    { new Guid("24263667-5d49-4302-89f9-850f0b6ef70c"), "Terror" },
+                    { new Guid("3cb33be8-184c-4d8a-9496-a94f7945c352"), "Suspenso" },
+                    { new Guid("0cb4de8f-9325-4323-b57e-5cd053e777df"), "Musical" },
+                    { new Guid("56fb256a-a443-4486-98da-c81daa6e0412"), "Comedia" },
+                    { new Guid("a54692c7-c863-414f-a47a-afa4bcfee665"), "Drama" },
+                    { new Guid("b05c4175-8258-48bd-a7ae-d14bfd72eaa0"), "Tragicomedia" },
+                    { new Guid("f57d04ce-3d21-4b95-b282-e20943f1a261"), "Erótico" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_clubMemberGenres_GenreId",
-                table: "clubMemberGenres",
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClubMemberGenres_ClubMemberUserId",
+                table: "ClubMemberGenres",
+                column: "ClubMemberUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClubMemberGenres_GenreId",
+                table: "ClubMemberGenres",
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
@@ -505,10 +694,25 @@ namespace Cine__backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
                 name: "BookEntries");
 
             migrationBuilder.DropTable(
-                name: "clubMemberGenres");
+                name: "ClubMemberGenres");
 
             migrationBuilder.DropTable(
                 name: "FilmFilmRols");
@@ -527,6 +731,9 @@ namespace Cine__backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserFilms");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "ClubMembers");
@@ -562,7 +769,7 @@ namespace Cine__backend.Migrations
                 name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "AspNetUsers");
         }
     }
 }
