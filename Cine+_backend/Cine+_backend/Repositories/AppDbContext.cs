@@ -23,11 +23,11 @@ namespace Cine__backend.Repositories
             modelBuilder.Entity<FilmRol>()
                 .HasData(new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" });
             //Item
-            modelBuilder.Entity<Item>()
-                .Property(e => e.State)
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (State)Enum.Parse(typeof(State), v));
+            //modelBuilder.Entity<Item>()
+            //    .Property(e => e.State)
+            //    .HasConversion(
+            //        v => v.ToString(),
+            //        v => (State)Enum.Parse(typeof(State), v));
             //ClubMember
             modelBuilder.Entity<ClubMemberGenre>()
                 .HasKey(c => new { c.ClubMemberId, c.GenreId } );
