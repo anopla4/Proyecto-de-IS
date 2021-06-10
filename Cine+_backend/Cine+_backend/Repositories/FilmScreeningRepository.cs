@@ -60,7 +60,7 @@ namespace Cine__backend.Repositories
             {
                 priceModifications.Add(new DTOPriceModification { PriceModification = priceModification.PriceModification, Optional = priceModification.Optional });
             }
-            DTOFilmScreening filmScreeningDTO = new DTOFilmScreening { FilmScreeningId = filmScreeningId, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications };
+            DTOFilmScreening filmScreeningDTO = new DTOFilmScreening { FilmScreeningId = filmScreeningId, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications, Date = filmScreening.Date };
             return filmScreeningDTO;
         }
 
@@ -76,7 +76,7 @@ namespace Cine__backend.Repositories
                 {
                     priceModifications.Add(new DTOPriceModification { PriceModification = priceModification.PriceModification, Optional = priceModification.Optional });
                 }
-                filmScreeningsDTO.Add(new DTOFilmScreening { FilmScreeningId = filmScreening.Id, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications });
+                filmScreeningsDTO.Add(new DTOFilmScreening { FilmScreeningId = filmScreening.Id, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications, Date = filmScreening.Date});
             }
             return filmScreeningsDTO;
         }
