@@ -9,6 +9,10 @@ namespace Cine__backend.Models
 {
     public class PurchaseOrder
     {
+        public PurchaseOrder()
+        {
+            this.PaidByPoints = false;
+        }
         [Key]
         public Guid Id { get; set; }
         [Required]
@@ -18,10 +22,13 @@ namespace Cine__backend.Models
         [Required]
         public List<Item> Items { get; set; }
         [Required]
+        public DateTime Date { get; set; }
+        [Required]
         public string PurchaseTime { get; set; }
         public StatePurchaseOrder State { get; set; }
         public string CredictCard { get; set; }
         public string BoxOffice { get; set; }
+        public bool PaidByPoints { get; set; }
 
 
     }

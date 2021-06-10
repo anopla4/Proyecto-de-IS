@@ -9,6 +9,11 @@ namespace Cine__backend.Models
 {
     public class FilmScreening
     {
+        public FilmScreening()
+        {
+            this.Points = 20;
+            this.Price = 20.00;
+        }
         [Key]
         public Guid Id { get; set; }
         [Required]
@@ -24,6 +29,10 @@ namespace Cine__backend.Models
         public DateTime Date { get; set; }
         [Required]
         public string Time { get; set; }
+        [Required]
+        public double Price { get; set; }
+        [Required]
+        public double Points { get; set; }
 
     }
 }
