@@ -70,6 +70,7 @@ class FilmScreeningForm extends Component {
     newRoom: undefined,
     time: undefined,
     newMod: undefined,
+    addNewMod: false,
     AM_PM: "AM",
     optional: false,
   };
@@ -133,7 +134,6 @@ class FilmScreeningForm extends Component {
       "10:00",
       "11:00",
       "12:00",
-      "1:00",
     ];
     if (this.props.location.state.roomTimes !== undefined) {
       let roomTimes = this.props.location.state.roomTimes;
@@ -146,6 +146,8 @@ class FilmScreeningForm extends Component {
         selectedPriceMod: selectedPriceMod,
         edit: true,
       });
+    } else {
+      this.setState({ times: t });
     }
   }
 
@@ -182,9 +184,13 @@ class FilmScreeningForm extends Component {
     this.setState({ optional: !this.state.optional });
   };
 
-  addNewMod = (e) => {
+  addMod = (e) => {
     let id = e.target.children[e.target.selectedIndex].id;
     this.setState({ newMod: id });
+  };
+
+  addNewMod = () => {
+    this.setState({ addNewMod: true });
   };
 
   handleAddRoom = () => {
@@ -225,17 +231,51 @@ class FilmScreeningForm extends Component {
 
         if (!oldMod || oldMod.mod.id !== mod) {
           let newM = this.state.priceModifications.find((c) => c.id === mod);
-          let item = { mod: newM, optional: opt };
+          let item = { priceModification: newM, optional: opt };
           let newMods = [...this.state.selectedPriceMod, item];
           this.setState({ selectedPriceMod: newMods });
         }
       } else {
         let newM = this.state.priceModifications.find((c) => c.id === mod);
-        let item = { room: newM };
+        let item = { priceModification: newM, optional: opt };
         let newMods = [...this.state.selectedPriceMod, item];
         this.setState({ selectedPriceMod: newMods });
       }
     }
+  };
+
+  handleAddNewMod = (e) => {
+    let formElements = e.target.elements;
+    const name = formElements.name.value;
+    const description = formElements.description.value;
+    const value = formElements.value.value;
+    const type = e.target.options.selectedIndex;
+    let mod = {
+      name,
+      description,
+      value,
+      type,
+    };
+    // fetch("https://localhost:44334/api/PriceModification", {
+    //   mode: "cors",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization:
+    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+    //   },
+    //   method: "POST",
+    //   body: JSON.stringify(mod),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw Error(response.statusText);
+    //     }
+    //     return response.json();
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
+    //   });
+    this.setState({ addNewMod: false });
   };
 
   handleDeleteRoom = (room, index) => {
@@ -439,20 +479,61 @@ class FilmScreeningForm extends Component {
               </Row>
               <Row>
                 <Col>
-                  <Form.Group
-                    onChange={this.addNewMod}
-                    controlId="priceModification"
-                  >
-                    <Form.Label>
-                      Posibles modificaciones para el precio de una entrada:
-                    </Form.Label>
-                    <Form.Control as="select" custom>
-                      <option>{""}</option>
-                      {this.state.priceModifications.map((mod) => (
-                        <option id={mod.id}>{mod.name}</option>
-                      ))}
-                    </Form.Control>
-                  </Form.Group>
+                  <Row>
+                    <Form.Group
+                      onChange={this.addMod}
+                      controlId="priceModification"
+                    >
+                      <Form.Label>
+                        Posibles modificaciones para el precio de una entrada:
+                      </Form.Label>
+                      <Form.Control as="select" custom>
+                        <option>{""}</option>
+                        {this.state.priceModifications.map((mod) => (
+                          <option id={mod.id}>{mod.name}</option>
+                        ))}
+                      </Form.Control>
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    {!this.state.addNewMod && (
+                      <Add
+                        text=" Agregar modificación"
+                        onClick={this.addNewMod}
+                      />
+                    )}
+                    {this.state.addNewMod && (
+                      <Form
+                        style={{ width: "100%" }}
+                        onSubmit={this.handleAddNewMod}
+                      >
+                        <Form.Label>
+                          <h6>Agregue la nueva modificación</h6>
+                        </Form.Label>
+
+                        <Form.Group controlId="name">
+                          <Form.Label>Nombre:</Form.Label>
+                          <Form.Control type="text" />
+                        </Form.Group>
+                        <Form.Group controlId="type">
+                          <Form.Label>Tipo:</Form.Label>
+                          <Form.Control as="select" custom>
+                            <option id={"Descuento"}>Descuento</option>
+                            <option id={"Aumento"}>Aumento</option>
+                          </Form.Control>
+                        </Form.Group>
+                        <Form.Group controlId="value">
+                          <Form.Label>Valor (en por ciento):</Form.Label>
+                          <Form.Control type="number" min={0} max={100} />
+                        </Form.Group>
+                        <Form.Group controlId="description">
+                          <Form.Label>Descripción:</Form.Label>
+                          <Form.Control as="textarea" rows={3} />
+                        </Form.Group>
+                        <Button type="submit">Aceptar</Button>
+                      </Form>
+                    )}
+                  </Row>
                 </Col>
                 <Col md={2}>
                   <Form.Label>Opcional</Form.Label>
