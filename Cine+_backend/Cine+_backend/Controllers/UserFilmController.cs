@@ -25,9 +25,9 @@ namespace Cine__backend.Controllers
             return Ok(_userFilmRep.GetUserFilms());
         }
         [HttpGet("allFilmsRatings")]
-        public IActionResult GetFilmsRatings()
+        public IActionResult GetFilmsStatics()
         {
-            return Ok(_userFilmRep.GetFilmsRatings());
+            return Ok(_userFilmRep.GetFilmsStatics());
         }
         [HttpGet("{userId}/{filmId}")]
         public IActionResult GetUserFilm(string userId, Guid filmId)
@@ -43,12 +43,12 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpGet("{filmId}/rating")]
-        public IActionResult GetRatingForFilm(Guid filmId)
+        public IActionResult GetStaticsForFilm(Guid filmId)
         {
             try
             {
-                var rating = _userFilmRep.GetRatingForFilm(filmId);
-                return Ok(rating);
+                var filmStatics = _userFilmRep.GetStaticsForFilm(filmId);
+                return Ok(filmStatics);
             }
             catch (Exception e)
             {

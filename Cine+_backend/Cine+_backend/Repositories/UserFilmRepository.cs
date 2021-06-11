@@ -61,9 +61,9 @@ namespace Cine__backend.Repositories
             return;
         }
 
-        public IList<DTOFilmRating> GetFilmsRatings()
+        public IList<DTOFilmStatics> GetFilmsStatics()
         {
-            var films_ratings = new List<DTOFilmRating>();
+            var films_statics = new List<DTOFilmStatics>();
             foreach(var film in _context.Films)
             {
                 var count = 0;
@@ -73,14 +73,29 @@ namespace Cine__backend.Repositories
                     count++;
                     rating += userFilm.Rating;
                 }
-                films_ratings.Add(new DTOFilmRating { Film = film, Raiting = (int)(rating / count) }) ;
+                var films_sreenings = _context.FilmScreenings.Where(f => f.FilmId == film.Id && f.Date < DateTime.Now);
+                var timesSeen = 0;
+                foreach (var f_s in films_sreenings)
+                {
+                    timesSeen += _context.Reservations.Where(r => r.FilmSreeningId == f_s.Id).Count();
+                }
+                films_statics.Add(new DTOFilmStatics {
+                    Country = film.Country,
+                    Img = film.Img,
+                    ImgPath = film.ImgPath,
+                    Name = film.Name,
+                    Year = film.Year,
+                    Raiting = (int)(rating / count),
+                    TimesSeen = timesSeen,
+                });
             }
-            return films_ratings;
+            return films_statics;
         }
 
-        public int GetRatingForFilm(Guid filmId)
+        public DTOFilmStatics GetStaticsForFilm(Guid filmId)
         {
-            if (_context.Films.Find(filmId) == null)
+            var film = _context.Films.Find(filmId);
+            if (film == null)
             {
                 throw new KeyNotFoundException("No se encuentra la película especificada");
             }
@@ -91,7 +106,23 @@ namespace Cine__backend.Repositories
                 count++;
                 rating += userFilm.Rating;
             }
-            return (int)(rating / count);
+            var films_sreenings = _context.FilmScreenings.Where(f => f.FilmId == filmId && f.Date < DateTime.Now);
+            var timesSeen = 0;
+            foreach(var f_s in films_sreenings)
+            {
+                timesSeen += _context.Reservations.Where(r => r.FilmSreeningId == f_s.Id).Count();
+            }
+            var dTOFilmStatics = new DTOFilmStatics
+            {
+                Country = film.Country,
+                Img = film.Img,
+                ImgPath = film.ImgPath,
+                Name = film.Name,
+                Year = film.Year,
+                Raiting = (int)(rating / count),
+                TimesSeen = timesSeen,
+            };
+            return dTOFilmStatics;
         }
 
         public UserFilm GetUserFilm(string userId, Guid filmId)
