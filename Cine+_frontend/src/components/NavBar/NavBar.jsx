@@ -53,6 +53,7 @@ const navigation = (props) => {
             ) : (
               <Nav.Link href="/login">Iniciar sesión</Nav.Link>
             )}
+            <Nav.Link href="/register">Registrarse</Nav.Link>
           </Nav.Item>
         </Nav>
       </Navbar.Collapse>

@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import Home from "../../components/Home/Home";
 import Login from "../../components/Login/Login";
+import Register from "../../components/Register/Register";
 import Reserve from "../../components/Reserve/Reserve";
 import FilmScreenings from "../../components/FilmScreenings/FilmScreenings";
 import MoviesScreening from "../../components/MoviesScreening/MoviesScreening";
@@ -37,6 +38,7 @@ class App extends Component {
                 <Login onLoginCallback={this.logginUserCallback} />
               )}
             />
+            <Route path="/register" component={Register} />
             <Route path="/reserve" component={Reserve} />
             <Route path="/myReservations" component={Home} />
             <Route path="/filmScreenings" component={FilmScreenings} />

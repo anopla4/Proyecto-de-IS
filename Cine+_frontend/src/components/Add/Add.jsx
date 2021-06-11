@@ -9,6 +9,7 @@ class Add extends Component {
     return (
       // isLoggedIn() &&
       <Button
+        size={this.props.size ? this.props.size : "sm"}
         className="mr-3"
         style={{ float: "right" }}
         onClick={this.props.onClick}
