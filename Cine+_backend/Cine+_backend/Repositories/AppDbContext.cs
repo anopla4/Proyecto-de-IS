@@ -3,6 +3,7 @@ using Cine__backend.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace Cine__backend.Repositories
 {
@@ -10,11 +11,82 @@ namespace Cine__backend.Repositories
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            Dictionary<int, char> rowIntToChar = new Dictionary<int, char> { { 0, 'A' }, { 1, 'B' }, { 2, 'C' }, { 3, 'D' }, { 4, 'E' }, { 5, 'F' }, { 6, 'G' }, { 7, 'H' } };
+            List<Seat> seats = new List<Seat>();
+            List<Room> RoomsAdd = new List<Room> { new Room { Id = Guid.NewGuid(), Name = "Sala 1" }, new Room { Id = Guid.NewGuid(), Name = "Sala 2" } };
+            List<Section> SectionsAdd = new List<Section> { new Section { Id = Guid.NewGuid(), Name = "Sección 1" }, new Section { Id = Guid.NewGuid(), Name = "Sección 2" }, new Section { Id = Guid.NewGuid(), Name = "Sección 3" } };
+            List<Level> LevelAdd = new List<Level> { new Level { Id = Guid.NewGuid(), Name = "Platea Baja", PercentOfPriceIncrement = 10 }, new Level { Id = Guid.NewGuid(), Name = "Platea Alta", PercentOfPriceIncrement = 0 } };
+            List<SeatSectionLevelRoom> seatsRoomsAdd = new List<SeatSectionLevelRoom>();
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        for (int l = 0; l < ((j == 0) ? 8 : 6); l++)
+                        {
+                            if (j == 0 && (k == 0 || k == 2))
+                            {
+                                for (int m = 1; m <= 3; m++)
+                                {
+                                    Seat tempSeat = new Seat { Id = Guid.NewGuid(), Code = rowIntToChar[l].ToString() + m.ToString() };
+                                    seats.Add(tempSeat);
+                                    seatsRoomsAdd.Add(new SeatSectionLevelRoom { RoomId = RoomsAdd[i].Id, LevelId = LevelAdd[j].Id, SectionId = SectionsAdd[k].Id, SeatId = tempSeat.Id });
+                                }
+                            }
+                            if (j == 0 && k == 1)
+                            {
+                                for (int m = 1; m <= 2; m++)
+                                {
+                                    Seat tempSeat = new Seat { Id = Guid.NewGuid(), Code = rowIntToChar[l].ToString() + m.ToString() };
+                                    seats.Add(tempSeat);
+                                    seatsRoomsAdd.Add(new SeatSectionLevelRoom { RoomId = RoomsAdd[i].Id, LevelId = LevelAdd[j].Id, SectionId = SectionsAdd[k].Id, SeatId = tempSeat.Id });
+                                }
+                            }
+                            if (j == 1 && (k == 0 || k == 2))
+                            {
+                                for (int m = 1; m <= l + 1; m++)
+                                {
+                                    Seat tempSeat = new Seat { Id = Guid.NewGuid(), Code = rowIntToChar[l].ToString() + m.ToString() };
+                                    seats.Add(tempSeat);
+                                    seatsRoomsAdd.Add(new SeatSectionLevelRoom { RoomId = RoomsAdd[i].Id, LevelId = LevelAdd[j].Id, SectionId = SectionsAdd[k].Id, SeatId = tempSeat.Id });
+                                }
+                            }
+                            if (j == 1 && k == 1)
+                            {
+                                for (int m = 1; m <= 7 - l; m++)
+                                {
+                                    Seat tempSeat = new Seat { Id = Guid.NewGuid(), Code = rowIntToChar[l].ToString() + m.ToString() };
+                                    seats.Add(tempSeat);
+                                    seatsRoomsAdd.Add(new SeatSectionLevelRoom { RoomId = RoomsAdd[i].Id, LevelId = LevelAdd[j].Id, SectionId = SectionsAdd[k].Id, SeatId = tempSeat.Id });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             base.OnModelCreating(modelBuilder);
+            //Seats
+            modelBuilder.Entity<Seat>()
+                .HasData(seats);
+            //Room
+            modelBuilder.Entity<Room>()
+                .HasData(RoomsAdd.ToArray());
+            //Level
+            modelBuilder.Entity<Level>()
+                .HasData(LevelAdd.ToArray());
+            //Section
+            modelBuilder.Entity<Section>()
+                .HasData(SectionsAdd.ToArray());
+            //SeatSectionLevelRoom
+            modelBuilder.Entity<SeatSectionLevelRoom>()
+                .HasData(seatsRoomsAdd.ToArray());
             //Genre
             modelBuilder.Entity<Genre>()
                 .HasData(new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" }, new Genre { Id = Guid.NewGuid(), Name = "Tragicomedia" }, new Genre { Id = Guid.NewGuid(), Name = "Hístorico" }, new Genre { Id = Guid.NewGuid(), Name = "Documental" }, new Genre { Id = Guid.NewGuid(), Name = "Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Ciencia Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Aventura" }, new Genre { Id = Guid.NewGuid(), Name = "Musical" }, new Genre { Id = Guid.NewGuid(), Name = "Erótico" });
@@ -164,8 +236,5 @@ namespace Cine__backend.Repositories
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<Top10Film> Top10 { get; set; }
-
-
-
     }
 }
