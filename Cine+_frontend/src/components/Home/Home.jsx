@@ -7,14 +7,14 @@ class Home extends Component {
   state = {
     top10: [
       {
-        id: 1,
+        id: "1",
         name: "Pulp Fiction",
         year: "1994",
         country: "Estados Unidos",
         imgPath: "src/images/pulpFiction.jpg",
       },
       {
-        id: 2,
+        id: "2",
         name: "Cinema Paradiso",
         year: "1988",
         country: "Italia",
