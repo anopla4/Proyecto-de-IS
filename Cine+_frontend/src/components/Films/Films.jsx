@@ -4,7 +4,6 @@ import "../../containers/App/App.css";
 import "./Films.css";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
-import Rating from "react-rating";
 import ReactStars from "react-rating-stars-component";
 
 class Films extends Component {
