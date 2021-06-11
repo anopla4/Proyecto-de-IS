@@ -20,6 +20,7 @@ class MoviesScreening extends Component {
   state = {
     movies: [
       {
+        id: "1",
         film: {
           id: 1,
           name: "Cinema Paradiso",
@@ -30,9 +31,9 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "05/06/2021",
+        date: "2021-06-05",
         time: "8:00 PM",
-        room: { name: "Sala A" },
+        room: { id: "1", name: "Sala A" },
         priceModifications: [
           {
             priceModification: { id: "1", name: "Día de las madres" },
@@ -41,6 +42,7 @@ class MoviesScreening extends Component {
         ],
       },
       {
+        id: "2",
         film: {
           id: 1,
           name: "Cinema Paradiso",
@@ -51,12 +53,13 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "06/06/2021",
+        date: "2021-06-06",
         time: "8:00 PM",
-        room: { name: "Sala B" },
+        room: { id: "2", name: "Sala B" },
         priceModifications: [],
       },
       {
+        id: "3",
         film: {
           id: 1,
           name: "Cinema Paradiso",
@@ -67,9 +70,9 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "05/06/2021",
+        date: "2021-06-05",
         time: "10:00 PM",
-        room: { name: "Sala A" },
+        room: { id: "1", name: "Sala A" },
         priceModifications: [
           {
             priceModification: { id: "1", name: "Día de las madres" },
@@ -78,6 +81,7 @@ class MoviesScreening extends Component {
         ],
       },
       {
+        id: "4",
         film: {
           id: 2,
           name: "Pulp Fiction",
@@ -88,7 +92,7 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "05/06/2021",
+        date: "2021-06-05",
         priceModifications: [
           {
             priceModification: { id: "1", name: "Día de las madres" },
@@ -96,11 +100,12 @@ class MoviesScreening extends Component {
           },
         ],
         time: "10:00 PM",
-        room: { name: "Sala B" },
+        room: { id: "2", name: "Sala B" },
       },
     ],
     moviesFilter: [
       {
+        id: 1,
         film: {
           id: 1,
           name: "Cinema Paradiso",
@@ -111,9 +116,9 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "05/06/2021",
+        date: "2021-06-05",
         time: "8:00 PM",
-        room: { name: "Sala A" },
+        room: { id: "1", name: "Sala A" },
         priceModifications: [
           {
             priceModification: { id: "1", name: "Día de las madres" },
@@ -122,6 +127,7 @@ class MoviesScreening extends Component {
         ],
       },
       {
+        id: 2,
         film: {
           id: 1,
           name: "Cinema Paradiso",
@@ -132,13 +138,14 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "06/06/2021",
+        date: "2021-06-06",
         time: "8:00 PM",
-        room: { name: "Sala B" },
+        room: { id: "2", name: "Sala B" },
 
         priceModifications: [],
       },
       {
+        id: 3,
         film: {
           id: 1,
           name: "Cinema Paradiso",
@@ -149,9 +156,9 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "05/06/2021",
+        date: "2021-06-05",
         time: "10:00 PM",
-        room: { name: "Sala A" },
+        room: { id: "1", name: "Sala A" },
 
         priceModifications: [
           {
@@ -161,6 +168,7 @@ class MoviesScreening extends Component {
         ],
       },
       {
+        id: 4,
         film: {
           id: 2,
           name: "Pulp Fiction",
@@ -171,9 +179,9 @@ class MoviesScreening extends Component {
         },
         price: 20,
         points: 20,
-        date: "05/06/2021",
+        date: "2021-06-05",
         time: "10:00 PM",
-        room: { name: "Sala B" },
+        room: { id: "2", name: "Sala B" },
 
         priceModifications: [
           {
@@ -190,7 +198,7 @@ class MoviesScreening extends Component {
   };
 
   componentDidMount() {
-    let grouped = groupBy(this.state.movies, ["film.id", "date"]);
+    let grouped = groupBy(this.state.movies, ["film.id", "date", "time"]);
     this.setState({ grouped: grouped });
     // fetch("https://localhost:44334/api/FilmScreening/WithTimes", {
     //   mode: "cors",
@@ -212,7 +220,7 @@ class MoviesScreening extends Component {
   handleInputChangeTypeahead = (text, e) => {
     let moviesTempFilter = [...this.state.movies];
     moviesTempFilter = moviesTempFilter.filter((c) => {
-      if (c.movie.name.toLowerCase().match(text.toLowerCase())) return true;
+      if (c.film.name.toLowerCase().match(text.toLowerCase())) return true;
       return false;
     });
     if (this.state.inputTime !== "") {
@@ -227,8 +235,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
-    console.log(text);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
     this.setState({
       inputName: text,
       moviesFilter: moviesTempFilter,
@@ -243,7 +250,7 @@ class MoviesScreening extends Component {
     if (e.length !== 0) {
       text = e[0];
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.movie.name.toLowerCase().match(text.toLowerCase())) return true;
+        if (c.film.name.toLowerCase().match(text.toLowerCase())) return true;
         return false;
       });
     }
@@ -259,7 +266,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
     this.setState({
       inputName: text,
       moviesFilter: moviesTempFilter,
@@ -278,9 +285,7 @@ class MoviesScreening extends Component {
     }
     if (this.state.inputName !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (
-          c.movie.name.toLowerCase().match(this.state.inputName.toLowerCase())
-        )
+        if (c.film.name.toLowerCase().match(this.state.inputName.toLowerCase()))
           return true;
         return false;
       });
@@ -291,7 +296,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
     this.setState({
       inputTime: time,
       moviesFilter: moviesTempFilter,
@@ -300,8 +305,7 @@ class MoviesScreening extends Component {
   };
 
   handleChangeDate = (e) => {
-    console.log(e.target.value);
-    let date = formatDateRequest(e.target.value);
+    let date = e.target.value;
     let moviesTempFilter = [...this.state.movies];
     if (date !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
@@ -311,9 +315,7 @@ class MoviesScreening extends Component {
     }
     if (this.state.inputName !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (
-          c.movie.name.toLowerCase().match(this.state.inputName.toLowerCase())
-        )
+        if (c.film.name.toLowerCase().match(this.state.inputName.toLowerCase()))
           return true;
         return false;
       });
@@ -324,7 +326,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date"]);
+    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
     this.setState({
       inputDate: date,
       moviesFilter: moviesTempFilter,
@@ -332,7 +334,14 @@ class MoviesScreening extends Component {
     });
   };
 
-  handleOnEdit = (filmScreenings) => {
+  handleOnEdit = (a) => {
+    let filmScreenings = [];
+    a.forEach((element) => {
+      element.forEach((d) => {
+        filmScreenings.push(d);
+      });
+    });
+    console.log(filmScreenings);
     let roomTimes = [];
     let date = filmScreenings[0].date;
     let film = filmScreenings[0].film;
@@ -342,6 +351,7 @@ class MoviesScreening extends Component {
     filmScreenings.forEach((element) => {
       roomTimes.push({ room: element.room, time: element.time });
     });
+    console.log(filmScreenings);
     this.props.history.push({
       pathname: "/filmScreeningForm",
       state: {
@@ -392,10 +402,14 @@ class MoviesScreening extends Component {
                           <Col md={1} style={{ padding: "0px" }}>
                             <DeleteEdit
                               edit={true}
-                              onEdit={() => this.handleOnEdit(date._items)}
+                              onEdit={() =>
+                                this.handleOnEdit(
+                                  date._items.map((c) => c._items)
+                                )
+                              }
                             />
                           </Col>
-                          <Col md={3}>
+                          <Col md={4}>
                             <OverlayTrigger
                               key={`priceMod-${item.film.id}-${date.date}`}
                               placement="top"
@@ -404,12 +418,12 @@ class MoviesScreening extends Component {
                                   id={`priceMod-${item.film.id}-${date.date}`}
                                 >
                                   <Popover.Title as="h3">
-                                    {date._items[0].priceModifications.length >
-                                    0
+                                    {date._items[0]._items[0].priceModifications
+                                      .length > 0
                                       ? "Modificaciones del precio disponibles"
                                       : "No hay modificaciones del precio disponibles"}
                                   </Popover.Title>
-                                  {date._items[0].priceModifications.map(
+                                  {date._items[0]._items[0].priceModifications.map(
                                     (mod) => (
                                       <Popover.Content>
                                         <strong>
@@ -434,7 +448,7 @@ class MoviesScreening extends Component {
                             >
                               {date._items.map((time) => (
                                 <Button
-                                  onClick={() => this.reserve(date._items)}
+                                  onClick={() => this.reserve(time._items)}
                                   variant="default"
                                   bsPrefix="my-button"
                                   className="my-button mb-2 ml-2"

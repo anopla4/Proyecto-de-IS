@@ -179,7 +179,6 @@ class FilmScreeningForm extends Component {
   };
 
   onChangeOptional = (e) => {
-    console.log(e);
     this.setState({ optional: !this.state.optional });
   };
 
@@ -298,7 +297,6 @@ class FilmScreeningForm extends Component {
   };
 
   render() {
-    console.log(this.props.history.state);
     return (
       <Container className="mt-5">
         <h1 className="mb-5 my-style-header">Puesta en escena</h1>

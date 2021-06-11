@@ -8,7 +8,10 @@ import {
   Button,
   ListGroupItem,
   ListGroup,
+  Popover,
+  OverlayTrigger,
 } from "react-bootstrap";
+import { TrashFill, Cart } from "react-bootstrap-icons";
 
 class Reserve extends Component {
   state = {
@@ -17,7 +20,7 @@ class Reserve extends Component {
       {
         room: { id: "1", name: "Sala A" },
         level: { id: "1", name: "Platea Baja" },
-        section: { id: "1", name: "A" },
+        section: { id: "2", name: "B" },
         seat: { id: "1" },
         available: false,
       },
@@ -53,35 +56,35 @@ class Reserve extends Component {
         room: { id: "2", name: "Sala B" },
         level: { id: "1", name: "Platea Baja" },
         section: { id: "1", name: "A" },
-        seat: { id: "1" },
+        seat: { id: "6" },
         available: true,
       },
       {
         room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "2", name: "Platea Alta" },
         section: { id: "1", name: "A" },
-        seat: { id: "2" },
+        seat: { id: "7" },
         available: false,
       },
       {
         room: { id: "2", name: "Sala B" },
         level: { id: "1", name: "Platea Baja" },
         section: { id: "1", name: "A" },
-        seat: { id: "3" },
+        seat: { id: "8" },
         available: true,
       },
       {
         room: { id: "2", name: "Sala B" },
         level: { id: "1", name: "Platea Baja" },
         section: { id: "1", name: "A" },
-        seat: { id: "4" },
+        seat: { id: "9" },
         available: false,
       },
       {
         room: { id: "2", name: "Sala B" },
         level: { id: "1", name: "Platea Baja" },
         section: { id: "1", name: "A" },
-        seat: { id: "5" },
+        seat: { id: "10" },
         available: true,
       },
     ],
@@ -89,6 +92,7 @@ class Reserve extends Component {
     availables: undefined,
     filmScreeningSelected: undefined,
     grouped: [],
+    takenSeats: [],
   };
 
   componentWillMount() {
@@ -109,28 +113,28 @@ class Reserve extends Component {
     //     console.log("Hubo un problema con la petición Fetch:" + error.message);
     //   });
     let filmScreeningSelected = this.props.location.state.film;
-    this.setState({
-      filmScreeningSelected: filmScreeningSelected,
-      film: filmScreeningSelected[0].film.name,
-      date: filmScreeningSelected[0].date,
-      time: filmScreeningSelected[0].time,
-    });
-  }
-
-  componentDidMount() {
     let grouped = groupBy(this.state.seats, [
       "room.id",
       "level.id",
       "section.id",
     ]);
+    let selectedRoom = grouped[0].room.id;
+    this.setState({
+      filmScreeningSelected: filmScreeningSelected,
+      film: filmScreeningSelected[0].film,
+      date: filmScreeningSelected[0].date,
+      time: filmScreeningSelected[0].time,
+      grouped: grouped,
+      selectedRoom: selectedRoom,
+    });
+  }
+
+  componentDidMount() {
     let availables = this.state.seats.filter(
       (c) => c.available === true
     ).length;
-    let selectedRoom = grouped[0].room.id;
     this.setState({
       availables: availables,
-      grouped: grouped,
-      selectedRoom: selectedRoom,
     });
   }
 
@@ -139,23 +143,81 @@ class Reserve extends Component {
     this.setState({ selectedRoom: id });
   };
 
-  onFormSubmit = () => {};
+  onSelectSeat = (e, s) => {
+    let seat = e.target.id;
+    if (!this.state.takenSeats.map((c) => c.seat.id).includes(seat)) {
+      let newSeats = [...this.state.takenSeats, s];
+      this.setState({ takenSeats: newSeats });
+    }
+  };
+
+  handleDeleteSeat = (idS) => {
+    let newSeats = this.state.takenSeats.filter((c) => c.seat.id !== idS);
+    this.setState({ takenSeats: newSeats });
+  };
+
+  getTickets = (e) => {
+    let seats = this.state.seats
+      .filter((c) => c.available === true)
+      .slice(0, e.target.value);
+    this.setState({ takenSeats: seats });
+  };
+
+  onFormSubmit = () => {
+    let filmScreening = this.state.filmScreeningSelected.filter(
+      (c) => c.room.id === this.state.selectedRoom
+    )[0].id;
+  };
 
   render() {
-    console.log(this.state.selectedRoom);
     return (
       <Container className="mt-5">
-        <h4>Reserva para la película {this.state.film}</h4>
+        <h4>Reserva para la película {this.state.film.name}</h4>
         <h6>
           {formatDateRequest(this.state.date)} - {this.state.time}
         </h6>
+        <OverlayTrigger
+          trigger="click"
+          key="ticketsCard"
+          placement="bottom"
+          overlay={
+            <Popover id="ticketsCard">
+              <Popover.Title as="h3">
+                {this.state.takenSeats.length === 0
+                  ? "No se han escogido asientos."
+                  : "Asientos escogidos"}
+              </Popover.Title>
+              <Popover.Content>
+                <ListGroup>
+                  {this.state.takenSeats.map((item) => (
+                    <ListGroupItem>
+                      {item.room.name}-{item.level.name}-{item.section.name}-
+                      {item.seat.id}
+                      <Button
+                        className="ml-3"
+                        style={{ padding: "0px", float: "right" }}
+                        onClick={() => this.handleDeleteSeat(item.seat.id)}
+                        variant="danger"
+                      >
+                        <TrashFill style={{ width: "100%" }} />
+                      </Button>
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+              </Popover.Content>
+            </Popover>
+          }
+        >
+          <Button size="lg" variant="secondary" style={{ float: "right" }}>
+            <Cart />
+          </Button>
+        </OverlayTrigger>
         <Row>
           <Col>
             <Row>
               <Form
                 style={{ width: "100%" }}
                 className="mt-5"
-                onSubmit={this.onFormSubmit}
                 controlId="numberOfTickets"
               >
                 <Form.Row>
@@ -170,16 +232,17 @@ class Reserve extends Component {
                         </small>
                       </Row>
                       <Form.Control
-                        style={{ width: "50%" }}
+                        style={{ width: "30%" }}
                         min={0}
                         max={this.state.availables}
+                        onChange={this.getTickets}
                         type="number"
                       />
                     </Form.Group>
                   </Col>
-                  <Col style={{ display: "flex", alignItems: "center" }}>
+                  {/* <Col style={{ display: "flex", alignItems: "center" }}>
                     <Button type="submit">Aceptar</Button>
-                  </Col>
+                  </Col> */}
                 </Form.Row>
               </Form>
             </Row>
@@ -208,7 +271,7 @@ class Reserve extends Component {
           </Col>
           <Col>
             <Row>
-              <Form.Group className="mr-3" controlId="genres">
+              <Form.Group className="mr-3 mt-5" controlId="rooms">
                 <Form.Label>Sala:</Form.Label>
                 <Form.Control
                   as="select"
@@ -222,18 +285,55 @@ class Reserve extends Component {
                     ))}
                 </Form.Control>
               </Form.Group>
+            </Row>
+            <Row style={{ width: "100%" }}>
               {this.state.grouped
-                .filter((c) => c.room.id === this.state.selectedRoom)
-                ._items.map((item) => (
-                  <p>ana</p>
-
-                  // {/* <Row>
-                  // {item._items.map((l) => (
-
-                  //   ))}
-                  // </Row> */}
+                .filter((c) => c.room.id === this.state.selectedRoom)[0]
+                ._items.map((l) => (
+                  <Row className="mt-3" style={{ width: "100%" }}>
+                    <Row style={{ width: "100%" }}>
+                      <h4>{l.level.name}</h4>
+                    </Row>
+                    <Row>
+                      {l._items.map((s) => (
+                        <Col style={{ width: "100%" }}>
+                          <h5>{s.section.name}</h5>
+                          <ListGroup>
+                            {s._items.map((seat, index) => (
+                              <ListGroupItem
+                                style={{ width: "150px" }}
+                                variant={seat.available ? "success" : "danger"}
+                                id={seat.seat.id}
+                              >
+                                {seat.section.name}
+                                {index + 1}
+                                {seat.available && (
+                                  <Button
+                                    variant="success"
+                                    id={seat.seat.id}
+                                    size="sm"
+                                    style={{ float: "right" }}
+                                    onClick={(e) => this.onSelectSeat(e, seat)}
+                                  >
+                                    Pick
+                                  </Button>
+                                )}
+                              </ListGroupItem>
+                            ))}
+                          </ListGroup>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Row>
                 ))}
             </Row>
+          </Col>
+        </Row>
+        <Row className="mt-5">
+          <Col>
+            <Button style={{ float: "right" }} onClick={this.onFormSubmit}>
+              Continuar
+            </Button>
           </Col>
         </Row>
       </Container>
