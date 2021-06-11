@@ -23,7 +23,7 @@ class Home extends Component {
   };
   render() {
     return (
-      <Carousel className="mt-5" bsprefix=" carousel" fade>
+      <Carousel className="mt-5" bsprefix="carousel" fade>
         {this.state.top10.map((film) => (
           <Carousel.Item bsPrefix="carousel-item">
             <img
