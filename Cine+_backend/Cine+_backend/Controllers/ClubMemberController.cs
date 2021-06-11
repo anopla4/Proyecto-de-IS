@@ -1,14 +1,13 @@
 ﻿using Cine__backend.Interfaces;
 using Cine__backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cine__backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClubMemberController : ControllerBase
@@ -18,11 +17,13 @@ namespace Cine__backend.Controllers
         {
             this._clubMemberRep = clubMemberRep;
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpGet]
         public IActionResult GetClubmembers()
         {
             return Ok(_clubMemberRep.GetClubMembers());
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpGet("{userId}")]
         public IActionResult GetClubMember(string userId)
         {
@@ -36,6 +37,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost("{userId}")]
         public IActionResult AddClubMember(string userId, [FromForm]ClubMember clubMember)
         {
@@ -49,6 +51,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{userId}")]
         public IActionResult DeleteClubMember(string userId)
         {
@@ -62,8 +65,9 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch()]
-        public IActionResult UpdateBookEntry([FromForm]ClubMember clubMember)
+        public IActionResult UpdateClubMember([FromForm]ClubMember clubMember)
         {
             try
             {

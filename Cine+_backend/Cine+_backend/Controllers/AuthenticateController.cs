@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +86,7 @@ namespace Cine__backend.Controllers
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
+        [Authorize(Roles = UserRoles.WebMaster)]
         [HttpPatch("{userId}/{rol}")]
         public async Task<IActionResult> UserAddRol(string userId, string rol)
         {
@@ -98,6 +99,7 @@ namespace Cine__backend.Controllers
                 await userManager.AddToRoleAsync(user, rol);
             return Ok();
         }
+        [Authorize(Roles = UserRoles.WebMaster)]
         [HttpDelete("{userId}/{rolId}")]
         public async Task<IActionResult> UserRemoveRol(string userId, string rol)
         {
