@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cine__backend.Controllers
 {
+    [Authorize(Roles = "WebMaster,Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class PurchaseOrderController : ControllerBase
