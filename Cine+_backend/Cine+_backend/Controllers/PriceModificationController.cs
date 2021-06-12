@@ -7,7 +7,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PriceModificationController : ControllerBase
@@ -37,7 +37,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
-
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddPriceModification(PriceModification priceModification)
         {
@@ -51,7 +51,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{priceModificationId}")]
         public IActionResult UpdatePriceModifiation(Guid priceModificationId, PriceModification priceModification)
         {
@@ -65,6 +65,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{priceModificationId}")]
         public IActionResult RemovePriceModification(Guid priceModificationId, PriceModification priceModification)
         {

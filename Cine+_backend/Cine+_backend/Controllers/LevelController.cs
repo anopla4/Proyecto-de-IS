@@ -7,7 +7,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LevelController : ControllerBase
@@ -35,6 +35,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddLevel(Level level)
         {
@@ -48,6 +49,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{levelId}")]
         public IActionResult DeleteLevel(Guid levelId)
         {
@@ -62,6 +64,7 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{levelId}")]
         public IActionResult LevelUpdate(Guid levelId, Level level)
         {

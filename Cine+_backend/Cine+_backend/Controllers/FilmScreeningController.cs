@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FilmScreeningController : ControllerBase
@@ -52,7 +52,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
-
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddFilmScreening([FromForm]Film film, [FromForm]DateTime date, [FromForm]List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModification> priceModifications)
         {
@@ -71,6 +71,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{filmScreeningId}")]
         public IActionResult UpdateFilmScreening( Guid filmScreeningId,[FromForm]FilmScreening filmScreening, [FromForm] List<DTOPriceModification> priceModifications)
         {
@@ -86,7 +87,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
-
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{filmScreeningId}")]
         public IActionResult RemoveFilmScreening(Guid filmScreeningId)
         {

@@ -7,7 +7,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClubMemberController : ControllerBase
@@ -17,6 +17,7 @@ namespace Cine__backend.Controllers
         {
             this._clubMemberRep = clubMemberRep;
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpGet]
         public IActionResult GetClubmembers()
         {
@@ -48,6 +49,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{userId}")]
         public IActionResult DeleteClubMember(string userId)
         {
