@@ -13,6 +13,7 @@ import Films from "../../components/Films/Films";
 import FilmForm from "../../components/FilmForm/FilmForm";
 import FilmScreeningForm from "../../components/FilmScreeningForm/FilmScreeningForm";
 import Top10Form from "../../components/Top10Form/Top10Form";
+import PurchaseOrder from "../../components/PurchaseOrder/PurchaseOrder";
 
 class App extends Component {
   // logginUserCallback = (username, password, jwt_token) => {
@@ -47,6 +48,7 @@ class App extends Component {
             <Route path="/filmForm" component={FilmForm} />
             <Route path="/filmScreeningForm" component={FilmScreeningForm} />
             <Route path="/top10Form" component={Top10Form} />
+            <Route path="/purchaseOrder" component={PurchaseOrder} />
           </Switch>
         </Layout>
       </BrowserRouter>

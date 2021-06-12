@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Table, Row, Col, ListGroupItem, ListGroup } from "react-bootstrap";
+import {
+  Table,
+  Row,
+  Col,
+  ListGroupItem,
+  ListGroup,
+  Toast,
+} from "react-bootstrap";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
 
@@ -24,6 +31,7 @@ class Top10Form extends Component {
       },
     ],
     top10: [],
+    showToast: false,
   };
 
   componentWillMount() {
@@ -38,9 +46,20 @@ class Top10Form extends Component {
 
   addMovieToTop10 = (film) => {
     if (!this.state.top10.map((film) => film.id).includes(film.id)) {
-      let newTop10 = [...this.state.top10, film];
-      this.setState({ top10: newTop10 });
+      if (this.state.top10.length === 10) {
+        this.handleShowToast();
+      } else {
+        let newTop10 = [...this.state.top10, film];
+        this.setState({ top10: newTop10 });
+      }
     }
+  };
+
+  handleShowToast = () => {
+    this.setState({ showToast: true });
+  };
+  handleCloseToast = () => {
+    this.setState({ showToast: false });
   };
 
   render() {
@@ -73,6 +92,12 @@ class Top10Form extends Component {
         </Col>
         <Col>
           <h4>Top10</h4>
+          <Toast show={this.state.showToast} onClose={this.handleCloseToast}>
+            <Toast.Header>
+              <strong className="mr-auto">¡Atención!</strong>
+            </Toast.Header>
+            <Toast.Body>Ya han sido añadidas diez películas.</Toast.Body>
+          </Toast>
           <ListGroup className="mt-4">
             {this.state.top10.map((film, index) => (
               <ListGroupItem>

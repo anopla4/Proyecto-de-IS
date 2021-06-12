@@ -53,6 +53,8 @@ const navigation = (props) => {
             ) : (
               <Nav.Link href="/login">Iniciar sesión</Nav.Link>
             )}
+          </Nav.Item>
+          <Nav.Item>
             <Nav.Link href="/register">Registrarse</Nav.Link>
           </Nav.Item>
         </Nav>

@@ -12,6 +12,7 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import { TrashFill, Cart } from "react-bootstrap-icons";
+import { withRouter } from "react-router-dom";
 
 class Reserve extends Component {
   state = {
@@ -166,7 +167,12 @@ class Reserve extends Component {
   onFormSubmit = () => {
     let filmScreening = this.state.filmScreeningSelected.filter(
       (c) => c.room.id === this.state.selectedRoom
-    )[0].id;
+    )[0];
+    let takenSeats = this.state.takenSeats;
+    this.props.history.push({
+      pathname: "/purchaseOrder",
+      state: { filmScreening, takenSeats },
+    });
   };
 
   render() {
@@ -331,7 +337,11 @@ class Reserve extends Component {
         </Row>
         <Row className="mt-5">
           <Col>
-            <Button style={{ float: "right" }} onClick={this.onFormSubmit}>
+            <Button
+              disabled={this.state.takenSeats.length > 0 ? false : true}
+              style={{ float: "right" }}
+              onClick={this.onFormSubmit}
+            >
               Continuar
             </Button>
           </Col>
@@ -341,4 +351,4 @@ class Reserve extends Component {
   }
 }
 
-export default Reserve;
+export default withRouter(Reserve);
