@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class Top10Controller : ControllerBase
@@ -36,6 +35,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult AddTop10([FromForm] List<Film> films)
         {
             try
@@ -55,6 +56,8 @@ namespace Cine__backend.Controllers
         }
 
         [HttpDelete("{filmId}")]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult RemoveFilmFromTop10(Guid filmId)
         {
             try

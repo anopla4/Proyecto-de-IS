@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,6 +20,8 @@ namespace Cine__backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult GetUsers()
         {
             return Ok(_rep.GetUsers());
@@ -37,6 +40,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult AddUser()
         {
             try
@@ -50,6 +55,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpDelete("{userId}")]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult RemoveUser(string userId)
         {
             try

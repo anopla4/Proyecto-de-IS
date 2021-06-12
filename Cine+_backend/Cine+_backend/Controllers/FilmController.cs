@@ -11,7 +11,6 @@ using System.Net.Http.Headers;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class FilmController : ControllerBase
@@ -57,7 +56,10 @@ namespace Cine__backend.Controllers
 
             }
         }
+        
         [HttpPost]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult AddFilm([FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
             try
@@ -72,6 +74,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpDelete("{filmId}")]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult DeleteFilm(Guid filmId, Film film)
         {
             try
@@ -86,6 +90,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPatch("{filmId}")]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult UpdateFilm(Guid filmId,[FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
             try

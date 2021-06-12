@@ -1,6 +1,7 @@
 ﻿using Cine__backend.Authentication;
 using Cine__backend.Interfaces;
 using Cine__backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -56,6 +57,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "WebMaster,Admin,User")]
+
         public IActionResult AddRating([FromForm] User user, [FromForm] Film film, [FromForm] int rating)
         {
             try
@@ -74,6 +77,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpDelete("{userId}/{filmId}")]
+        [Authorize(Roles = "WebMaster,Admin")]
+
         public IActionResult DeleteUserFilm(string userId, Guid filmId)
         {
             try
@@ -88,6 +93,8 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPatch("{userid}/{filmId}")]
+        [Authorize(Roles = "WebMaster,Admin,User")]
+
         public IActionResult UpdateFilm(string userId, Guid filmId, int rating)
         {
             try
