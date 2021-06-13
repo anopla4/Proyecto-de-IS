@@ -7,7 +7,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin,Worker")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookEntryController : ControllerBase
@@ -17,11 +17,14 @@ namespace Cine__backend.Controllers
         {
             this._bookEntryRep = bookEntryRepository;
         }
+        
+        [Authorize(Roles = "WebMaster, Accountant")]
         [HttpGet]
         public IActionResult GetBookEntrys()
         {
             return Ok(_bookEntryRep.GetBookEntries());
         }
+        [Authorize(Roles = "WebMaster, Accountant")]
         [HttpGet("{bookEntryId}")]
         public IActionResult GetBookEntry(Guid bookEntryId)
         {
@@ -35,6 +38,8 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        
+        [Authorize(Roles = "WebMaster, Accountant, Worker")]
         [HttpPost]
         public IActionResult AddBookEntry(BookEntry bookEntry)
         {
@@ -48,6 +53,8 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+        
+        [Authorize(Roles = "WebMaster, Accountant")]
         [HttpDelete("{bookEntryId}")]
         public IActionResult DeleteBookEntry(Guid bookEntryId)
         {
@@ -61,6 +68,8 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        
+        [Authorize(Roles = "WebMaster, Accountant")]
         [HttpPatch("{bookEntryId}")]
         public IActionResult UpdateBookEntry(Guid bookEntryId, BookEntry bookEntry)
         {

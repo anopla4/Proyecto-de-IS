@@ -15,6 +15,7 @@ namespace Cine__backend.Context
             //Seed Roles
             await roleManager.CreateAsync(new IdentityRole(UserRoles.WebMaster));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            await roleManager.CreateAsync(new IdentityRole(UserRoles.Accountant));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.Worker));
             await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             //Seed Default User

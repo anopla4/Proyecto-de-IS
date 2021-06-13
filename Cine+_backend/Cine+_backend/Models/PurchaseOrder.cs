@@ -27,7 +27,9 @@ namespace Cine__backend.Models
         [Required]
         public string PurchaseTime { get; set; }
         public StatePurchaseOrder State { get; set; }
+        [CreditCard]
         public string CreditCard { get; set; }
+        [StringLength(20, ErrorMessage ="No puede superar los 20 caracteres")]
         public string BoxOffice { get; set; }
         public bool PaidByPoints { get; set; }
 

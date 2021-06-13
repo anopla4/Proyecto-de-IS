@@ -11,6 +11,7 @@ namespace Cine__backend.Models
         [Key]
         public Guid Id { get; set; }
         [Required]
+        [StringLength(30, ErrorMessage ="No puede superar los 30 caracteres")]
         public string Name { get; set; }
     }
 }

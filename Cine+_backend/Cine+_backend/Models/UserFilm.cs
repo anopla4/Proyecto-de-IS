@@ -19,6 +19,7 @@ namespace Cine__backend.Models
         public Guid FilmId { get; set; }
         public Film Film { get; set; }
         [Required]
+        [Range(0,5, ErrorMessage = "El rango válido es 0-5")]
         public int Rating { get; set; }
     }
 }
