@@ -48,7 +48,7 @@ namespace Cine__backend.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         [Authorize(Roles = "WebMaster,Admin")]

@@ -16,6 +16,10 @@ namespace Cine__backend.Repositories
         }
         public Genre AddGenre(Genre genre)
         {
+            if(!_context.Genres.All(g => g.Name != genre.Name))
+            {
+                throw new InvalidOperationException($"Ya existe el género {genre.Name}");
+            }
             genre.Id = Guid.NewGuid();
             _context.Genres.Add(genre);
             _context.SaveChanges();
