@@ -29,12 +29,15 @@ class MyReservations extends Component {
               price: 20,
               points: 20,
               room: { id: "1", name: "Sala A" },
+              time: "8:00 AM",
+              date: "2021-06-13",
             },
             seat: {
               room: { id: "1", name: "Sala A" },
               level: { id: "1", name: "Platea Baja" },
               section: { id: "1", name: "A" },
               seat: { id: "1" },
+              time: "8:00 AM",
             },
             price: 20,
             points: 20,
@@ -45,6 +48,8 @@ class MyReservations extends Component {
               price: 20,
               points: 20,
               room: { id: "1", name: "Sala A" },
+              time: "8:00 AM",
+              date: "2021-06-13",
             },
             seat: {
               room: { id: "1", name: "Sala A" },
@@ -140,7 +145,41 @@ class MyReservations extends Component {
 
   payPurchaseOrder = () => {};
 
+  compareTimes = (time, date) => {
+    let now = new Date();
+    let currentDay = now.getDate();
+    let currentMonth = now.getMonth() + 1;
+    let currentYear = now.getFullYear();
+    let currentHour = now.getHours();
+    let currentMinutes = now.getMinutes();
+    let tempTime = time.split(" ");
+    let t = tempTime[0].split(":");
+    let hour = parseInt(t[0], 10);
+    if (tempTime[1] === "PM") hour = hour + 12;
+    let minutes = parseInt(t[1], 10);
+    let tempDate = date.split("-");
+    let year = parseInt(tempDate[0], 10);
+    let month = parseInt(tempDate[1], 10);
+    let day = parseInt(tempDate[2], 10);
+
+    if (currentYear <= year) {
+      if (currentMonth <= month) {
+        if (currentDay <= day) {
+          if (currentHour <= hour) {
+            if (currentMinutes <= minutes) return true;
+            return false;
+          }
+          return false;
+        }
+        return false;
+      }
+      return false;
+    }
+    return false;
+  };
+
   cancelPurchaseOrder = () => {};
+
   cancelReservation = () => {};
 
   render() {
@@ -215,7 +254,8 @@ class MyReservations extends Component {
                                     placement="top"
                                     overlay={
                                       <Tooltip id={`cancelReservation`}>
-                                        Cancelar reserva.
+                                        Cancelar reserva (hasta dos horas antes
+                                        de la presentación).
                                       </Tooltip>
                                     }
                                   >
@@ -224,6 +264,14 @@ class MyReservations extends Component {
                                         size="sm"
                                         onClick={this.cancelReservation}
                                         variant="outline-danger"
+                                        disabled={
+                                          this.compareTimes(
+                                            po.items[0].filmScreening.time,
+                                            po.items[0].filmScreening.date
+                                          )
+                                            ? false
+                                            : true
+                                        }
                                       >
                                         <XLg />
                                       </Button>

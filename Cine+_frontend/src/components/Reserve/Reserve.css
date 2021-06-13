@@ -1,1 +1,13 @@
 /* .m{align-items: ;} */
+
+.transparent-button {
+  background-color: transparent;
+  border-color: transparent;
+  color: rgb(19, 18, 18);
+}
+
+.center-counter {
+  display: flex;
+  align-items: flex-end;
+  text-align: end;
+}

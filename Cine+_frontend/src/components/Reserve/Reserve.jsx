@@ -10,8 +10,11 @@ import {
   ListGroup,
   Popover,
   OverlayTrigger,
+  Tooltip,
+  Badge,
 } from "react-bootstrap";
-import { TrashFill, Cart } from "react-bootstrap-icons";
+import "./Reserve.css";
+import { TrashFill, Cart, CartPlus } from "react-bootstrap-icons";
 import { withRouter } from "react-router-dom";
 
 class Reserve extends Component {
@@ -20,70 +23,70 @@ class Reserve extends Component {
     seats: [
       {
         room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "2", name: "B" },
         seat: { id: "1" },
         available: false,
       },
       {
         room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "2" },
         available: true,
       },
       {
         room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "3" },
         available: true,
       },
       {
         room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "4" },
         available: false,
       },
       {
         room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "5" },
         available: true,
       },
       {
         room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "6" },
         available: true,
       },
       {
         room: { id: "2", name: "Sala B" },
-        level: { id: "2", name: "Platea Alta" },
+        level: { id: "2", name: "Platea Alta", percentOfPriceIncrement: 10 },
         section: { id: "1", name: "A" },
         seat: { id: "7" },
-        available: false,
+        available: true,
       },
       {
         room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "8" },
         available: true,
       },
       {
         room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "9" },
         available: false,
       },
       {
         room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja" },
+        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
         section: { id: "1", name: "A" },
         seat: { id: "10" },
         available: true,
@@ -94,6 +97,7 @@ class Reserve extends Component {
     filmScreeningSelected: undefined,
     grouped: [],
     takenSeats: [],
+    boxOffice: undefined,
   };
 
   componentWillMount() {
@@ -120,6 +124,11 @@ class Reserve extends Component {
       "section.id",
     ]);
     let selectedRoom = grouped[0].room.id;
+    let selectedPriceModifications = [];
+    filmScreeningSelected[0].priceModifications.forEach((element) => {
+      var selected = element.optional ? false : true;
+      selectedPriceModifications.push({ mod: element, selected: selected });
+    });
     this.setState({
       filmScreeningSelected: filmScreeningSelected,
       film: filmScreeningSelected[0].film,
@@ -127,6 +136,7 @@ class Reserve extends Component {
       time: filmScreeningSelected[0].time,
       grouped: grouped,
       selectedRoom: selectedRoom,
+      selectedPriceModifications: selectedPriceModifications,
     });
   }
 
@@ -164,6 +174,51 @@ class Reserve extends Component {
     this.setState({ takenSeats: seats });
   };
 
+  setBoxOffice = (e) => {
+    this.setState({ boxOffice: e.target.value });
+  };
+
+  setPrice = (levelPercent, filmScreening) => {
+    let price =
+      filmScreening.price + filmScreening.price * (levelPercent / 100);
+    return price;
+  };
+
+  totalPrice = () => {
+    const total = this.state.takenSeats
+      .map((seat) =>
+        this.setPrice(
+          seat.level.percentOfPriceIncrement,
+          this.state.filmScreeningSelected[0]
+        )
+      )
+      .reduce(function (acc, val) {
+        return acc + val;
+      }, 0);
+    return total;
+  };
+
+  modifiedPrice = () => {
+    let price = this.totalPrice();
+    this.state.selectedPriceModifications
+      .filter((c) => c.selected === true)
+      .forEach((element) => {
+        var count = price * (element.mod.priceModification.value / 100);
+        if (element.mod.priceModification.type === "Descuento") {
+          price = price - count;
+        } else {
+          price = price + count;
+        }
+      });
+    return price;
+  };
+
+  changePriceModification = (index) => {
+    let nPriceModifications = [...this.state.selectedPriceModifications];
+    nPriceModifications[index].selected = !nPriceModifications[index].selected;
+    this.setState({ selectedPriceModifications: nPriceModifications });
+  };
+
   onFormSubmit = () => {
     let filmScreening = this.state.filmScreeningSelected.filter(
       (c) => c.room.id === this.state.selectedRoom
@@ -178,46 +233,69 @@ class Reserve extends Component {
   render() {
     return (
       <Container className="mt-5">
-        <h4>Reserva para la película {this.state.film.name}</h4>
-        <h6>
-          {formatDateRequest(this.state.date)} - {this.state.time}
-        </h6>
-        <OverlayTrigger
-          trigger="click"
-          key="ticketsCard"
-          placement="bottom"
-          overlay={
-            <Popover id="ticketsCard">
-              <Popover.Title as="h3">
-                {this.state.takenSeats.length === 0
-                  ? "No se han escogido asientos."
-                  : "Asientos escogidos"}
-              </Popover.Title>
-              <Popover.Content>
-                <ListGroup>
-                  {this.state.takenSeats.map((item) => (
-                    <ListGroupItem>
-                      {item.room.name}-{item.level.name}-{item.section.name}-
-                      {item.seat.id}
-                      <Button
-                        className="ml-3"
-                        style={{ padding: "0px", float: "right" }}
-                        onClick={() => this.handleDeleteSeat(item.seat.id)}
-                        variant="danger"
-                      >
-                        <TrashFill style={{ width: "100%" }} />
-                      </Button>
-                    </ListGroupItem>
-                  ))}
-                </ListGroup>
-              </Popover.Content>
-            </Popover>
-          }
-        >
-          <Button size="lg" variant="secondary" style={{ float: "right" }}>
-            <Cart />
-          </Button>
-        </OverlayTrigger>
+        <Row>
+          <Col>
+            <h4>Reserva para la película {this.state.film.name}</h4>
+            <h6>
+              {formatDateRequest(this.state.date)} - {this.state.time}
+            </h6>
+          </Col>
+        </Row>
+        <Row>
+          <Col></Col>
+          <Col className="center-counter" md={2}>
+            <Badge variant="dark">
+              Precio modificado {this.modifiedPrice()}
+            </Badge>
+          </Col>
+          <Col className="center-counter" md={3}>
+            <OverlayTrigger
+              trigger="click"
+              key="ticketsCard"
+              placement="bottom"
+              overlay={
+                <Popover id="ticketsCard">
+                  <Popover.Title as="h3">
+                    {this.state.takenSeats.length === 0
+                      ? "No se han escogido asientos."
+                      : "Asientos escogidos"}
+                  </Popover.Title>
+                  <Popover.Content>
+                    <ListGroup>
+                      {this.state.takenSeats.map((item) => (
+                        <ListGroupItem>
+                          {item.room.name}-{item.level.name}-{item.section.name}
+                          -{item.seat.id}
+                          <Button
+                            className="ml-3"
+                            style={{ padding: "0px", float: "right" }}
+                            onClick={() => this.handleDeleteSeat(item.seat.id)}
+                            variant="danger"
+                          >
+                            <TrashFill style={{ width: "100%" }} />
+                          </Button>
+                        </ListGroupItem>
+                      ))}
+                    </ListGroup>
+                  </Popover.Content>
+                </Popover>
+              }
+            >
+              <Button size="lg" variant="secondary" style={{ float: "right" }}>
+                <Badge variant="light">CUP: {this.totalPrice()}</Badge>
+                {"  "}
+                <Badge variant="light">
+                  Puntos:{" "}
+                  {this.state.takenSeats.length *
+                    this.state.filmScreeningSelected[0].points}
+                </Badge>
+                {"  "}
+                <Cart />
+              </Button>
+            </OverlayTrigger>
+          </Col>
+        </Row>
+
         <Row>
           <Col>
             <Row>
@@ -245,10 +323,15 @@ class Reserve extends Component {
                         type="number"
                       />
                     </Form.Group>
+                    <Form.Group controlId="numberOfTickets">
+                      <Form.Label className="mb-0">Taquilla:</Form.Label>
+                      <Form.Control
+                        style={{ width: "30%" }}
+                        onChange={this.setBoxOffice}
+                        type="text"
+                      />
+                    </Form.Group>
                   </Col>
-                  {/* <Col style={{ display: "flex", alignItems: "center" }}>
-                    <Button type="submit">Aceptar</Button>
-                  </Col> */}
                 </Form.Row>
               </Form>
             </Row>
@@ -259,7 +342,7 @@ class Reserve extends Component {
 
               <ListGroup>
                 {this.state.filmScreeningSelected[0].priceModifications.map(
-                  (item) => (
+                  (item, index) => (
                     <ListGroupItem>
                       {item.priceModification.name}{" "}
                       <Form.Check
@@ -268,7 +351,8 @@ class Reserve extends Component {
                         id={item.priceModification.id}
                         disabled={item.optional ? false : true}
                         type="checkbox"
-                      ></Form.Check>
+                        onChange={() => this.changePriceModification(index)}
+                      />
                     </ListGroupItem>
                   )
                 )}
@@ -307,23 +391,66 @@ class Reserve extends Component {
                           <ListGroup>
                             {s._items.map((seat, index) => (
                               <ListGroupItem
-                                style={{ width: "150px" }}
+                                style={{ width: "180px" }}
                                 variant={seat.available ? "success" : "danger"}
                                 id={seat.seat.id}
                               >
-                                {seat.section.name}
-                                {index + 1}
-                                {seat.available && (
-                                  <Button
-                                    variant="success"
-                                    id={seat.seat.id}
-                                    size="sm"
-                                    style={{ float: "right" }}
-                                    onClick={(e) => this.onSelectSeat(e, seat)}
-                                  >
-                                    Pick
-                                  </Button>
-                                )}
+                                <Row>
+                                  <Col md={1}>
+                                    {seat.section.name}
+                                    {index + 1}
+                                  </Col>
+
+                                  {seat.available && (
+                                    <Col style={{ alignItems: "center" }}>
+                                      <OverlayTrigger
+                                        overlay={
+                                          <Tooltip id="price/points">
+                                            CUP/Puntos
+                                          </Tooltip>
+                                        }
+                                      >
+                                        <span className="d-inline-block">
+                                          <Button
+                                            bsPrefix="transparent-button"
+                                            id={seat.seat.id}
+                                            size="sm"
+                                          >
+                                            {this.setPrice(
+                                              l.level.percentOfPriceIncrement,
+                                              this.state
+                                                .filmScreeningSelected[0]
+                                            )}
+                                            /
+                                            {
+                                              this.state
+                                                .filmScreeningSelected[0].points
+                                            }
+                                          </Button>
+                                        </span>
+                                      </OverlayTrigger>
+                                    </Col>
+                                  )}
+                                  {seat.available && (
+                                    <Col md={1}>
+                                      <Button
+                                        variant="success"
+                                        id={seat.seat.id}
+                                        size="sm"
+                                        style={{ float: "right" }}
+                                        onClick={(e) =>
+                                          this.onSelectSeat(
+                                            e,
+                                            seat,
+                                            this.state.filmScreeningSelected[0]
+                                          )
+                                        }
+                                      >
+                                        <CartPlus />
+                                      </Button>
+                                    </Col>
+                                  )}
+                                </Row>
                               </ListGroupItem>
                             ))}
                           </ListGroup>

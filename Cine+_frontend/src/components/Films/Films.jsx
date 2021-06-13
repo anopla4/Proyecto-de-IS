@@ -133,6 +133,11 @@ class Films extends Component {
                     <Card.Text>
                       <Container>
                         <p style={{ display: "inline" }} className="bold">
+                          {film.film.name}
+                        </p>
+                      </Container>
+                      <Container>
+                        <p style={{ display: "inline" }} className="bold">
                           Géneros:{" "}
                         </p>
                         {film.film.genres.map((genre) => genre.name).join(", ")}

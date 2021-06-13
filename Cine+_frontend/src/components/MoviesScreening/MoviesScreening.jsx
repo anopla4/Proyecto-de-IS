@@ -36,7 +36,12 @@ class MoviesScreening extends Component {
         room: { id: "1", name: "Sala A" },
         priceModifications: [
           {
-            priceModification: { id: "1", name: "Día de las madres" },
+            priceModification: {
+              id: "1",
+              name: "Día de las madres",
+              value: 20,
+              type: "Descuento",
+            },
             optional: false,
           },
         ],
@@ -75,7 +80,12 @@ class MoviesScreening extends Component {
         room: { id: "1", name: "Sala A" },
         priceModifications: [
           {
-            priceModification: { id: "1", name: "Día de las madres" },
+            priceModification: {
+              id: "1",
+              name: "Día de las madres",
+              value: 20,
+              type: "Descuento",
+            },
             optional: false,
           },
         ],
@@ -95,7 +105,12 @@ class MoviesScreening extends Component {
         date: "2021-06-05",
         priceModifications: [
           {
-            priceModification: { id: "1", name: "Día de las madres" },
+            priceModification: {
+              id: "1",
+              name: "Día de las madres",
+              value: 20,
+              type: "Descuento",
+            },
             optional: false,
           },
         ],
@@ -121,7 +136,12 @@ class MoviesScreening extends Component {
         room: { id: "1", name: "Sala A" },
         priceModifications: [
           {
-            priceModification: { id: "1", name: "Día de las madres" },
+            priceModification: {
+              id: "1",
+              name: "Día de las madres",
+              value: 20,
+              type: "Descuento",
+            },
             optional: false,
           },
         ],
@@ -162,7 +182,12 @@ class MoviesScreening extends Component {
 
         priceModifications: [
           {
-            priceModification: { id: "1", name: "Día de las madres" },
+            priceModification: {
+              id: "1",
+              name: "Día de las madres",
+              value: 20,
+              type: "Descuento",
+            },
             optional: false,
           },
         ],
@@ -185,7 +210,12 @@ class MoviesScreening extends Component {
 
         priceModifications: [
           {
-            priceModification: { id: "1", name: "Día de las madres" },
+            priceModification: {
+              id: "1",
+              name: "Día de las madres",
+              value: 20,
+              type: "Descuento",
+            },
             optional: false,
           },
         ],
