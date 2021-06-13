@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import MovieScreenings from "../MoviesScreening/MoviesScreening";
 import "./FilmScreenings.css";
+import "../../containers/App/App.css";
 import Add from "../Add/Add";
 
 class FilmScreenings extends Component {

@@ -14,6 +14,7 @@ import FilmForm from "../../components/FilmForm/FilmForm";
 import FilmScreeningForm from "../../components/FilmScreeningForm/FilmScreeningForm";
 import Top10Form from "../../components/Top10Form/Top10Form";
 import PurchaseOrder from "../../components/PurchaseOrder/PurchaseOrder";
+import MyReservations from "../../components/MyReservations/MyReservations";
 
 class App extends Component {
   // logginUserCallback = (username, password, jwt_token) => {
@@ -41,7 +42,7 @@ class App extends Component {
             />
             <Route path="/register" component={Register} />
             <Route path="/reserve" component={Reserve} />
-            <Route path="/myReservations" component={Home} />
+            <Route path="/myReservations" component={MyReservations} />
             <Route path="/filmScreenings" component={FilmScreenings} />
             <Route path="/movieScreenings" component={MoviesScreening} />
             <Route path="/films" component={Films} />

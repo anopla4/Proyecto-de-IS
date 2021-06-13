@@ -72,3 +72,16 @@ body {
   background-color: #6c757d;
   border-color: #6c757d;
 }
+
+.my-button {
+  background-color: palevioletred;
+  border-color: transparent;
+  color: white;
+  border-radius: 8px;
+}
+
+.my-button:hover {
+  background-color: white;
+  border-color: palevioletred;
+  color: palevioletred;
+}
