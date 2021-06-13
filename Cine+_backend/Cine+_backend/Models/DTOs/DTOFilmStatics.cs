@@ -13,7 +13,7 @@ namespace Cine__backend.Models.DTOs
         public string Country { get; set; }
         public string ImgPath { get; set; }
         public IFormFile Img { get; set; }
-        public int Raiting { get; set; }
+        public int Rating { get; set; }
         public int TimesSeen { get; set; }
     }
 }

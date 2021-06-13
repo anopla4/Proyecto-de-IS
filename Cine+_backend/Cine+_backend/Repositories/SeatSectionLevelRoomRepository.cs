@@ -36,7 +36,7 @@ namespace Cine__backend.Repositories
             {
                 throw new InvalidOperationException("Ya existe un asiento en la sección, el nivel y la sala especificadas");
             }
-            var newSeatSectionLevelRoom = new SeatSectionLevelRoom { SeatId = seatId, SectionId = seatId, 
+            var newSeatSectionLevelRoom = new SeatSectionLevelRoom { SeatId = seatId, SectionId = sectionId, 
                                                                     LevelId = levelId, RoomId = roomId };
             _context.SeatSectionLevelRooms.Add(newSeatSectionLevelRoom);
             _context.SaveChanges();

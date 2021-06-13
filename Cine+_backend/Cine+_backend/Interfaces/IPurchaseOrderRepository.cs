@@ -9,6 +9,7 @@ namespace Cine__backend.Interfaces
     public interface IPurchaseOrderRepository
     {
         List<PurchaseOrder> GetPurchaseOrders();
+        List<PurchaseOrder> GetPurchaseOrdersOfUser(string username);
         PurchaseOrder GetPurchaseOrder(Guid purchaseOrderId);
         PurchaseOrder AddPurchaseOrder(PurchaseOrder purchaseOrder);
         void PayPurchaseOrder(Guid purchaseOrderId);

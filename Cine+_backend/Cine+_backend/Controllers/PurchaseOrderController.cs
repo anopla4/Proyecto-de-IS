@@ -41,6 +41,20 @@ namespace Cine__backend.Controllers
             }
         }
 
+        [HttpGet("{username}")]
+        public IActionResult GetPurchaseOrdersOfUser(string username)
+        {
+            try
+            {
+                var purchaseOrders = _rep.GetPurchaseOrdersOfUser(username);
+                return Ok(purchaseOrders);
+            }
+            catch(Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
         [HttpPost]
         public IActionResult AddPurchaseOrder([FromForm] PurchaseOrder purchaseOrder)
         {

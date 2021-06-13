@@ -117,7 +117,7 @@ namespace Cine__backend.Repositories
 
             foreach(var seat in seats)
             {
-                seatsDTO.Add(new DTOSeat { Room = seat.Room, Level = seat.Level, Section = seat.Section, Seat = seat.Seat, Available = !(_context.Reservations.Any(c => c.FilmScreening.FilmId == filmId && c.FilmScreening.Date == date && c.FilmScreening.Time == time && c.SeatId == seat.SeatId)) });
+                seatsDTO.Add(new DTOSeat { Room = seat.Room, Level = seat.Level, Section = seat.Section, Seat = seat.Seat, Available = !(_context.Reservations.Any(c => c.FilmScreening.FilmId == filmId && c.FilmScreening.Date == date && c.FilmScreening.Time == time && c.SeatSeatId == seat.SeatId)) });
             }
             return seatsDTO;
         }

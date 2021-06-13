@@ -85,7 +85,7 @@ namespace Cine__backend.Repositories
                     ImgPath = film.ImgPath,
                     Name = film.Name,
                     Year = film.Year,
-                    Raiting = (int)(rating / count),
+                    Rating = (int)(rating / count),
                     TimesSeen = timesSeen,
                 });
             }
@@ -119,7 +119,7 @@ namespace Cine__backend.Repositories
                 ImgPath = film.ImgPath,
                 Name = film.Name,
                 Year = film.Year,
-                Raiting = (int)(rating / count),
+                Rating = (int)(rating / count),
                 TimesSeen = timesSeen,
             };
             return dTOFilmStatics;
