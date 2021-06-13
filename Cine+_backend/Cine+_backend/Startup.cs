@@ -2,26 +2,21 @@ using Cine__backend.Repositories;
 using Cine__backend.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Cine__backend.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Cine__backend.Settings;
 
 namespace Cine__backend
 {
@@ -37,19 +32,23 @@ namespace Cine__backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configuration from AppSettings
+            services.Configure<JWT>(Configuration.GetSection("JWT"));
 
             services.AddControllers();
             services.AddDbContext<AppDbContext>(options =>
                options.UseSqlServer(Configuration["Data:Cine:ConnectionString"]));
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISeatRepository, SeatRepository>();
             services.AddScoped<IRoomRepository,RoomRepository>();
+            services.AddScoped<ISectionRepository, SectionRepository>();
             services.AddScoped<ILevelRepository, LevelRepository>();
             services.AddScoped<IFilmRepository, FilmRepository>();
             services.AddScoped<IUserFilmRepository, UserFilmRepository>();
             services.AddScoped<IFilmScreeningRepository, FilmScreeningRepository>();
             services.AddScoped<IFilmScreeningPriceModificationRepository, FilmScreeningPriceModificationRepository>();
             services.AddScoped<IPriceModificationRepository, PriceModificationRepository>();
-            services.AddScoped<IGenreRepository, GenreRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();            
             services.AddScoped<IFilmRolRepository, FilmRolRepository>();
             services.AddScoped<IBookEntryRepository, BookEntryRepository>();
             services.AddScoped<ISeatSectionLevelRoomRepository, SeatSectionLevelRoomRepository>();
@@ -64,33 +63,35 @@ namespace Cine__backend
                         AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                     });
             });
+            services.AddIdentity<User, IdentityRole>().
+                AddEntityFrameworkStores<AppDbContext>();
             // For Identity  
-            services.AddIdentity<User, IdentityRole>()
-                    .AddEntityFrameworkStores<AppDbContext>()
-                    .AddDefaultTokenProviders();
+            //services.AddIdentity<User, IdentityRole>()
+            //        .AddEntityFrameworkStores<AppDbContext>()
+            //        .AddDefaultTokenProviders();
 
-            // Adding Authentication  
+            //Adding Athentication - JWT
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-
-            // Adding Jwt Bearer  
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
+                .AddJwtBearer(o =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = Configuration["JWT:ValidAudience"],
-                    ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
-                };
-            });
+                    o.RequireHttpsMetadata = false;
+                    o.SaveToken = false;
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = Configuration["JWT:Issuer"],
+                        ValidAudience = Configuration["JWT:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
+                    };
+                });
 
 
             services.AddSwaggerGen(c =>
@@ -124,6 +125,7 @@ namespace Cine__backend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

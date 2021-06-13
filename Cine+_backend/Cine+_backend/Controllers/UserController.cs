@@ -1,4 +1,5 @@
-﻿using Cine__backend.Interfaces;
+﻿using Cine__backend.Authentication;
+using Cine__backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,61 +14,100 @@ namespace Cine__backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserRepository _rep;
-        public UserController(IUserRepository repo)
+        private IUserRepository _userRep;
+        public UserController(IUserRepository userRepository)
         {
-            _rep = repo;
+            _userRep = userRepository;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "WebMaster,Admin")]
+        [HttpPost("register")]
+        public async Task<ActionResult> RegisterAsync([FromBody]RegisterModel model)
+        {
+            var response = await _userRep.RegisterAsync(model);
+            if(response.Status == Status.Error)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+            return Ok(response);
+        }
 
-        public IActionResult GetUsers()
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync(LoginModel model)
         {
-            return Ok(_rep.GetUsers());
+            var result = await _userRep.LoginAsync(model);
+            return Ok(result);
         }
-        [HttpGet("{userId}")]
-        public IActionResult GetUser(string userId)
-        {
-            try
-            {
-                var user = _rep.GetUser(userId);
-                return Ok(user);
-            }
-            catch(Exception e)
-            {
-                return NotFound(e.Message);
-            }
-        }
-        [HttpPost]
-        [Authorize(Roles = "WebMaster,Admin")]
 
-        public IActionResult AddUser()
+        [HttpPost("userAddrole")]
+        public async Task<IActionResult> UserAddRoleAsync(UserRoleModel model)
         {
-            try
+            var response = await _userRep.UserRemoveRoleAsync(model);
+            if (response.Status == Status.Error)
             {
-                var user = _rep.AddUser();
-                return Ok(user);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-            catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok(response);
         }
-        [HttpDelete("{userId}")]
-        [Authorize(Roles = "WebMaster,Admin")]
 
-        public IActionResult RemoveUser(string userId)
+        [HttpDelete("userRemoveRole")]
+        public async Task<IActionResult> UserRemoveRoleAsync(UserRoleModel model)
         {
-            try
+            var response = await _userRep.UserRemoveRoleAsync(model);
+            if(response.Status == Status.Error)
             {
-                _rep.RemoveUser(userId);
-                return Ok();
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-            catch(Exception e)
-            {
-                return NotFound(e.Message);
-            }
+            return Ok(response);
         }
+
+        //[HttpGet]
+        //[Authorize(Roles = "WebMaster,Admin")]
+        //public IActionResult GetUsers()
+        //{
+        //    return Ok(_rep.GetUsers());
+        //}
+        //[HttpGet("{userId}")]
+        //public IActionResult GetUser(string userId)
+        //{
+        //    try
+        //    {
+        //        var user = _rep.GetUser(userId);
+        //        return Ok(user);
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        return NotFound(e.Message);
+        //    }
+        //}
+        //[HttpPost]
+        //[Authorize(Roles = "WebMaster,Admin")]
+
+        //public IActionResult AddUser()
+        //{
+        //    try
+        //    {
+        //        var user = _rep.AddUser();
+        //        return Ok(user);
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
+        //[HttpDelete("{userId}")]
+        //[Authorize(Roles = "WebMaster,Admin")]
+
+        //public IActionResult RemoveUser(string userId)
+        //{
+        //    try
+        //    {
+        //        _rep.RemoveUser(userId);
+        //        return Ok();
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        return NotFound(e.Message);
+        //    }
+        //}
     }
 }

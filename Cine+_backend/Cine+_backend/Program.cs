@@ -1,5 +1,8 @@
+using Cine__backend.Authentication;
+using Cine__backend.Context;
 using Cine__backend.Repositories;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,30 +17,25 @@ namespace Cine__backend
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
                 try
                 {
-                    var context = services.GetRequiredService<AppDbContext>();
-                    context.Database.Migrate();
-
-                    // requires using Microsoft.Extensions.Configuration;
-                    var config = host.Services.GetRequiredService<IConfiguration>();
-                    // Set password with the Secret Manager tool.
-                    // dotnet user-secrets set SeedUserPW <pw>
-
-                    var testUserPw = "P@ssword123";
-
-                    SeedData.Initialize(services, testUserPw).Wait();
+                    //Seed Default Users
+                    var userManager = services.GetRequiredService<UserManager<User>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                 }
                 catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    var logger = loggerFactory.CreateLogger<Program>();
                     logger.LogError(ex, "An error occurred seeding the DB.");
                 }
             }

@@ -8,9 +8,18 @@ namespace Cine__backend.Interfaces
 {
     public interface IUserRepository
     {
-        List<User> GetUsers();
-        User GetUser(string userId);
-        User AddUser();
-        void RemoveUser(string userId);
+        Task<Response> RegisterAsync(RegisterModel model);
+
+        Task<AuthenticationModel> LoginAsync(LoginModel model);
+
+
+        Task<Response> UserAddRoleAsync(UserRoleModel model);
+
+        Task<Response> UserRemoveRoleAsync(UserRoleModel model);
+
+        //List<User> GetUsers();
+        //User GetUser(string userId);
+        //User AddUser();
+        //void RemoveUser(string userId);
     }
 }

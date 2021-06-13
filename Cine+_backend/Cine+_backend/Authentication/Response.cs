@@ -5,9 +5,14 @@ using System.Threading.Tasks;
 
 namespace Cine__backend.Authentication
 {
+    public enum Status
+    {
+        Error,
+        Succes
+    }
     public class Response
     {
-        public string Status { get; set; }
+        public Status Status { get; set; }
         public string Message { get; set; }
     }
 }
