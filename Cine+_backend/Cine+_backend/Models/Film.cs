@@ -15,9 +15,12 @@ namespace Cine__backend.Models
         [Required]
         public string Name { get; set; }
         [Required]
+        [StringLength(4,ErrorMessage = "El año de la pélicula no es válido")]
         public string Year { get; set; }
         [Required]
+        [MaxLength(30, ErrorMessage = "El nombre del país ingresado excede el número de caracteres permitidos(30)")]
         public string Country { get; set; }
+        [Url(ErrorMessage = "Url no válida")]
         public string ImgPath { get; set; }
         [NotMapped]
         public IFormFile Img { get; set; }

@@ -30,8 +30,10 @@ namespace Cine__backend.Models
         [Required]
         public string Time { get; set; }
         [Required]
+        [Range(0,10000.00,ErrorMessage = "El precio de la puesta en escena está fuera del rango permitido(0,10000.00)")]
         public double Price { get; set; }
         [Required]
+        [Range(0,100, ErrorMessage = "El precio de la puesta en escena en puntos está fuera del rango permitido(0,100)")]
         public double Points { get; set; }
 
     }

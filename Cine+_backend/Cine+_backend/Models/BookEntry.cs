@@ -12,8 +12,10 @@ namespace Cine__backend.Models
         [Key]
         public Guid Id { get; set; }
         [Required]
+        [Range(0,10000.00, ErrorMessage = "El valor asignado no está en el rango válido(0,10000.00)")]
         public double Income { get; set; }
         [Required]
+        [Range(0, 10000.00, ErrorMessage = "El valor asignado no está en el rango válido(0,10000.00)")]
         public double Expense { get; set; }
         [Required]
         [Column(TypeName = "date")]
