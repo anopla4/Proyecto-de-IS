@@ -63,7 +63,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
-        [HttpPatch()]
+        [HttpPatch]
         public IActionResult UpdateClubMember([FromForm]ClubMember clubMember)
         {
             try

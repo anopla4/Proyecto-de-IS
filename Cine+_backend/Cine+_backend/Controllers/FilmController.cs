@@ -25,6 +25,7 @@ namespace Cine__backend.Controllers
         {
             return Ok(_filmRep.GetFilms());
         }
+
         [HttpGet("{filmId}")]
         public IActionResult GetFilm(Guid filmId)
         {
@@ -59,7 +60,6 @@ namespace Cine__backend.Controllers
         
         [HttpPost]
         [Authorize(Roles = "WebMaster,Admin")]
-
         public IActionResult AddFilm([FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
             try
@@ -73,9 +73,9 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
         [HttpDelete("{filmId}")]
         [Authorize(Roles = "WebMaster,Admin")]
-
         public IActionResult DeleteFilm(Guid filmId, Film film)
         {
             try
@@ -89,9 +89,9 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
+
         [HttpPatch("{filmId}")]
         [Authorize(Roles = "WebMaster,Admin")]
-
         public IActionResult UpdateFilm(Guid filmId,[FromForm]Film film,[FromForm]List<Genre> genres,[FromForm]List<DTOMemberRol> membersRol)
         {
             try
