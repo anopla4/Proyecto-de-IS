@@ -11,10 +11,10 @@ namespace Cine__backend.Models
         [ForeignKey("FilmScreening")]
         public Guid FilmSreeningId { get; set; }
         public FilmScreening FilmScreening { get; set; }
-        public Guid SeatSeatId { get; set; }
-        public Guid SeatSectionId { get; set; }
-        public Guid SeatLevelId { get; set; }
-        public Guid SeatRoomId { get; set; }
+        public Guid? SeatSeatId { get; set; }
+        public Guid? SeatSectionId { get; set; }
+        public Guid? SeatLevelId { get; set; }
+        public Guid? SeatRoomId { get; set; }
         [ForeignKey("SeatSeatId, SeatSectionId, SeatLevelId, SeatRoomId")]
         public SeatSectionLevelRoom Seat { get; set; }
     }

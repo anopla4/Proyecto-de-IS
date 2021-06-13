@@ -93,17 +93,6 @@ namespace Cine__backend.Repositories
             //FilmRol
             modelBuilder.Entity<FilmRol>()
                 .HasData(new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" });
-            
-            ////---------------->>
-            //Item
-            //modelBuilder.Entity<Item>()
-            //    .Property(e => e.State)
-            //    .HasConversion(
-            //        v => v.ToString(),
-            //        v => (State)Enum.Parse(typeof(State), v));
-            /////---------------------->>
-
-
             //ClubMember
             modelBuilder.Entity<ClubMemberGenre>()
                 .HasKey(c => new { c.ClubMemberId, c.GenreId } );
@@ -167,22 +156,6 @@ namespace Cine__backend.Repositories
                 .HasOne(c => c.Room)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade);
-            //FilmFilmStaffMemberFilmRol
-            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-            //    .HasKey(c => new { c.FilmId, c.FilmStaffMemberId, c.FilmRolId});
-            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-            //    .HasOne(c => c.Film)
-            //    .WithMany()
-            //    .OnDelete(DeleteBehavior.SetNull);
-            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-            //    .HasOne(c => c.FilmStaffMember)
-            //    .WithMany()
-            //    .OnDelete(DeleteBehavior.Restrict);
-            //modelBuilder.Entity<FilmFilmStaffMemberFilmRol>()
-            //    .HasOne(c => c.FilmRol)
-            //    .WithMany()
-            //    .OnDelete(DeleteBehavior.SetNull);
-            //Reservation
             modelBuilder.Entity<Reservation>()
                 .HasOne(c => c.FilmScreening)
                 .WithMany()
@@ -190,7 +163,7 @@ namespace Cine__backend.Repositories
             modelBuilder.Entity<Reservation>()
                 .HasOne(c => c.Seat)
                 .WithMany()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
             //PurchaseOrder
             modelBuilder.Entity<PurchaseOrder>()
                 .HasMany(c => c.Items)
@@ -214,9 +187,7 @@ namespace Cine__backend.Repositories
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Seat> Seats { get; set; }
-        //public DbSet<FilmStaffMember> FilmStaffMembers { get; set; }
         public DbSet<Item> Items { get; set; }
-        //public DbSet<User> Users { get; set; }
         public DbSet<ClubMember> ClubMembers { get; set; }
         public DbSet<ClubMemberGenre> ClubMemberGenres { get; set; }
         public DbSet<BookEntry> BookEntries { get; set; }
@@ -232,7 +203,6 @@ namespace Cine__backend.Repositories
         public DbSet<UserFilm> UserFilms { get; set; }
         public DbSet<FilmScreeningPriceModification> FilmScreeningPriceModifications { get; set; }
         public DbSet<SeatSectionLevelRoom> SeatSectionLevelRooms { get; set; }
-        //public DbSet<FilmFilmStaffMemberFilmRol> FilmFilmStaffMemberFilmRols { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<Top10Film> Top10 { get; set; }
