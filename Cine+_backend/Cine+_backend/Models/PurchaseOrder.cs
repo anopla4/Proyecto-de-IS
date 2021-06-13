@@ -27,7 +27,7 @@ namespace Cine__backend.Models
         [Required]
         public string PurchaseTime { get; set; }
         public StatePurchaseOrder State { get; set; }
-        public string CredictCard { get; set; }
+        public string CreditCard { get; set; }
         public string BoxOffice { get; set; }
         public bool PaidByPoints { get; set; }
 
