@@ -10,16 +10,14 @@ namespace Cine__backend.Interfaces
 
         Task<AuthenticationModel> LoginAsync(LoginModel model);
 
-
-        Task<Response> UserAddRoleAsync(UserRoleModel model);
-
-        Task<Response> UserRemoveRoleAsync(UserRoleModel model);
-
         Task<IList<UserAccountModel>> GetUsersAsync();
         
         Task<UserAccountModel> GetUserByIdAsync(string userId);
         
         Task RemoveUserByIdAsync(string userId);
 
+        Task<IList<UserAccountModel>> UpdateUsersRoles(IList<UserRolesModel> usersRolesModels);
+
+        Task<Response> AddRoleAsync(string role);
     }
 }

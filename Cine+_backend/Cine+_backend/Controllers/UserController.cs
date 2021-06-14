@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cine__backend.Controllers
@@ -37,29 +38,33 @@ namespace Cine__backend.Controllers
         }
 
         [Authorize(Roles = UserRoles.WebMaster)]
-        [HttpPost("userAddrole")]
-        public async Task<IActionResult> UserAddRoleAsync(UserRoleModel model)
+        [HttpPatch("Roles")]
+        public async Task<IActionResult> UsersRolesAsync(List<UserRolesModel> usersRolesModels)
         {
-            var response = await _userRep.UserRemoveRoleAsync(model);
+            try
+            {
+                var userAccountModels = await _userRep.UpdateUsersRoles(usersRolesModels);
+                return Ok(userAccountModels);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+            
+        }
+
+        [Authorize(Roles = UserRoles.WebMaster)]
+        [HttpPost("addRole")]
+        public async Task<IActionResult> AddNewRole(string role)
+        {
+            var response = await _userRep.AddRoleAsync(role);
             if (response.Status == Status.Error)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
             return Ok(response);
         }
-
-        [Authorize(Roles = UserRoles.WebMaster)]
-        [HttpDelete("userRemoveRole")]
-        public async Task<IActionResult> UserRemoveRoleAsync(UserRoleModel model)
-        {
-            var response = await _userRep.UserRemoveRoleAsync(model);
-            if(response.Status == Status.Error)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
-            }
-            return Ok(response);
-        }
-
+        
         [HttpGet]
         [Authorize(Roles = UserRoles.WebMaster)]
         public async Task<IActionResult> GetUsersAsync()

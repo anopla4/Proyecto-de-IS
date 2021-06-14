@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Cine__backend.Authentication
 {
-    public class UserRoleModel
+    public class UserRolesModel
     {
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Role { get; set; }
+        public IList<string> Roles { get; set; }
     }
 }

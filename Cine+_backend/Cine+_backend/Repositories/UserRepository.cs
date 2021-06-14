@@ -27,7 +27,6 @@ namespace Cine__backend.Repositories
             _jwt = jwt.Value;
             _context = appDbContext;
         }
-
         public async Task<Response> RegisterAsync(RegisterModel model)
         {
 
@@ -111,53 +110,6 @@ namespace Cine__backend.Repositories
             return jwtSecurityToken;
         }
 
-
-        public async Task<Response> UserAddRoleAsync(UserRoleModel model)
-        {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return new Response
-                { Status = Status.Error, Message = $"Ninguna cuenta con email {model.Email}!" };
-            }
-
-            var roleExists = await _roleManager.RoleExistsAsync(model.Role);
-            if (roleExists)
-            {               
-                await _userManager.AddToRoleAsync(user, model.Role);
-                return new Response
-                { Status = Status.Succes, Message = $"Se asignó el rol {model.Role} al usuario {model.Email}." };
-            }
-            return new Response
-            { Status = Status.Error, Message = $"El rol {model.Role} no existe!" };
-
-        }
-
-        public async Task<Response> UserRemoveRoleAsync(UserRoleModel model)
-        {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return new Response
-                { Status = Status.Error, Message = $"Ninguna cuenta con email {model.Email}!" };
-            }
-
-            var roleExists = await _roleManager.RoleExistsAsync(model.Role);
-            if (!roleExists)
-            {
-                return new Response
-                { Status = Status.Error, Message = $"El rol {model.Role} no existe!" };
-            }
-            if(await _userManager.IsInRoleAsync(user, model.Role))
-            {
-                await _userManager.RemoveFromRoleAsync(user, model.Role);
-                return new Response
-                { Status = Status.Succes, Message = $"El usuario { model.Email } ya no posse el rol { model.Role }" };
-                }
-            return new Response
-            { Status = Status.Error, Message = $"El usuario {model.Email} no posse el rol {model.Role}" };
-        }
-
         public async Task<IList<UserAccountModel>> GetUsersAsync()
         {
             var all_users = new List<UserAccountModel>();
@@ -201,6 +153,52 @@ namespace Cine__backend.Repositories
             await _userManager.DeleteAsync(user);
             return;
         }
-    
+
+        public async Task<IList<UserAccountModel>> UpdateUsersRoles(IList<UserRolesModel> usersRolesModels)
+        {
+            foreach (var model in usersRolesModels)
+            {
+                if (await _userManager.FindByEmailAsync(model.Email) == null)
+                    throw new KeyNotFoundException($"No se encuentra el usuario {model.Email}");
+                foreach (var role in model.Roles)
+                    if (!await _roleManager.RoleExistsAsync(role))
+                        throw new KeyNotFoundException($"No se encuentra el rol {role}");
+            }
+            var users_accounts = new List<UserAccountModel>();
+            foreach(var model in usersRolesModels)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                foreach(var role in await _userManager.GetRolesAsync(user))
+                    await _userManager.RemoveFromRoleAsync(user, role);
+                foreach(var role in model.Roles)
+                    await _userManager.AddToRoleAsync(user, role);
+                users_accounts.Add(new UserAccountModel
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    ClubMember = await _context.ClubMembers.FindAsync(user.Id) != null,
+                    Roles = model.Roles
+                });
+            }
+            return users_accounts;
+        }
+
+        public async Task<Response> AddRoleAsync(string role)
+        {
+            if(await _roleManager.RoleExistsAsync(role))
+            {
+                return new Response
+                {
+                    Status = Status.Error,
+                    Message = $"Ya existe el rol {role}"
+                };
+            }
+            await _roleManager.CreateAsync(new IdentityRole(role));
+            return new Response
+            {
+                Status = Status.Succes,
+                Message = $"Se creó el rol {role}"
+            };
+        }
     }
 }
