@@ -37,6 +37,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddGenre(Genre genre)
@@ -51,6 +52,7 @@ namespace Cine__backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{genreId}")]
         public IActionResult UpdateGenre(Guid genreId, Genre genre)
@@ -65,6 +67,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{genreId}")]
         public IActionResult RemoveGenre(Guid genreId)

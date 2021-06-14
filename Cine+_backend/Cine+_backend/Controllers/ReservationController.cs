@@ -1,12 +1,8 @@
 ﻿using Cine__backend.Interfaces;
 using Cine__backend.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cine__backend.Controllers
 {
@@ -20,11 +16,13 @@ namespace Cine__backend.Controllers
         {
             this._reservationRep = reservationRepository; 
         }
+
         [HttpGet("{filmScreeningId}")]
         public IActionResult GetReservationsFromFilmScreening(Guid filmScreeningId)
         {
             return Ok(_reservationRep.GetReservationsFromFilmScreening(filmScreeningId));
         }
+
         [HttpPost]
         public IActionResult AddReservation(Reservation reservation)
         {
@@ -38,6 +36,7 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
         [HttpDelete("{reservationId}")]
         public IActionResult DeleteReservation(Guid reservationId)
         {
