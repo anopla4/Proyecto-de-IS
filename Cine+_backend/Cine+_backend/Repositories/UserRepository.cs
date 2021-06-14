@@ -1,6 +1,5 @@
 ﻿using Cine__backend.Authentication;
 using Cine__backend.Interfaces;
-using Cine__backend.Models;
 using Cine__backend.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -20,12 +19,13 @@ namespace Cine__backend.Repositories
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JWT _jwt;
-        //private AppDbContext _context;
-        public UserRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt)
+        private readonly AppDbContext _context;
+        public UserRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt, AppDbContext appDbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwt = jwt.Value;
+            _context = appDbContext;
         }
 
         public async Task<Response> RegisterAsync(RegisterModel model)
@@ -158,38 +158,49 @@ namespace Cine__backend.Repositories
             { Status = Status.Error, Message = $"El usuario {model.Email} no posse el rol {model.Role}" };
         }
 
+        public async Task<IList<UserAccountModel>> GetUsersAsync()
+        {
+            var all_users = new List<UserAccountModel>();
+            var users = _userManager.Users.ToList();
+            foreach(var user in users)
+            {
+                all_users.Add(new UserAccountModel
+                {
+                    ClubMember = await _context.ClubMembers.FindAsync(user.Id) != null,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    Roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false)
+                });
+            }
+            return all_users;
+        }
 
-        //public User AddUser()
-        //{
-        //    throw new NotImplementedException();
-        //    //User user = new User { Id = Guid.NewGuid() };
-        //    //_context.Users.Add(user);
-        //    //_context.SaveChanges();
-        //    //return user;
-        //}
-        //public User GetUser(string userId)
-        //{
-        //    var user = _context.Users.Find(userId);
-        //    if(user == null)
-        //    {
-        //        throw new KeyNotFoundException("No se encuentra el usuario especificado");
-        //    }
-        //    return user;
-        //}
-        //public List<User> GetUsers()
-        //{
-        //    return _context.Users.ToList();
-        //}
-        //public void RemoveUser(string userId)
-        //{
-        //    var user = _context.Users.Find(userId);
-        //    if (user == null)
-        //    {
-        //        throw new KeyNotFoundException("No se encuentra el usuario especificado");
-        //    }
-        //    _context.Users.Remove(user);
-        //    _context.SaveChanges();
-        //    return;
-        //}
+        public async Task<UserAccountModel> GetUserByIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                throw new KeyNotFoundException("No se encuentra el usuario especificado");
+            }
+            return new UserAccountModel
+                    {
+                        ClubMember = await _context.ClubMembers.FindAsync(user.Id) != null,
+                        Email = user.Email,
+                        UserName = user.UserName,
+                        Roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false)
+                    };
+        }
+       
+        public async Task RemoveUserByIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("No se encuentra el usuario especificado");
+            }
+            await _userManager.DeleteAsync(user);
+            return;
+        }
+    
     }
 }

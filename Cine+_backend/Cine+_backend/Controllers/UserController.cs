@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cine__backend.Controllers
@@ -38,6 +36,7 @@ namespace Cine__backend.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = UserRoles.WebMaster)]
         [HttpPost("userAddrole")]
         public async Task<IActionResult> UserAddRoleAsync(UserRoleModel model)
         {
@@ -49,6 +48,7 @@ namespace Cine__backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = UserRoles.WebMaster)]
         [HttpDelete("userRemoveRole")]
         public async Task<IActionResult> UserRemoveRoleAsync(UserRoleModel model)
         {
@@ -60,54 +60,41 @@ namespace Cine__backend.Controllers
             return Ok(response);
         }
 
-        //[HttpGet]
-        //[Authorize(Roles = "WebMaster,Admin")]
-        //public IActionResult GetUsers()
-        //{
-        //    return Ok(_rep.GetUsers());
-        //}
-        //[HttpGet("{userId}")]
-        //public IActionResult GetUser(string userId)
-        //{
-        //    try
-        //    {
-        //        var user = _rep.GetUser(userId);
-        //        return Ok(user);
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        return NotFound(e.Message);
-        //    }
-        //}
-        //[HttpPost]
-        //[Authorize(Roles = "WebMaster,Admin")]
+        [HttpGet]
+        [Authorize(Roles = UserRoles.WebMaster)]
+        public async Task<IActionResult> GetUsersAsync()
+        {
+            return Ok(await _userRep.GetUsersAsync());
+        }
 
-        //public IActionResult AddUser()
-        //{
-        //    try
-        //    {
-        //        var user = _rep.AddUser();
-        //        return Ok(user);
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-        //[HttpDelete("{userId}")]
-        //[Authorize(Roles = "WebMaster,Admin")]
+        [HttpGet("{userId}")]
+        [Authorize(Roles = UserRoles.WebMaster)]
+        public async Task<IActionResult> GetUserByIdAsync(string userId)
+        {
+            try
+            {
+                var user = await _userRep.GetUserByIdAsync(userId);
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
 
-        //public IActionResult RemoveUser(string userId)
-        //{
-        //    try
-        //    {
-        //        _rep.RemoveUser(userId);
-        //        return Ok();
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        return NotFound(e.Message);
-        //    }
-        //}
+        [HttpDelete("{userId}")]
+        [Authorize(Roles = UserRoles.WebMaster)]
+        public async Task<IActionResult> RemoveUserByIdAsync(string userId)
+        {
+            try
+            {
+                await _userRep.RemoveUserByIdAsync(userId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
     }
 }
