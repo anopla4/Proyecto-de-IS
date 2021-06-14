@@ -16,6 +16,7 @@ import Top10Form from "../../components/Top10Form/Top10Form";
 import PurchaseOrder from "../../components/PurchaseOrder/PurchaseOrder";
 import MyReservations from "../../components/MyReservations/MyReservations";
 import ClubMemberForm from "../../components/ClubMemberForm/ClubMemberForm";
+import BookEntry from "../../components/BookEntry/BookEntry";
 
 class App extends Component {
   // logginUserCallback = (username, password, jwt_token) => {
@@ -52,6 +53,7 @@ class App extends Component {
             <Route path="/top10Form" component={Top10Form} />
             <Route path="/purchaseOrder" component={PurchaseOrder} />
             <Route path="/clubMemberForm" component={ClubMemberForm} />
+            <Route path="/bookEntry" component={BookEntry} />
           </Switch>
         </Layout>
       </BrowserRouter>
