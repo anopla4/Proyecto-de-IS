@@ -90,7 +90,7 @@ namespace Cine__backend.Controllers
 
         [HttpDelete("{filmId}")]
         [Authorize(Roles = "WebMaster,Admin")]
-        public IActionResult DeleteFilm(Guid filmId, Film film)
+        public IActionResult DeleteFilm(Guid filmId)
         {
             try
             {

@@ -16,6 +16,7 @@ namespace Cine__backend.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //SeedSeatSectionLevelRoom
             Dictionary<int, char> rowIntToChar = new Dictionary<int, char> { { 0, 'A' }, { 1, 'B' }, { 2, 'C' }, { 3, 'D' }, { 4, 'E' }, { 5, 'F' }, { 6, 'G' }, { 7, 'H' } };
             List<Seat> seats = new List<Seat>();
             List<Room> RoomsAdd = new List<Room> { new Room { Id = Guid.NewGuid(), Name = "Sala 1" }, new Room { Id = Guid.NewGuid(), Name = "Sala 2" } };
@@ -71,6 +72,40 @@ namespace Cine__backend.Repositories
                     }
                 }
             }
+
+            //seddFilm
+            List<FilmRol> rols = new List<FilmRol>{new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" }};
+            List<Genre> genresTypes = new List<Genre> { new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" }, new Genre { Id = Guid.NewGuid(), Name = "Tragicomedia" }, new Genre { Id = Guid.NewGuid(), Name = "Hístorico" }, new Genre { Id = Guid.NewGuid(), Name = "Documental" }, new Genre { Id = Guid.NewGuid(), Name = "Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Ciencia Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Aventura" }, new Genre { Id = Guid.NewGuid(), Name = "Musical" }, new Genre { Id = Guid.NewGuid(), Name = "Erótico" } };
+            List<Film> films = new List<Film>();
+            List<FilmGenre> genres = new List<FilmGenre>();
+            List<FilmFilmRol> staffs = new List<FilmFilmRol>();
+            films.Add(new Film { Id = Guid.NewGuid(), Name = "Todo sobre mi madre}", Country = "España", Year = "1999", ImgPath = "Resources\\Images\\TodoSobreMiMadre.jpg" });
+            genres.Add(new FilmGenre { FilmId = films[0].Id, GenreId = genresTypes[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Pedro Almodovar", FilmId = films[0].Id, FilmRolId = rols[1].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Cecilia Roth", FilmId = films[0].Id, FilmRolId = rols[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Penélope Cruz", FilmId = films[0].Id, FilmRolId = rols[0].Id });
+            films.Add(new Film { Id = Guid.NewGuid(), Name = "Mulholland Drive", Country = "USA", Year = "2002", ImgPath = "Resources\\Images\\Mulholland.jpg" });
+            genres.Add(new FilmGenre { FilmId = films[1].Id, GenreId = genresTypes[3].Id});
+            staffs.Add(new FilmFilmRol { MemberRol = "David Lynch", FilmId = films[1].Id, FilmRolId = rols[1].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Naomi Watts", FilmId = films[1].Id, FilmRolId = rols[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Laura Harring", FilmId = films[1].Id, FilmRolId = rols[0].Id});
+            staffs.Add(new FilmFilmRol { MemberRol = "Justin Theroux", FilmId = films[1].Id, FilmRolId = rols[0].Id});
+            staffs.Add(new FilmFilmRol { MemberRol = "Mary Sweeny", FilmId = films[1].Id, FilmRolId = rols[6].Id});
+            films.Add(new Film { Id = Guid.NewGuid(), Name = "Pulp Fiction", Country = "USA", Year = "1994", ImgPath = "Resources\\Images\\PulpFiction.jpg" });
+            genres.Add(new FilmGenre { FilmId = films[2].Id, GenreId = genresTypes[0].Id});
+            staffs.Add(new FilmFilmRol { MemberRol = "Quentin Tarantino", FilmId = films[2].Id, FilmRolId = rols[1].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "John Travolta", FilmId = films[2].Id, FilmRolId = rols[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Una Thurman", FilmId = films[2].Id, FilmRolId = rols[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Samuel Jackson", FilmId = films[2].Id, FilmRolId = rols[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Quentin Tarantino", FilmId = films[2].Id, FilmRolId = rols[2].Id }); 
+            staffs.Add(new FilmFilmRol { MemberRol = "Roger Avary", FilmId = films[2].Id, FilmRolId = rols[2].Id });
+            films.Add(new Film { Id = Guid.NewGuid(), Name = "Forrest Gump", Country = "USA", Year = "1994", ImgPath = "Resources\\Images\\Forrest.jpg" });
+            genres.Add(new FilmGenre { FilmId = films[3].Id, GenreId = genresTypes[0].Id }); 
+            genres.Add(new FilmGenre { FilmId = films[3].Id, GenreId = genresTypes[2].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Robert Zemeckis", FilmId = films[3].Id, FilmRolId = rols[1].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Tom Hancks", FilmId = films[3].Id, FilmRolId = rols[0].Id });
+            staffs.Add(new FilmFilmRol { MemberRol = "Robin Wright", FilmId = films[3].Id, FilmRolId = rols[0].Id });       
+            
             base.OnModelCreating(modelBuilder);
             //Seats
             modelBuilder.Entity<Seat>()
@@ -89,10 +124,13 @@ namespace Cine__backend.Repositories
                 .HasData(seatsRoomsAdd.ToArray());
             //Genre
             modelBuilder.Entity<Genre>()
-                .HasData(new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" }, new Genre { Id = Guid.NewGuid(), Name = "Tragicomedia" }, new Genre { Id = Guid.NewGuid(), Name = "Hístorico" }, new Genre { Id = Guid.NewGuid(), Name = "Documental" }, new Genre { Id = Guid.NewGuid(), Name = "Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Ciencia Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Aventura" }, new Genre { Id = Guid.NewGuid(), Name = "Musical" }, new Genre { Id = Guid.NewGuid(), Name = "Erótico" });
+                .HasData(genresTypes.ToArray());
+            //Film
+            modelBuilder.Entity<Film>()
+                .HasData(films.ToArray());
             //FilmRol
             modelBuilder.Entity<FilmRol>()
-                .HasData(new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" });
+                .HasData(rols.ToArray());
             //ClubMember
             modelBuilder.Entity<ClubMemberGenre>()
                 .HasKey(c => new { c.ClubMemberId, c.GenreId } );
@@ -114,6 +152,8 @@ namespace Cine__backend.Repositories
                 .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FilmGenre>()
                 .HasOne(c => c.Genre).WithMany().OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FilmGenre>()
+                .HasData(genres.ToArray());
             //FilmFilmRol
             modelBuilder.Entity<FilmFilmRol>()
                .HasKey(c => new { c.FilmId, c.FilmRolId, c.MemberRol });
@@ -121,6 +161,8 @@ namespace Cine__backend.Repositories
                 .HasOne(c => c.Film).WithMany().OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FilmFilmRol>()
                 .HasOne(c => c.FilmRol).WithMany().OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FilmFilmRol>()
+                .HasData(staffs.ToArray());
             //UserFilm
             modelBuilder.Entity<UserFilm>()
                 .HasKey(c => new { c.UserId, c.FilmId });
