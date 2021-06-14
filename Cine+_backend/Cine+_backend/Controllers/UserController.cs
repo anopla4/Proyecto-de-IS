@@ -54,7 +54,7 @@ namespace Cine__backend.Controllers
         }
 
         [Authorize(Roles = UserRoles.WebMaster)]
-        [HttpPost("addRole")]
+        [HttpPost("addRole/{role}")]
         public async Task<IActionResult> AddNewRole(string role)
         {
             var response = await _userRep.AddRoleAsync(role);

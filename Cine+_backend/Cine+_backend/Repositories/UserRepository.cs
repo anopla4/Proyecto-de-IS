@@ -29,7 +29,6 @@ namespace Cine__backend.Repositories
         }
         public async Task<Response> RegisterAsync(RegisterModel model)
         {
-
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return new Response 
@@ -39,21 +38,22 @@ namespace Cine__backend.Repositories
             if (userWithSameEmail != null)
                 return new Response 
                 { Status = Status.Error, Message = $"Ya existe un usuario con email {model.Email}!" };
-
             var user = new User
             {
                 UserName = model.Username,
                 Email = model.Email,
                 EmailConfirmed = true
             };
-
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
+                return new Response
+                { Status = Status.Succes, Message = $"Usuario {user.UserName} registrado" };
             }
             return new Response
-            { Status = Status.Succes, Message = $"Usuario {user.UserName} registrado" };
+            { Status = Status.Error, Message = $"El password ingresado no es válido!" +
+            $" Debe incluir mayúsculas, minúsculas, números y algún caracter especial." };
         }
 
         public async Task<AuthenticationModel> LoginAsync(LoginModel model)
