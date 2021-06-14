@@ -17,6 +17,7 @@ import PurchaseOrder from "../../components/PurchaseOrder/PurchaseOrder";
 import MyReservations from "../../components/MyReservations/MyReservations";
 import ClubMemberForm from "../../components/ClubMemberForm/ClubMemberForm";
 import BookEntry from "../../components/BookEntry/BookEntry";
+import WebMaster from "../../components/WebMaster/WebMaster";
 
 class App extends Component {
   // logginUserCallback = (username, password, jwt_token) => {
@@ -54,6 +55,7 @@ class App extends Component {
             <Route path="/purchaseOrder" component={PurchaseOrder} />
             <Route path="/clubMemberForm" component={ClubMemberForm} />
             <Route path="/bookEntry" component={BookEntry} />
+            <Route path="/webMaster" component={WebMaster} />
           </Switch>
         </Layout>
       </BrowserRouter>

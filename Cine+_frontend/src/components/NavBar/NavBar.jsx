@@ -38,6 +38,9 @@ const navigation = (props) => {
           <NavItem>
             <Nav.Link href="/bookEntry">Contabilidad</Nav.Link>
           </NavItem>
+          <NavItem>
+            <Nav.Link href="/webMaster">Modificar roles</Nav.Link>
+          </NavItem>
         </Nav>
         <Nav className="ml-auto">
           <Nav.Item>
