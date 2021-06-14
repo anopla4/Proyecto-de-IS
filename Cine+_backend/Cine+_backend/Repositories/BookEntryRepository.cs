@@ -18,6 +18,7 @@ namespace Cine__backend.Repositories
         public BookEntry AddBookEntry(BookEntry bookEntry)
         {
             bookEntry.Id = Guid.NewGuid();
+            bookEntry.Date = DateTime.Now;
             _context.BookEntries.Add(bookEntry);
             _context.SaveChanges();
             return bookEntry;
