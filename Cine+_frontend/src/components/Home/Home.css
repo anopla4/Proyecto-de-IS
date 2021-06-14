@@ -8,10 +8,14 @@
 }
 
 .carousel {
-  width: 90%;
+  align-items: left;
+  background-color: black;
   margin: auto;
 }
 
+.carousel-item {
+  text-align: left;
+}
 .item img {
   width: 100%;
   height: 100% !important;
@@ -20,14 +24,4 @@
 
 .item {
   height: 550px;
-}
-
-.carousel {
-  align-items: center;
-  background-color: black;
-  width: "100%";
-}
-
-.carousel-item {
-  text-align: center;
 }
