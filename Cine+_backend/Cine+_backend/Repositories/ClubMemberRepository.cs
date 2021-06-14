@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cine__backend.Repositories
 {
@@ -73,6 +72,8 @@ namespace Cine__backend.Repositories
             currClubMember.DateOfBirth = clubMember.DateOfBirth;
             currClubMember.Nationality = clubMember.Nationality;
             currClubMember.Points = clubMember.Points;
+            currClubMember.ImgPath = currClubMember.ImgPath;
+            currClubMember.Img = currClubMember.Img;
             _context.ClubMembers.Update(currClubMember);
             _context.SaveChanges();
             return currClubMember;

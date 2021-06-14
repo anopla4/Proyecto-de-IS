@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Authentication;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,10 @@ namespace Cine__backend.Models
         public DateTime? DateOfBirth { get; set; }
         public string Nationality { get; set; }
         public int Points { get; set; }
+        [Url(ErrorMessage = "Url no válida")]
+        public string ImgPath { get; set; }
+        [NotMapped]
+        public IFormFile Img { get; set; }
 
     }
 }
