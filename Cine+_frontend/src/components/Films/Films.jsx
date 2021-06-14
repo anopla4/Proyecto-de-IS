@@ -9,43 +9,43 @@ import ReactStars from "react-rating-stars-component";
 class Films extends Component {
   state = {
     filmsRated: [],
-    // films: [],
-    films: [
-      {
-        film: {
-          id: 1,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-          genres: [{ name: "Thriller" }],
-        },
-        staff: [
-          { rol: { name: "Actor" }, member: "John Travolta" },
-          { rol: { name: "Director" }, member: "Quentin Tarantino" },
-        ],
-      },
-      {
-        film: {
-          id: 2,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-          genres: [{ name: "Thriller" }],
-        },
-        staff: [
-          { rol: { name: "Actor" }, member: "John Travolta" },
-          { rol: { name: "Director" }, member: "Quentin Tarantino" },
-        ],
-      },
-    ],
+    films: [],
+    // films: [
+    //   {
+    //     film: {
+    //       id: 1,
+    //       name: "Pulp Fiction",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/pulpFiction.jpg",
+    //       genres: [{ name: "Thriller" }],
+    //     },
+    //     staff: [
+    //       { rol: { name: "Actor" }, member: "John Travolta" },
+    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
+    //     ],
+    //   },
+    //   {
+    //     film: {
+    //       id: 2,
+    //       name: "Pulp Fiction",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/pulpFiction.jpg",
+    //       genres: [{ name: "Thriller" }],
+    //     },
+    //     staff: [
+    //       { rol: { name: "Actor" }, member: "John Travolta" },
+    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
+    //     ],
+    //   },
+    // ],
   };
 
   componentDidMount() {
-    fetch("https://localhost:44334/api/Film", {
+    fetch("https://localhost:44313/api/Film", {
       mode: "cors",
     })
       .then((response) => {
@@ -127,7 +127,7 @@ class Films extends Component {
 
                   <Card.Img
                     variant="top"
-                    src={`http://localhost:8000/${film.film.imgPath}`}
+                    src={`https://localhost:44313/${film.film.imgPath}`}
                   />
                   <Card.Body>
                     <Card.Text>
@@ -140,17 +140,16 @@ class Films extends Component {
                         <p style={{ display: "inline" }} className="bold">
                           Géneros:{" "}
                         </p>
-                        {film.film.genres.map((genre) => genre.name).join(", ")}
-                        .
+                        {film.genres.map((genre) => genre.name).join(", ")}.
                       </Container>
-                      {film.staff.map((member) => (
+                      {/* {film.staff.map((member) => (
                         <Container>
                           <p style={{ display: "inline" }} className="bold">
                             {member.rol.name}:{" "}
                           </p>
                           {member.member}.
                         </Container>
-                      ))}
+                      ))} */}
                       <DeleteEdit
                         onDelete={() =>
                           this.handleOnDelete(film.film.id, index)
