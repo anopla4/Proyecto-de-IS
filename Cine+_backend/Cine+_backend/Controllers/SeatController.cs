@@ -6,7 +6,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SeatController : ControllerBase
@@ -16,11 +16,13 @@ namespace Cine__backend.Controllers
         {
             this._seatRep = seatRepository;
         }
+
         [HttpGet]
         public IActionResult GetSeats()
         {
             return Ok(_seatRep.GetSeats());
         }
+
         [HttpGet("{seatId}")]
         public IActionResult GetSeat(Guid seatId)
         {
@@ -34,7 +36,9 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
         [HttpPost]
+        [Authorize(Roles = "WebMaster,Admin")]
         public IActionResult AddSeat(Seat seat)
         {
             try
@@ -48,7 +52,9 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
         [HttpDelete("{seatId}")]
+        [Authorize(Roles = "WebMaster,Admin")]
         public IActionResult RemoveSeat(Guid seatId)
         {
             try

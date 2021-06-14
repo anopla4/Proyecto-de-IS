@@ -7,7 +7,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SectionController : ControllerBase
@@ -17,11 +17,13 @@ namespace Cine__backend.Controllers
         {
             this._sectionRep = sectionRepository;
         }
+
         [HttpGet]
         public IActionResult GetSections()
         {
             return Ok(_sectionRep.GetSections());
         }
+
         [HttpGet("{setionId}")]
         public IActionResult GetSection(Guid sectionId)
         {
@@ -35,6 +37,8 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddSection(Section section)
         {
@@ -48,6 +52,8 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{sectionId}")]
         public IActionResult RemoveSection(Guid sectionId)
         {
@@ -62,6 +68,8 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{sectionId}")]
         public IActionResult UpdateSect(Guid sectionId, Section section)
         {

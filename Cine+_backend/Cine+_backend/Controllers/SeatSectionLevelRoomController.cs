@@ -6,7 +6,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SeatSectionLevelRoomController : ControllerBase
@@ -16,11 +16,13 @@ namespace Cine__backend.Controllers
         {
             this._seatSectionLevelRoomRep = seatSectionLevelRoomRepository;
         }
+
         [HttpGet]
         public IActionResult GetAllSeatSectionLevelRooms()
         {
             return Ok(_seatSectionLevelRoomRep.GetAllSeatSectionLevelRoom());
         }
+
         [HttpGet("{seatId}/{sectionId}/{levelId}/{roomId}")]
         public IActionResult GetSeatSectionLevelRoom(Guid seatId,Guid sectionId,Guid levelId,Guid roomId)
         {
@@ -34,6 +36,8 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddSeatSeactionLevelRoom([FromForm]Guid seatId, [FromForm] Guid sectionId, [FromForm] Guid levelId, [FromForm] Guid roomId)
         {
@@ -52,6 +56,8 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{seatId}/{sectionId}/{levelId}/{roomId}")]
         public IActionResult RemoveSeatSeactionLevelRomm(Guid seatId,Guid sectionId,Guid levelId,Guid roomId)
         {
