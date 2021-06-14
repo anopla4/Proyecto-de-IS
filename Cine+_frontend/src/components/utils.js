@@ -43,6 +43,19 @@ function formatDateRequest(date) {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
+function compareList(m, n) {
+  let a = [...m.sort()];
+  let b = [...n.sort()];
+
+  if (a.length !== b.length) return false;
+  for (let index = 0; index < a.length; index++) {
+    const ai = a[index];
+    const bi = b[index];
+    if (ai !== bi) return false;
+  }
+  return true;
+}
+
 let moviesFilter = [
   {
     id: 1,
@@ -108,4 +121,5 @@ module.exports = {
   onlyUnique,
   formatDate,
   formatDateRequest,
+  compareList,
 };
