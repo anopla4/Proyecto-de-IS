@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { TrashFill } from "react-bootstrap-icons";
 import Add from "../Add/Add";
+import { formatDateRequest } from "../utils";
 
 class ClubMemberForm extends Component {
   state = {
@@ -50,35 +51,25 @@ class ClubMemberForm extends Component {
   onFormSubmit = (e) => {
     let formElements = e.target.elements;
     const name = formElements.name.value;
-    const year = formElements.year.value;
-    const country = formElements.country.value;
+    const birthdate = formElements.birthdate.value;
+    const nationality = formElements.nationality.value;
     let film = {
       name,
-      year,
-      country,
+      birthdate,
+      nationality,
     };
 
     var formdata = new FormData();
     formdata.append("film.name", film.name);
-    formdata.append("film.country", film.country);
-    formdata.append("film.year", film.year);
+    formdata.append("film.birthdate", film.birthdate);
+    formdata.append("film.nationality", film.nationality);
     if (this.state.file)
       formdata.append("film.img", this.state.file, this.state.file.name);
     for (let i = 0; i < this.state.selectedGenres.length; i++) {
       formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
       formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
     }
-    for (let i = 0; i < this.state.selectedRols.length; i++) {
-      formdata.append(`staff[${i}].rol.id`, this.state.selectedRols[i].rol.id);
-      formdata.append(
-        `staff[${i}].rol.name`,
-        this.state.selectedRols[i].rol.name
-      );
-      formdata.append(`staff[${i}].member`, this.state.selectedRols[i].member);
-    }
-    let postUrl =
-      "https://localhost:44334/api/Film" +
-      (this.state.edit ? `/${this.state.filmEdit.id}` : "");
+    // let postUrl = `https://localhost:44334/api/ClubMember/${}`;
     // fetch(postUrl, {
     //   mode: "cors",
     //   headers: {
@@ -97,7 +88,7 @@ class ClubMemberForm extends Component {
     //   .catch(function (error) {
     //     console.log("Hubo un problema con la petición Fetch:" + error.message);
     //   });
-    this.props.history.push("/home");
+    this.props.history.push("/");
   };
 
   addNewGenre = (e) => {
@@ -158,7 +149,7 @@ class ClubMemberForm extends Component {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="age">
+            <Form.Group controlId="nationality">
               <Form.Label>Nacionalidad:</Form.Label>
               <Form.Control type="text" name="nationality" />
             </Form.Group>
