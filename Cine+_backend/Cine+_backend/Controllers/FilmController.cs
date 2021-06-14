@@ -39,6 +39,20 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
+        [HttpGet("{filmId}/staff")]
+        public IActionResult GetFilmStaff(Guid filmId)
+        {
+            try
+            {
+                var staff = _filmRep.GetFilmStaff(filmId);
+                return Ok(staff);
+            }
+            catch(Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
         private void SaveFile(Film film)
         {
             var file = film.Img;

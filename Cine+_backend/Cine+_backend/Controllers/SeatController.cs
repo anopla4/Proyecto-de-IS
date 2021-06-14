@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Interfaces;
+using Cine__backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -34,12 +35,13 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddSeat()
+        public IActionResult AddSeat(Seat seat)
         {
             try
             {
-                var seat = _seatRep.AddSeat();
-                return Ok(seat);
+                seat = _seatRep.AddSeat(seat);
+                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + seat.Id, seat);
+
             }
             catch (Exception e)
             {

@@ -10,7 +10,7 @@ namespace Cine__backend.Interfaces
     {
         IList<Seat> GetSeats();
         Seat GetSeat(Guid seatId);
-        Seat AddSeat();
+        Seat AddSeat(Seat seat);
         void RemoveSeat(Guid seatId);
     }
 }

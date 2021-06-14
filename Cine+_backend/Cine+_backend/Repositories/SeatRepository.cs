@@ -14,9 +14,9 @@ namespace Cine__backend.Repositories
         {
             _context = context;
         }
-        public Seat AddSeat()
+        public Seat AddSeat(Seat seat)
         {
-            Seat seat = new Seat { Id = Guid.NewGuid() };
+            seat.Id = Guid.NewGuid();
             _context.Seats.Add(seat);
             _context.SaveChanges();
             return seat;

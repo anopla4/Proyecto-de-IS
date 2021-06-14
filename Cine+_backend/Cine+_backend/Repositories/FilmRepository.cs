@@ -135,5 +135,21 @@ namespace Cine__backend.Repositories
             };           
             return dtoFilmStaff;
         }
+
+        public List<DTOMemberRol> GetFilmStaff(Guid filmId)
+        {
+            if(_context.Films.Find(filmId) == null)
+            {
+                throw new KeyNotFoundException("No se encuentra la película especificada");
+            }
+            var staff = _context.FilmFilmRols.Include(c => c.FilmRol).Where(c => c.FilmId == filmId).ToList();
+            List<DTOMemberRol> members = new List<DTOMemberRol>();
+            foreach(var member in staff)
+            {
+                var dtoMember = new DTOMemberRol { Member = member.MemberRol, Rol = member.FilmRol };
+                members.Add(dtoMember);
+            }
+            return members;
+        }
     }
 }

@@ -35,11 +35,11 @@ namespace Cine__backend.Controllers
             }
         }
         [HttpPost]
-        public IActionResult AddSeatSeactionLevelRoom([FromForm]Seat seat, [FromForm] Section section, [FromForm] Level level, [FromForm] Room room)
+        public IActionResult AddSeatSeactionLevelRoom([FromForm]Guid seatId, [FromForm] Guid sectionId, [FromForm] Guid levelId, [FromForm] Guid roomId)
         {
             try
             {
-                _seatSectionLevelRoomRep.AddSeatSectionLevelRoom(seat.Id, section.Id, level.Id, room.Id);
+                _seatSectionLevelRoomRep.AddSeatSectionLevelRoom(seatId, sectionId, levelId, roomId);
                 return Ok();
             }
             catch (Exception e)
