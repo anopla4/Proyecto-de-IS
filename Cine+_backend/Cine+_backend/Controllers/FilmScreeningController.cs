@@ -8,7 +8,6 @@ using System.Collections.Generic;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FilmScreeningController : ControllerBase

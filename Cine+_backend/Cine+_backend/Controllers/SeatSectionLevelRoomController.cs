@@ -6,7 +6,6 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SeatSectionLevelRoomController : ControllerBase

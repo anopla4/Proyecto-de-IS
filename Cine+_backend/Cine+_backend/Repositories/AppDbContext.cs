@@ -128,6 +128,11 @@ namespace Cine__backend.Repositories
             //Film
             modelBuilder.Entity<Film>()
                 .HasData(films.ToArray());
+            //PriceModification
+            modelBuilder.Entity<PriceModification>()
+                .HasData(new PriceModification { Id = Guid.NewGuid(), Name = "Estudiante", Value = 10, Type = "Descuento", Description = "Descuento del 10% para estudiantes que muestren el carnet." },
+                new PriceModification { Id = Guid.NewGuid(), Name = "Madres", Value = 10, Type = "Descuento", Description = "Descuento por el día de las madres." },
+                new PriceModification { Id = Guid.NewGuid(), Name = "Descuento del Director", Value = 10, Type = "Descuento", Description = "Descuento decidido por la direccion del cine por un motivo que surja." });
             //FilmRol
             modelBuilder.Entity<FilmRol>()
                 .HasData(rols.ToArray());

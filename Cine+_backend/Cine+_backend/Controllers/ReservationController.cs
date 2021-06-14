@@ -6,7 +6,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "WebMaster,Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReservationController : ControllerBase
