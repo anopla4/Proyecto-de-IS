@@ -44,6 +44,7 @@ namespace Cine__backend.Repositories
             {
                 UserName = model.Username,
                 Email = model.Email,
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
