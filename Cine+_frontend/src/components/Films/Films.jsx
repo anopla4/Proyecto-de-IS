@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Container, Card, Row, Col, CardDeck } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Row,
+  Col,
+  Accordion,
+  CardDeck,
+} from "react-bootstrap";
 import "../../containers/App/App.css";
 import "./Films.css";
 import Add from "../Add/Add";
@@ -45,7 +52,7 @@ class Films extends Component {
   };
 
   componentDidMount() {
-    fetch("https://localhost:44313/api/Film", {
+    fetch("https://localhost:44313/api/Film/staff", {
       mode: "cors",
     })
       .then((response) => {

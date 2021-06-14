@@ -39,8 +39,8 @@ class App extends Component {
             <Route path="/" exact component={Home} />
             <Route
               path="/login"
-              component={() => (
-                <Login onLoginCallback={this.logginUserCallback} />
+              component={(props) => (
+                <Login {...props} onLoginCallback={this.logginUserCallback} />
               )}
             />
             <Route path="/register" component={Register} />

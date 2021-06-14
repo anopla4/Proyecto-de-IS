@@ -5,16 +5,16 @@ import "./Login.css";
 
 class Login extends Component {
   state = {
-    username: undefined,
+    email: undefined,
     password: undefined,
   };
 
   onFormSubmit = (e) => {
     let user = {
-      username: this.state.username,
+      email: this.state.email,
       password: this.state.password,
     };
-    fetch("https://localhost:44334/api/Authenticate/login", {
+    fetch("https://localhost:44313/api/User/login", {
       mode: "cors",
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -27,11 +27,7 @@ class Login extends Component {
         return response.json();
       })
       .then((response) => {
-        this.props.onLoginCallback(
-          user.username,
-          user.password,
-          response.token
-        );
+        this.props.onLoginCallback(user.email, user.password, response.token);
       })
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
@@ -47,13 +43,13 @@ class Login extends Component {
         </Row>
         <Row className="center-col" style={{ width: "100%" }}>
           <Form style={{ width: "30%" }}>
-            <Form.Group controlId="username">
-              <Form.Label>Nombre de Usuario</Form.Label>
+            <Form.Group controlId="email">
+              <Form.Label>Correo electrónico</Form.Label>
               <Form.Control
-                type="username"
+                type="email"
                 placeholder="Ponga el correo"
                 onChange={(e) => {
-                  this.setState({ username: e.target.value });
+                  this.setState({ email: e.target.value });
                 }}
               />
             </Form.Group>

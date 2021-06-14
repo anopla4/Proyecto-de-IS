@@ -7,11 +7,12 @@ class Register extends Component {
   onFormSubmit = (e) => {
     let formElements = e.target.elements;
     let user = {
-      username: formElements.value,
-      password: formElements.password,
-      email: formElements.email,
+      username: formElements.username.value,
+      password: formElements.password.value,
+      email: formElements.email.value,
     };
-    fetch("https://localhost:44313/api/Authenticate/register", {
+    console.log("ana");
+    fetch("https://localhost:44313/api/User/register", {
       mode: "cors",
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -36,7 +37,7 @@ class Register extends Component {
           <h4>Registrarse</h4>
         </Row>
         <Row className="center-col">
-          <Form style={{ width: "30%" }}>
+          <Form style={{ width: "30%" }} onSubmit={this.onFormSubmit}>
             <Form.Group controlId="username">
               <Form.Label>Nombre de usuario:</Form.Label>
               <Form.Control
