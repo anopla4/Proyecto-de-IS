@@ -22,14 +22,16 @@ class FilmForm extends Component {
     addRol: false,
     addGenre: false,
     filmEdit: {},
-    genres: [
-      { name: "Drama", id: 1 },
-      { name: "Comedia", id: 2 },
-    ],
-    rols: [
-      { name: "Actor", id: 1 },
-      { name: "Director", id: 2 },
-    ],
+    genres: [],
+    rols: [],
+    // genres: [
+    //   { name: "Drama", id: 1 },
+    //   { name: "Comedia", id: 2 },
+    // ],
+    // rols: [
+    //   { name: "Actor", id: 1 },
+    //   { name: "Director", id: 2 },
+    // ],
     showToast: false,
     newGenre: undefined,
     newMemberName: undefined,
@@ -50,21 +52,37 @@ class FilmForm extends Component {
       });
     }
 
-    // fetch("https://localhost:44334/api/Genre", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ genres: response});
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/Genre", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ genres: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+
+    fetch("https://localhost:44313/api/FilmRol", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ rols: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   }
 
   componentDidMount() {}
@@ -107,7 +125,7 @@ class FilmForm extends Component {
       formdata.append(`staff[${i}].member`, this.state.selectedRols[i].member);
     }
     let postUrl =
-      "https://localhost:44334/api/Film" +
+      "https://localhost:44313/api/Film" +
       (this.state.edit ? `/${this.state.filmEdit.id}` : "");
     // fetch(postUrl, {
     //   mode: "cors",
@@ -204,7 +222,7 @@ class FilmForm extends Component {
     let genre = {
       name,
     };
-    fetch("https://localhost:44334/api/Genre", {
+    fetch("https://localhost:44313/api/Genre", {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
@@ -232,7 +250,7 @@ class FilmForm extends Component {
     let rol = {
       name,
     };
-    fetch("https://localhost:44334/api/Rol", {
+    fetch("https://localhost:44313/api/Rol", {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",

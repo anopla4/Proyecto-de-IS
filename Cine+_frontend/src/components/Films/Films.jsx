@@ -142,14 +142,14 @@ class Films extends Component {
                         </p>
                         {film.genres.map((genre) => genre.name).join(", ")}.
                       </Container>
-                      {/* {film.staff.map((member) => (
+                      {film.staff.map((member) => (
                         <Container>
                           <p style={{ display: "inline" }} className="bold">
                             {member.rol.name}:{" "}
                           </p>
                           {member.member}.
                         </Container>
-                      ))} */}
+                      ))}
                       <DeleteEdit
                         onDelete={() =>
                           this.handleOnDelete(film.film.id, index)

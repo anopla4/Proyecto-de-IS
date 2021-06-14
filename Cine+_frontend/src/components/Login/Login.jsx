@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Form, Button,Toast, Col, Container } from "react-bootstrap";
+import { Form, Button, Toast, Row, Col, Container } from "react-bootstrap";
 import isLoggedIn from "../utils";
-
+import "./Login.css";
 
 class Login extends Component {
   state = {
@@ -24,29 +24,37 @@ class Login extends Component {
         if (!response.ok) {
           throw Error(response.statusText);
         }
-          return response.json();
+        return response.json();
       })
       .then((response) => {
-        this.props.onLoginCallback(user.username, user.password, response.token);
+        this.props.onLoginCallback(
+          user.username,
+          user.password,
+          response.token
+        );
       })
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
       });
-      
-  }
+    this.props.history.push("/");
+  };
 
   render() {
     return (
-      <Container alignSelf="center" className="mt-5">
-      <h3>Iniciar sesión</h3>
-        <Col className="center">
-          <Form style={{width:"30%"}}>
+      <Container className="mt-5">
+        <Row className="center-col mb-3" style={{ width: "100%" }}>
+          <h3>Iniciar sesión</h3>
+        </Row>
+        <Row className="center-col" style={{ width: "100%" }}>
+          <Form style={{ width: "30%" }}>
             <Form.Group controlId="username">
               <Form.Label>Nombre de Usuario</Form.Label>
               <Form.Control
                 type="username"
                 placeholder="Ponga el correo"
-                onChange={(e) => {this.setState({username:e.target.value})}}
+                onChange={(e) => {
+                  this.setState({ username: e.target.value });
+                }}
               />
             </Form.Group>
 
@@ -55,10 +63,12 @@ class Login extends Component {
               <Form.Control
                 type="password"
                 placeholder="Contraseña"
-                onChange={(e) => {this.setState({password:e.target.value})}}
+                onChange={(e) => {
+                  this.setState({ password: e.target.value });
+                }}
               />
             </Form.Group>
-            <Button 
+            <Button
               variant="primary"
               style={{ float: "right" }}
               onClick={this.onFormSubmit}
@@ -66,7 +76,7 @@ class Login extends Component {
               Aceptar
             </Button>
           </Form>
-        </Col>
+        </Row>
       </Container>
     );
   }
