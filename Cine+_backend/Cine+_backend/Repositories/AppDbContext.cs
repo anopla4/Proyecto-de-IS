@@ -79,7 +79,7 @@ namespace Cine__backend.Repositories
             List<Film> films = new List<Film>();
             List<FilmGenre> genres = new List<FilmGenre>();
             List<FilmFilmRol> staffs = new List<FilmFilmRol>();
-            films.Add(new Film { Id = Guid.NewGuid(), Name = "Todo sobre mi madre}", Country = "España", Year = "1999", ImgPath = "Resources\\Images\\TodoSobreMiMadre.jpg" });
+            films.Add(new Film { Id = Guid.NewGuid(), Name = "Todo sobre mi madre", Country = "España", Year = "1999", ImgPath = "Resources\\Images\\TodoSobreMiMadre.jpg" });
             genres.Add(new FilmGenre { FilmId = films[0].Id, GenreId = genresTypes[0].Id });
             staffs.Add(new FilmFilmRol { MemberRol = "Pedro Almodovar", FilmId = films[0].Id, FilmRolId = rols[1].Id });
             staffs.Add(new FilmFilmRol { MemberRol = "Cecilia Roth", FilmId = films[0].Id, FilmRolId = rols[0].Id });

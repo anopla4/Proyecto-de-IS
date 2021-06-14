@@ -25,6 +25,19 @@ namespace Cine__backend.Controllers
         {
             return Ok(_filmRep.GetFilms());
         }
+        [HttpGet("staff")]
+        public IActionResult GetFilmsWithStaff()
+        {
+            try
+            {
+                var films = _filmRep.GetFilmsWithStaff();
+                return Ok(films);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         [HttpGet("{filmId}")]
         public IActionResult GetFilm(Guid filmId)

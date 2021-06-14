@@ -151,5 +151,26 @@ namespace Cine__backend.Repositories
             }
             return members;
         }
+
+        public List<DTOFilmStaff> GetFilmsWithStaff()
+        {
+            List<DTOFilmStaff> dTOFilmsStaff = new List<DTOFilmStaff>();
+            foreach (var film in _context.Films.ToList())
+            {
+                var staff = _context.FilmFilmRols.Include(c => c.FilmRol).Where(c => c.FilmId == film.Id).ToList();
+                List<DTOMemberRol> staff_ = new List<DTOMemberRol>();
+                foreach (var member in staff)
+                    staff_.Add(new DTOMemberRol { Member = member.MemberRol, Rol = member.FilmRol });
+                var dtoFilmStaff = new DTOFilmStaff
+                {
+                    Film = film,
+                    Genres = _context.FilmGenres.Include(c => c.Genre).
+                            Where(c => c.FilmId == film.Id).Select(c => c.Genre).ToList(),
+                    Staff = staff_
+                };
+                dTOFilmsStaff.Add(dtoFilmStaff);
+            }
+            return dTOFilmsStaff;
+        }
     }
 }
