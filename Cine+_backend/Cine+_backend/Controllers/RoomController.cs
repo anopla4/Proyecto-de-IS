@@ -7,7 +7,7 @@ using System;
 
 namespace Cine__backend.Controllers
 {
-    [Authorize(Roles = "WebMaster,Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomController : ControllerBase
@@ -17,11 +17,13 @@ namespace Cine__backend.Controllers
         {
             this._roomRep = roomRepository;
         }
+
         [HttpGet]
         public IActionResult GetRooms()
         {
             return Ok(_roomRep.GetRooms());
         }
+
         [HttpGet("{roomId}")]
         public IActionResult GetRoom(Guid roomId)
         {
@@ -35,7 +37,9 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
-        [HttpPost]
+
+        [Authorize(Roles = "WebMaster,Admin")]
+        [HttpPost]       
         public IActionResult AddRoom(Room room)
         {
             try
@@ -48,6 +52,8 @@ namespace Cine__backend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{roomId}")]
         public IActionResult DeleteRoom(Guid roomId)
         {
@@ -62,6 +68,8 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
+
+        [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{roomId}")]
         public IActionResult RoomUpdate(Guid roomId, Room room)
         {
