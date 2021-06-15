@@ -18,6 +18,7 @@ import MyReservations from "../../components/MyReservations/MyReservations";
 import ClubMemberForm from "../../components/ClubMemberForm/ClubMemberForm";
 import BookEntry from "../../components/BookEntry/BookEntry";
 import WebMaster from "../../components/WebMaster/WebMaster";
+import Payment from "../../components/Payment/Payment";
 
 class App extends Component {
   logginUserCallback = (email, password, roles, jwt_token) => {
@@ -57,6 +58,7 @@ class App extends Component {
             <Route path="/clubMemberForm" component={ClubMemberForm} />
             <Route path="/bookEntry" component={BookEntry} />
             <Route path="/webMaster" component={WebMaster} />
+            <Route path="/payment" component={Payment} />
           </Switch>
         </Layout>
       </BrowserRouter>
