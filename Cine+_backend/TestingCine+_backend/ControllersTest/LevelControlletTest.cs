@@ -21,7 +21,7 @@ namespace TestingCine__backend.ControllersTest
         }
     
         [Fact]
-        public void Get_WhenCalled_ReturnsOkResult()
+        public void GetAll_WhenCalled_ReturnsOkResult()
         {
             // Act
             var okResult = _controller.GetLevels();
@@ -30,7 +30,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void Get_WhenCalled_ReturnsAllLevels()
+        public void GetAll_WhenCalled_ReturnsAllLevels()
         {
             _mockRepo.Setup(repo => repo.GetLevels())
                 .Returns(new List<Level>() { new Level(), new Level() , new Level()});
@@ -40,5 +40,30 @@ namespace TestingCine__backend.ControllersTest
             var items = Assert.IsType<List<Level>>(okResult.Value);
             Assert.Equal(3, items.Count);
         }
+
+        [Fact]
+        public void GetById_WhenCalled_ReturnsOkResultAndCorrectObject()
+        {
+            var seedLevel = new Level
+            {
+                Id = new Guid("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"),
+                Name = "Piso",
+                PercentOfPriceIncrement = 5
+            };
+            _mockRepo.Setup(p => p.GetLevel(new Guid("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"))).Returns(seedLevel);
+            var okResult = _controller.GetLevel(new Guid("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"));
+            var result = Assert.IsType<OkObjectResult>(okResult);
+            var item = Assert.IsType<Level>(result.Value);
+            Assert.Equal(seedLevel, item);                 
+        }
+
+        [Fact]
+        public void GetById_WhenCalled_ReturnsNotFoundsResult()
+        {
+            _mockRepo.Setup(p => p.GetLevel(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
+            var notFoundResult = _controller.GetLevel(new Guid("43bbbb9c-17bd-4e17-b2ec-7603644b8f27"));
+            Assert.IsType<NotFoundObjectResult>(notFoundResult);
+        }
+
     }
 }
