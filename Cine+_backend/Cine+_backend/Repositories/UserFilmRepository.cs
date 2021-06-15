@@ -92,6 +92,14 @@ namespace Cine__backend.Repositories
             return films_statics;
         }
 
+        public List<UserFilm> GetRatingsOfUser(string userId)
+        {
+            if (_context.Users.SingleOrDefault(c => c.Id == userId) == null)
+                throw new KeyNotFoundException("No se encuentra el usuario especificado");
+            List<UserFilm> userFilms = _context.UserFilms.Include(c => c.User).Include(c => c.Film).Where(c => c.UserId == userId).ToList();
+            return userFilms;
+        }
+
         public DTOFilmStatics GetStaticsForFilm(Guid filmId)
         {
             var film = _context.Films.Find(filmId);

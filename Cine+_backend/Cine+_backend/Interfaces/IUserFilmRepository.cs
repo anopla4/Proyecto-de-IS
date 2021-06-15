@@ -11,6 +11,7 @@ namespace Cine__backend.Interfaces
         public UserFilm GetUserFilm(string userId, Guid filmId);
         public IList<UserFilm> GetUserFilms();
         public DTOFilmStatics GetStaticsForFilm(Guid filmId);
+        public List<UserFilm> GetRatingsOfUser(string userId);
         public IList<DTOFilmStatics> GetFilmsStatics();
         public void AddUserFilm(User user, Film film, int rating);
         public void UpdateUserFilm(string userId, Guid filmId, int rating);

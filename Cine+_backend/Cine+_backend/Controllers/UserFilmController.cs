@@ -43,6 +43,19 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        [HttpGet("{userId}")]
+        public IActionResult GetRatingsOfUser(string userId)
+        {
+            try
+            {
+                var filmRatings = _userFilmRep.GetRatingsOfUser(userId);
+                return Ok(filmRatings);
+            }
+            catch(Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
         [HttpGet("{filmId}/rating")]
         public IActionResult GetStaticsForFilm(Guid filmId)
         {
