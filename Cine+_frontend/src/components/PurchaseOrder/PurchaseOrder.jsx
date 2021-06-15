@@ -38,7 +38,7 @@ class PurchaseOrder extends Component {
       const pdf = new jsPDF();
       pdf.addImage(imgData, "JPEG", 0, 0);
       // pdf.output("dataurlnewwindow");
-      pdf.save("download.pdf");
+      pdf.save("entradas.pdf");
     });
   };
 
@@ -72,7 +72,7 @@ class PurchaseOrder extends Component {
                 id={seat.seat.id}
                 className="mt-3"
                 bg="light"
-                style={{ width: "80%" }}
+                style={{ width: "70%" }}
               >
                 <Row className="mt-3">
                   <Col>
