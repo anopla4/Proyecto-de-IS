@@ -145,6 +145,36 @@ namespace TestingCine__backend.ControllersTest
             Assert.Equal("Sala 2", item.Name);
         }
 
+        [Fact]
+        public void Delete_Valid_ReturnsOkResult()
+        {
+            // Act
+            var okResult = _controller.DeleteRoom(new Guid());
+            // Assert
+            Assert.IsType<OkResult>(okResult);
+        }
+
+        [Fact]
+        public void Delete_InValid_ReturnsNotFoundsResult()
+        {
+            // Arrange
+            _mockRepo.Setup(repo => repo.DeleteRoom(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
+            // Act
+            var notFoundResult = _controller.DeleteRoom(new Guid());
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(notFoundResult);
+        }
+
+        [Fact]
+        public void Update_Invalid_ReturnNotFoundResult()
+        {
+            _mockRepo.Setup(p => p.UpdateRoom(It.IsAny<Room>())).Throws(new KeyNotFoundException());
+            var notFoundResult = _controller.RoomUpdate(new Guid("43bbbb9c-17bd-4e17-b2ec-7603644b8f27"),
+                new Room());
+            Assert.IsType<NotFoundObjectResult>(notFoundResult);
+        }
+
+
 
     }
 }
