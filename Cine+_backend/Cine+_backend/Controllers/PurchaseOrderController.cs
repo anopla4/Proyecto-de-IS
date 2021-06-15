@@ -84,11 +84,12 @@ namespace Cine__backend.Controllers
         }
 
         [HttpPatch("{purchaseOrderId}")]
-        public IActionResult RemoveItems( Guid purchaseOrderId, [FromForm] List<Item> items)
+        public IActionResult RemoveItems( Guid purchaseOrderId, [FromForm] List<Guid> itemsIds)
         {
             try
             {
-                _rep.RemoveItems(purchaseOrderId, items);
+
+                _rep.RemoveItems(purchaseOrderId, itemsIds);
                 return Ok();
             }
             catch (Exception e)

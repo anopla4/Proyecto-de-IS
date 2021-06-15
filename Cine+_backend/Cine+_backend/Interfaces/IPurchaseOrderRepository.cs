@@ -13,7 +13,7 @@ namespace Cine__backend.Interfaces
         PurchaseOrder GetPurchaseOrder(Guid purchaseOrderId);
         PurchaseOrder AddPurchaseOrder(PurchaseOrder purchaseOrder);
         void PayPurchaseOrder(Guid purchaseOrderId, string creditCard);
-        void RemoveItems(Guid purchaseOrderId, List<Item> items);
+        void RemoveItems(Guid purchaseOrderId, List<Guid> itemsIds);
         void CancelPurchaseOrder(Guid purchaseOrderId);
         void CheckPendingToCancel(Guid purchaseOrderId);
     }

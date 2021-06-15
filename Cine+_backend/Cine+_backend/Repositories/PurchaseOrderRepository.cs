@@ -200,11 +200,19 @@ namespace Cine__backend.Repositories
             throw new Exception("No es válida la orden de compra");
         }
 
-        public void RemoveItems(Guid purchaseOrderId, List<Item> items)
+        public void RemoveItems(Guid purchaseOrderId, List<Guid> itemsIds)
         {
             var purchaseOrder = _context.PurchaseOrders.Include(c => c.Items).Include(c => c.User).SingleOrDefault(c => c.Id == purchaseOrderId);
             if (purchaseOrder == null)
                 throw new KeyNotFoundException("No se encuentra la orden de compra especificada");
+            List<Reservation> items = new List<Reservation>();
+            foreach(var itemId in itemsIds)
+            {
+                var item = _context.Reservations.Find(itemId);
+                if (item == null)
+                    throw new KeyNotFoundException($"No se encuentra el item con id = {itemId}");
+                items.Add(item);
+            }
             double price = 0;
             int points = 0;
             int pointsRest = 0;
