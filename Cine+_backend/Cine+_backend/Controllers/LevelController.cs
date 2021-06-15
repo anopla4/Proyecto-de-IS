@@ -42,7 +42,7 @@ namespace Cine__backend.Controllers
             try
             {
                 level = _levelRep.AddLevel(level);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + level.Id, level);
+                return Ok(level);
             }
             catch (Exception e)
             {
@@ -61,7 +61,6 @@ namespace Cine__backend.Controllers
             catch (Exception e)
             {
                 return NotFound(e.Message);
-                throw;
             }
         }
         [Authorize(Roles = "WebMaster,Admin")]
