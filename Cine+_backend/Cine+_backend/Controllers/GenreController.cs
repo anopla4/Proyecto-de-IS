@@ -45,7 +45,7 @@ namespace Cine__backend.Controllers
             try
             {
                 genre = _rep.AddGenre(genre);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + genre.Id, genre);
+                return Ok(genre);
             }
             catch(Exception e)
             {
@@ -59,6 +59,7 @@ namespace Cine__backend.Controllers
         {
             try
             {
+                genre.Id = genreId;
                 genre = _rep.UpdateGenre(genre);
                 return Ok(genre);
             }
