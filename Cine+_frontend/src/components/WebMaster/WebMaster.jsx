@@ -5,29 +5,26 @@ import "./WebMaster.css";
 
 class WebMaster extends Component {
   state = {
-    users: [
-      {
-        username: "anopla",
-        email: "anopla4@gmail.com",
-        roles: ["Admin", "Accountant"],
-      },
-      {
-        username: "anopla",
-        email: "anopla4@gmail.com",
-        roles: ["Admin", "Accountant"],
-      },
-      {
-        username: "anopla",
-        email: "anopla4@gmail.com",
-        roles: ["Admin"],
-      },
-      {
-        username: "anopla",
-        email: "anopla4@gmail.com",
-        roles: ["Admin", "Worker"],
-      },
-    ],
+    users: [],
     modifiedUsers: [],
+  };
+
+  componentDidMount = () => {
+    fetch("https://localhost:44313/api/User", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ users: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   };
 
   handleModifyUser = (e, rol, email, index) => {
@@ -54,15 +51,15 @@ class WebMaster extends Component {
 
   handleAcceptChanges = () => {
     if (this.state.modifiedUsers.length > 0) {
-      fetch("https://localhost:44334/api/User/Roles", {
+      fetch("https://localhost:44313/api/User/Roles", {
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Bearer " +
-            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+          // Authorization:
+          //   "Bearer " +
+          //   JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
         },
-        method: "POST",
+        method: "PATCH",
         body: JSON.stringify(this.state.modifiedUsers),
       })
         .then((response) => {
