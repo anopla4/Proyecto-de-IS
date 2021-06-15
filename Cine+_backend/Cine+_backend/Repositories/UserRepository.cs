@@ -76,6 +76,7 @@ namespace Cine__backend.Repositories
                 authenticationModel.UserName = user.UserName;
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 authenticationModel.Roles = rolesList.ToList();
+                authenticationModel.ClubMember = await _context.ClubMembers.FindAsync(user.Id) != null;
                 return authenticationModel;
             }
             authenticationModel.IsAuthenticated = false;
