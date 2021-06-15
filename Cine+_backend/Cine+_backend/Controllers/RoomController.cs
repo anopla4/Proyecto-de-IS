@@ -45,7 +45,7 @@ namespace Cine__backend.Controllers
             try
             {
                 room = _roomRep.AddRoom(room);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + room.Id, room);
+                return Ok(room);
             }
             catch (Exception e)
             {
@@ -77,7 +77,7 @@ namespace Cine__backend.Controllers
             {
                 var currentRoom = _roomRep.GetRoom(roomId);
                 room.Id = currentRoom.Id;
-                _roomRep.UpdateRoom(room);
+                room = _roomRep.UpdateRoom(room);
                 return Ok(room);
             }
             catch (Exception e)
