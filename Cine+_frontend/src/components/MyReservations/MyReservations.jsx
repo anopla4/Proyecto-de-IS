@@ -143,7 +143,15 @@ class MyReservations extends Component {
     return "Crédito";
   };
 
-  payPurchaseOrder = () => {};
+  payPurchaseOrder = (id, price) => {
+    this.props.history.push({
+      pathname: "/payment",
+      state: {
+        modifiedPrice: price,
+        purchaseOrderId: id,
+      },
+    });
+  };
 
   compareTimes = (time, date) => {
     let now = new Date();
@@ -178,9 +186,56 @@ class MyReservations extends Component {
     return false;
   };
 
-  cancelPurchaseOrder = () => {};
+  cancelPurchaseOrder = (id) => {
+    // fetch(`https://localhost:44334/api/PurchaseOrder/${id}`, {
+    //   mode: "cors",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization:
+    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+    //   },
+    //   method: "DELETE",
+    //   body: JSON.stringify(formdata),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw Error(response.statusText);
+    //     } else {
+    //       purchaseOrderId = response.id;
+    //       return response.json();
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
+    //   });
+  };
 
-  cancelReservation = () => {};
+  cancelReservation = (purchaseOrderId, reservation) => {
+    var formdata = new FormData();
+    // formdata.append("purchaseOrderId", purchaseOrderId);
+    formdata.append("items[0].id", reservation.id);
+
+    // fetch(`https://localhost:44334/api/PurchaseOrder/${purchaseOrderId}`, {
+    //   mode: "cors",
+    //   headers: {
+    //     Authorization:
+    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+    //   },
+    //   method: "PATCH",
+    //   body: JSON.stringify(formdata),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw Error(response.statusText);
+    //     } else {
+    //       purchaseOrderId = response.id;
+    //       return response.json();
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
+    //   });
+  };
 
   render() {
     return (
@@ -262,7 +317,9 @@ class MyReservations extends Component {
                                     {po.state !== "canceled" && (
                                       <Button
                                         size="sm"
-                                        onClick={this.cancelReservation}
+                                        onClick={() =>
+                                          this.cancelReservation(po.id, item)
+                                        }
                                         variant="outline-danger"
                                         disabled={
                                           this.compareTimes(
@@ -294,7 +351,16 @@ class MyReservations extends Component {
                       overlay={<Tooltip id={`pay`}>Pagar reservas.</Tooltip>}
                     >
                       <Button
-                        onClick={this.payPurchaseOrder}
+                        onClick={() =>
+                          this.payPurchaseOrder(
+                            po.id,
+                            po.items
+                              .map((c) => c.price)
+                              .reduce(function (acc, val) {
+                                return acc + val;
+                              }, 0)
+                          )
+                        }
                         variant="outline-success"
                       >
                         <CreditCard2BackFill />
@@ -310,7 +376,7 @@ class MyReservations extends Component {
                       }
                     >
                       <Button
-                        onClick={this.cancelPurchaseOrder}
+                        onClick={() => this.cancelPurchaseOrder(po.id)}
                         variant="outline-danger"
                       >
                         <XLg />

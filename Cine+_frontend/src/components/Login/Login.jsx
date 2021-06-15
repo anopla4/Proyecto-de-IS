@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Form, Button, Toast, Row, Col, Container } from "react-bootstrap";
 import isLoggedIn from "../utils";
-import "./Login.css";
+import "../../containers/App/App.css";
 
 class Login extends Component {
   state = {
@@ -31,6 +31,8 @@ class Login extends Component {
           user.email,
           user.password,
           response.roles,
+          response.id,
+          response.userName,
           response.token
         );
       })

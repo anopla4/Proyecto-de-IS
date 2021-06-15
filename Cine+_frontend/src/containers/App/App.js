@@ -21,13 +21,15 @@ import WebMaster from "../../components/WebMaster/WebMaster";
 import Payment from "../../components/Payment/Payment";
 
 class App extends Component {
-  logginUserCallback = (email, password, roles, jwt_token) => {
+  logginUserCallback = (email, password, roles, jwt_token, id, username) => {
     localStorage.setItem(
       "loggedUser",
       JSON.stringify({
         email: email,
         password: password,
         roles: roles,
+        userId: id,
+        unsername: username,
         jwt_token: jwt_token,
       })
     );

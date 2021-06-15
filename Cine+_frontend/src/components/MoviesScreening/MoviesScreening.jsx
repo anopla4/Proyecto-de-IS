@@ -63,6 +63,24 @@ class MoviesScreening extends Component {
         room: { id: "2", name: "Sala B" },
         priceModifications: [],
       },
+
+      {
+        id: "2",
+        film: {
+          id: 1,
+          name: "Cinema Paradiso",
+          year: "1988",
+          genre: { name: "Drama" },
+          country: "Italia",
+          imgPath: "src/images/cinemaParadiso.jpg",
+        },
+        price: 20,
+        points: 20,
+        date: "2021-06-06",
+        time: "8:00 PM",
+        room: { id: "1", name: "Sala A" },
+        priceModifications: [],
+      },
       {
         id: "3",
         film: {
