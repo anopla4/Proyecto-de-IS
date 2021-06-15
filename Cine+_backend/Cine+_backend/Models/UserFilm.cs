@@ -10,6 +10,10 @@ namespace Cine__backend.Models
 {
     public class UserFilm
     {
+        public UserFilm()
+        {
+            this.Rating = 0;
+        }
         [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
