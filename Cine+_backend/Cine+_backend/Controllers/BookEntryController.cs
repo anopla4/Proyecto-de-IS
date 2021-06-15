@@ -75,6 +75,7 @@ namespace Cine__backend.Controllers
         {
             try
             {
+                bookEntry.Id = bookEntryId;
                 bookEntry = _bookEntryRep.UpdateBookEntry(bookEntry);
                 return Ok(bookEntry);
             }
