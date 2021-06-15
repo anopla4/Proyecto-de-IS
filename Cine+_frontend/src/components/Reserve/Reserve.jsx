@@ -219,7 +219,7 @@ class Reserve extends Component {
     this.setState({ selectedPriceModifications: nPriceModifications });
   };
 
-  onFormSubmit = () => {
+  onFormSubmit = (e) => {
     let filmScreening = this.state.filmScreeningSelected.filter(
       (c) => c.room.id === this.state.selectedRoom
     )[0];
@@ -463,7 +463,7 @@ class Reserve extends Component {
                                           )
                                         }
                                       >
-                                        <CartPlus />
+                                        <CartPlus id={seat.seat.id} />
                                       </Button>
                                     </Col>
                                   )}

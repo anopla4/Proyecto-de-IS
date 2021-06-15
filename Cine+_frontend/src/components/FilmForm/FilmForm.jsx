@@ -47,7 +47,7 @@ class FilmForm extends Component {
       this.setState({
         edit: true,
         filmEdit: this.props.location.state.film,
-        selectedGenres: this.props.location.state.film.film.genres,
+        selectedGenres: this.props.location.state.film.genres,
         selectedRols: this.props.location.state.film.staff,
       });
     }
@@ -324,7 +324,7 @@ class FilmForm extends Component {
                           src={
                             this.state.fileTmpURL || !this.state.edit
                               ? this.state.fileTmpURL
-                              : `http://localhost:8000/${this.state.filmEdit.film.imgPath}`
+                              : `https://localhost:44313/${this.state.filmEdit.film.imgPath}`
                           }
                           className="mt-2"
                           style={{ width: "100px" }}

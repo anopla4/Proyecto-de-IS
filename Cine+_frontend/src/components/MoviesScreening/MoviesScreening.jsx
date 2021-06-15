@@ -77,7 +77,7 @@ class MoviesScreening extends Component {
         points: 20,
         date: "2021-06-05",
         time: "10:00 PM",
-        room: { id: "1", name: "Sala A" },
+        room: { id: "2", name: "Sala B" },
         priceModifications: [
           {
             priceModification: {

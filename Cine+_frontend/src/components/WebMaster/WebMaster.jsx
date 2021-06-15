@@ -95,7 +95,7 @@ class WebMaster extends Component {
           <tbody>
             {this.state.users.map((user, index) => (
               <tr id={user.username}>
-                <td>{user.username}</td>
+                <td>{user.userName}</td>
                 <td>{user.email}</td>
                 <td>
                   <Form.Check
