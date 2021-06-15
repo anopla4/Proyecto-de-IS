@@ -44,7 +44,7 @@ namespace Cine__backend.Controllers
             try
             {
                 rol = _rep.AddFilmRol(rol);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + rol.Id, rol);
+                return Ok(rol);
             }
             catch (Exception e)
             {
