@@ -294,16 +294,33 @@ class Reserve extends Component {
               </Button>
             </OverlayTrigger>
           </Col>
+          {JSON.parse(localStorage.getItem("loggedUser")) &&
+            (JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "Worker"
+            ) ||
+              JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+                "WebMaster"
+              )) && (
+              <Col className="center-counter" md={2}>
+                <Button
+                  onClick={() =>
+                    this.props.history.push({
+                      pathname: "/bookEntry",
+                      state: this.modifiedPrice(),
+                    })
+                  }
+                  variant="secondary"
+                >
+                  Agregar ingreso
+                </Button>
+              </Col>
+            )}
         </Row>
 
         <Row>
           <Col>
             <Row>
-              <Form
-                style={{ width: "100%" }}
-                className="mt-5"
-                controlId="numberOfTickets"
-              >
+              <Form style={{ width: "100%" }} controlId="numberOfTickets">
                 <Form.Row>
                   <Col>
                     <Form.Group controlId="numberOfTickets">

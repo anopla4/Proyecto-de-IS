@@ -27,7 +27,12 @@ class Login extends Component {
         return response.json();
       })
       .then((response) => {
-        this.props.onLoginCallback(user.email, user.password, response.token);
+        this.props.onLoginCallback(
+          user.email,
+          user.password,
+          response.roles,
+          response.token
+        );
       })
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);

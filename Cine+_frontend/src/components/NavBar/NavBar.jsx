@@ -35,18 +35,29 @@ const navigation = (props) => {
           <NavItem>
             <Nav.Link href="/myReservations">Mis reservas</Nav.Link>
           </NavItem>
-          <NavItem>
-            <Nav.Link href="/bookEntry">Contabilidad</Nav.Link>
-          </NavItem>
-          <NavItem>
-            <Nav.Link href="/webMaster">Modificar roles</Nav.Link>
-          </NavItem>
+
+          {JSON.parse(localStorage.getItem("loggedUser")) &&
+            JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "Accountant"
+            ) && (
+              <NavItem>
+                <Nav.Link href="/bookEntry">Contabilidad</Nav.Link>
+              </NavItem>
+            )}
+          {JSON.parse(localStorage.getItem("loggedUser")) &&
+            JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "WebMaster"
+            ) && (
+              <NavItem>
+                <Nav.Link href="/webMaster">Modificar roles</Nav.Link>
+              </NavItem>
+            )}
         </Nav>
         <Nav className="ml-auto">
           <Nav.Item>
             {isLoggedIn() && (
               <Nav.Link>
-                {JSON.parse(localStorage.getItem("loggedUser")).username}
+                {JSON.parse(localStorage.getItem("loggedUser")).email}
               </Nav.Link>
             )}
           </Nav.Item>

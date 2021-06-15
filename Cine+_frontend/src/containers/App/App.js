@@ -20,16 +20,17 @@ import BookEntry from "../../components/BookEntry/BookEntry";
 import WebMaster from "../../components/WebMaster/WebMaster";
 
 class App extends Component {
-  // logginUserCallback = (username, password, jwt_token) => {
-  //   localStorage.setItem(
-  //     "loggedUser",
-  //     JSON.stringify({
-  //       username: username,
-  //       password: password,
-  //       jwt_token: jwt_token,
-  //     })
-  //   );
-  // };
+  logginUserCallback = (email, password, roles, jwt_token) => {
+    localStorage.setItem(
+      "loggedUser",
+      JSON.stringify({
+        email: email,
+        password: password,
+        roles: roles,
+        jwt_token: jwt_token,
+      })
+    );
+  };
 
   render() {
     return (

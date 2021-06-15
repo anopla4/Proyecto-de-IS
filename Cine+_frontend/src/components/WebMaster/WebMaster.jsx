@@ -12,6 +12,10 @@ class WebMaster extends Component {
   componentDidMount = () => {
     fetch("https://localhost:44313/api/User", {
       mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -55,9 +59,9 @@ class WebMaster extends Component {
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
-          // Authorization:
-          //   "Bearer " +
-          //   JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
         },
         method: "PATCH",
         body: JSON.stringify(this.state.modifiedUsers),

@@ -44,6 +44,11 @@ class BookEntry extends Component {
     expense: true,
   };
 
+  componentDidMount() {
+    if (this.props.location.state !== undefined)
+      this.setState({ expense: false });
+  }
+
   onFormSubmit = (e) => {
     let formElements = e.target.elements;
     const income = formElements.income.value;
@@ -60,21 +65,25 @@ class BookEntry extends Component {
       paymentMethod,
     };
     let postUrl = "https://localhost:44334/api/BookEntry";
-    // fetch(postUrl, {
-    //   mode: "cors",
-    //    headers: { "Content-Type": "application/json","Authorization": "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token },
-    //method: "POST",
-    //   body: {item},
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch(postUrl, {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "POST",
+      body: { item },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
     this.props.history.push({
       pathname: "/",
       state: { edited: true },
@@ -91,34 +100,42 @@ class BookEntry extends Component {
   render() {
     return (
       <Row className="mt-5">
-        <Col>
-          <Row>
-            <h3>Libro de cuentas</h3>
-          </Row>
-          <Row style={{ width: "90%" }} className="mt-3">
-            {" "}
-            <Table hover bordered striped>
-              <thead>
-                <th>Fecha</th>
-                <th>Ingreso</th>
-                <th>Gasto</th>
-                <th>Método de pago</th>
-                <th>Descripción</th>
-              </thead>
-              <tbody>
-                {this.state.bookEntries.map((b) => (
-                  <tr>
-                    <td>{b.date}</td>
-                    <td>{b.income ? b.income : ""}</td>
-                    <td>{b.expense ? b.expense : ""}</td>
-                    <td>{b.paymentMethod}</td>
-                    <td>{b.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Row>
-        </Col>
+        {JSON.parse(localStorage.getItem("loggedUser")) &&
+          (JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+            "WebMaster"
+          ) ||
+            JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "Accountant"
+            )) && (
+            <Col>
+              <Row>
+                <h3>Libro de cuentas</h3>
+              </Row>
+              <Row style={{ width: "90%" }} className="mt-3">
+                <Table hover bordered striped>
+                  <thead>
+                    <th>Fecha</th>
+                    <th>Ingreso</th>
+                    <th>Gasto</th>
+                    <th>Método de pago</th>
+                    <th>Descripción</th>
+                  </thead>
+                  <tbody>
+                    {this.state.bookEntries.map((b) => (
+                      <tr>
+                        <td>{b.date}</td>
+                        <td>{b.income ? b.income : ""}</td>
+                        <td>{b.expense ? b.expense : ""}</td>
+                        <td>{b.paymentMethod}</td>
+                        <td>{b.description}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Row>
+            </Col>
+          )}
+
         <Col md={3}>
           <Row>
             <h3>Nueva cuenta</h3>
@@ -131,6 +148,11 @@ class BookEntry extends Component {
                   disabled={this.state.income ? false : true}
                   onChange={(e) => this.handleIncomeExpense("income", e)}
                   type="number"
+                  defaultValue={
+                    this.props.location.state !== undefined
+                      ? this.props.location.state
+                      : 0
+                  }
                   min={0}
                   max={10000}
                 />
