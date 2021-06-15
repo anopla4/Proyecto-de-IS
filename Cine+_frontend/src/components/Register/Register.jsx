@@ -37,7 +37,12 @@ class Register extends Component {
           <h4>Registrarse</h4>
         </Row>
         <Row className="center-col">
-          <Form style={{ width: "30%" }} onSubmit={this.onFormSubmit}>
+          <Form
+            noValidate
+            validated={this.state.validated}
+            style={{ width: "30%" }}
+            onSubmit={this.onFormSubmit}
+          >
             <Form.Group controlId="username">
               <Form.Label>Nombre de usuario:</Form.Label>
               <Form.Control

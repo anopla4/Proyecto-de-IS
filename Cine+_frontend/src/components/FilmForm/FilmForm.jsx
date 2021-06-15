@@ -24,14 +24,6 @@ class FilmForm extends Component {
     filmEdit: {},
     genres: [],
     rols: [],
-    // genres: [
-    //   { name: "Drama", id: 1 },
-    //   { name: "Comedia", id: 2 },
-    // ],
-    // rols: [
-    //   { name: "Actor", id: 1 },
-    //   { name: "Director", id: 2 },
-    // ],
     showToast: false,
     newGenre: undefined,
     newMemberName: undefined,

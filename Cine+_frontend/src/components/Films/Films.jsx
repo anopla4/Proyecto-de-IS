@@ -17,10 +17,12 @@ import DeleteEdit from "../DeleteEdit/DeleteEdit";
 import ReactStars from "react-rating-stars-component";
 import { ThreeDots } from "react-bootstrap-icons";
 import "./Films.css";
+import { isLoggedIn } from "../utils";
 
 class Films extends Component {
   state = {
     filmsRated: [],
+    ratings: [],
     films: [],
     filmsExpanded: [],
   };
@@ -42,6 +44,30 @@ class Films extends Component {
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
       });
+    if (isLoggedIn()) {
+      fetch(
+        `https://localhost:44313/api/UserFilm/${
+          JSON.parse(localStorage.getItem("loggedUser")).userId
+        }`,
+        {
+          mode: "cors",
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          this.setState({ ratings: response });
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+    }
   }
   handleAdd = () => {
     this.props.history.push({ pathname: "/filmForm", state: {} });
@@ -50,16 +76,20 @@ class Films extends Component {
   addRated = (newRate, idF) => {
     let film = this.state.filmsRated.find((c) => c.id === idF);
     let temp = [...this.state.filmsRated];
+    let rate = this.state.ratings.find((c) => c.film.id === idF);
     if (film) {
       let index = temp.indexOf(film);
-      temp[index].rate = newRate;
+      if (rate === newRate) temp = temp.filter((c) => c.id !== idF);
+      else temp[index].rate = newRate;
     } else {
       temp = [...temp, { id: idF, rate: newRate }];
     }
     this.setState({ filmsRated: temp });
   };
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.state.filmsRated.forEach((element) => {});
+  }
 
   handleOnDelete = (id, index) => {
     // fetch(`https://localhost:44334/api/Film/${id}`, {
@@ -99,6 +129,12 @@ class Films extends Component {
                 <Card className="mb-3">
                   <Row className="justify-content-center">
                     <ReactStars
+                      value={
+                        this.state.ratings.length > 0
+                          ? this.state.ratings[index]
+                          : 0
+                      }
+                      // defaultValue={this.state.ratings[index]}
                       count={5}
                       onChange={(newRate) =>
                         this.addRated(newRate, film.film.id)
