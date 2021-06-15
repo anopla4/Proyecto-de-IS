@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cine+_backend", "Cine+_backend\Cine+_backend.csproj", "{3E20B57A-B00A-44D1-8911-D4CB836DBE7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cine+_backend", "Cine+_backend\Cine+_backend.csproj", "{3E20B57A-B00A-44D1-8911-D4CB836DBE7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingCine+_backend", "TestingCine+_backend\TestingCine+_backend.csproj", "{73252618-245D-41AA-AED5-1352715E10A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3E20B57A-B00A-44D1-8911-D4CB836DBE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E20B57A-B00A-44D1-8911-D4CB836DBE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E20B57A-B00A-44D1-8911-D4CB836DBE7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73252618-245D-41AA-AED5-1352715E10A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73252618-245D-41AA-AED5-1352715E10A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73252618-245D-41AA-AED5-1352715E10A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73252618-245D-41AA-AED5-1352715E10A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
