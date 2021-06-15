@@ -1,5 +1,7 @@
 .vs/
 .vscode/
+Cine+_backend/Cine+_backend/Cine+_backend.csproj.user
 Cine+_backend/Cine+_backend/bin/
 Cine+_backend/Cine+_backend/obj/
-Cine+_backend/Cine+_backend/Cine+_backend.csproj.user
+Cine+_backend/TestingCine+_backend/obj/
+Cine+_backend/TestingCine+_backend/bin/
