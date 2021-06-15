@@ -74,8 +74,39 @@ namespace Cine__backend.Repositories
             }
 
             //seddFilm
-            List<FilmRol> rols = new List<FilmRol>{new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" }};
-            List<Genre> genresTypes = new List<Genre> { new Genre { Id = Guid.NewGuid(), Name = "Drama" }, new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, new Genre { Id = Guid.NewGuid(), Name = "Terror" }, new Genre { Id = Guid.NewGuid(), Name = "Tragicomedia" }, new Genre { Id = Guid.NewGuid(), Name = "Hístorico" }, new Genre { Id = Guid.NewGuid(), Name = "Documental" }, new Genre { Id = Guid.NewGuid(), Name = "Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Ciencia Ficción" }, new Genre { Id = Guid.NewGuid(), Name = "Aventura" }, new Genre { Id = Guid.NewGuid(), Name = "Musical" }, new Genre { Id = Guid.NewGuid(), Name = "Erótico" } };
+
+            #region Seed FilmRoles
+            List<FilmRol> rols = new List<FilmRol>{
+                new FilmRol { Id = Guid.NewGuid(), Name = "Actor" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Director" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Productor" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Asistente de dirección" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Productor Ejecutivo" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Guionista" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Diseñador de Vestuario" }, 
+                new FilmRol { Id = Guid.NewGuid(), Name = "Técnico de Sonido" }};
+            
+            #endregion Seed FilmRoles
+
+            #region SeedGenres
+            List<Genre> genresTypes = new List<Genre> { 
+                new Genre { Id = Guid.NewGuid(), Name = "Drama" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Comedia" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Romántica" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Suspenso" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Terror" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Tragicomedia" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Histórico" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Documental" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Ficción" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Ciencia Ficción" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Aventura" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Musical" }, 
+                new Genre { Id = Guid.NewGuid(), Name = "Erótico" } };
+
+            #endregion SeedGenres
+
+            #region Seed Films
             List<Film> films = new List<Film>();
             List<FilmGenre> genres = new List<FilmGenre>();
             List<FilmFilmRol> staffs = new List<FilmFilmRol>();
@@ -104,8 +135,10 @@ namespace Cine__backend.Repositories
             genres.Add(new FilmGenre { FilmId = films[3].Id, GenreId = genresTypes[2].Id });
             staffs.Add(new FilmFilmRol { MemberRol = "Robert Zemeckis", FilmId = films[3].Id, FilmRolId = rols[1].Id });
             staffs.Add(new FilmFilmRol { MemberRol = "Tom Hancks", FilmId = films[3].Id, FilmRolId = rols[0].Id });
-            staffs.Add(new FilmFilmRol { MemberRol = "Robin Wright", FilmId = films[3].Id, FilmRolId = rols[0].Id });       
-            
+            staffs.Add(new FilmFilmRol { MemberRol = "Robin Wright", FilmId = films[3].Id, FilmRolId = rols[0].Id });
+
+            #endregion Seed Films
+
             base.OnModelCreating(modelBuilder);
             //Seats
             modelBuilder.Entity<Seat>()
@@ -132,7 +165,7 @@ namespace Cine__backend.Repositories
             modelBuilder.Entity<PriceModification>()
                 .HasData(new PriceModification { Id = Guid.NewGuid(), Name = "Estudiante", Value = 10, Type = "Descuento", Description = "Descuento del 10% para estudiantes que muestren el carnet." },
                 new PriceModification { Id = Guid.NewGuid(), Name = "Madres", Value = 10, Type = "Descuento", Description = "Descuento por el día de las madres." },
-                new PriceModification { Id = Guid.NewGuid(), Name = "Descuento del Director", Value = 10, Type = "Descuento", Description = "Descuento decidido por la direccion del cine por un motivo que surja." });
+                new PriceModification { Id = Guid.NewGuid(), Name = "Descuento del Director", Value = 10, Type = "Descuento", Description = "Descuento decidido por la dirección del cine.." });
             //FilmRol
             modelBuilder.Entity<FilmRol>()
                 .HasData(rols.ToArray());
@@ -179,11 +212,11 @@ namespace Cine__backend.Repositories
             //FilmScreeningPriceModification
             modelBuilder.Entity<FilmScreeningPriceModification>()
                 .HasKey(c => new { c.FilmScreeningId, c.PriceModificationId });
-            modelBuilder.Entity<FilmScreeningPriceModification>().HasOne(c => c.FilmScreening).WithMany().
-                                                                    OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FilmScreeningPriceModification>()
+                .HasOne(c => c.FilmScreening).WithMany().OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<FilmScreeningPriceModification>().HasOne(c => c.PriceModification).WithMany().
-                                                                    OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FilmScreeningPriceModification>()
+                .HasOne(c => c.PriceModification).WithMany().OnDelete(DeleteBehavior.Cascade);
             //SeatSectionLevelRoom
             modelBuilder.Entity<SeatSectionLevelRoom>()
                 .HasKey(c => new { c.SeatId, c.SectionId, c.LevelId, c.RoomId });
