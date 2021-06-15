@@ -77,7 +77,7 @@ namespace Cine__backend.Repositories
                 var timesSeen = 0;
                 foreach (var f_s in films_sreenings)
                 {
-                    timesSeen += _context.Reservations.Where(r => r.FilmSreeningId == f_s.Id).Count();
+                    timesSeen += _context.Reservations.Where(r => r.FilmScreeningId == f_s.Id).Count();
                 }
                 films_statics.Add(new DTOFilmStatics {
                     Country = film.Country,
@@ -110,7 +110,7 @@ namespace Cine__backend.Repositories
             var timesSeen = 0;
             foreach(var f_s in films_sreenings)
             {
-                timesSeen += _context.Reservations.Where(r => r.FilmSreeningId == f_s.Id).Count();
+                timesSeen += _context.Reservations.Where(r => r.FilmScreeningId == f_s.Id).Count();
             }
             var dTOFilmStatics = new DTOFilmStatics
             {

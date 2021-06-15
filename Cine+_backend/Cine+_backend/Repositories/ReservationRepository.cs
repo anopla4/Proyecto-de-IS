@@ -38,7 +38,7 @@ namespace Cine__backend.Repositories
             {
                 throw new KeyNotFoundException("No se encuentra la puesta en escena especificada");
             }
-            var reservations = _context.Reservations.Where(c => c.FilmSreeningId == filmScreeningId);
+            var reservations = _context.Reservations.Where(c => c.FilmScreeningId == filmScreeningId);
             return reservations.ToList();
         }
 
