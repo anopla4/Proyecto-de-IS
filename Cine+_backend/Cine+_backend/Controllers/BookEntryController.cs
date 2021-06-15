@@ -20,7 +20,7 @@ namespace Cine__backend.Controllers
         
         [Authorize(Roles = "WebMaster, Accountant")]
         [HttpGet]
-        public IActionResult GetBookEntrys()
+        public IActionResult GetBookEntries()
         {
             return Ok(_bookEntryRep.GetBookEntries());
         }
@@ -46,7 +46,7 @@ namespace Cine__backend.Controllers
             try
             {
                 bookEntry = _bookEntryRep.AddBookEntry(bookEntry);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + bookEntry.Id, bookEntry);
+                return Ok(bookEntry);
             }
             catch (Exception e)
             {

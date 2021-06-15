@@ -32,18 +32,6 @@ namespace TestingCine__backend.ControllersTest
             }
             return seedRoom;
         }
-        private Room SeedRoomToUpdate(string guid_seed = "")
-        {
-            Room seedRoom = new Room
-            {
-                Name = "Sala 2",
-            };
-            if (guid_seed != "")
-            {
-                seedRoom.Id = new Guid(guid_seed);
-            }
-            return seedRoom;
-        }
 
         [Fact]
         public void GetAll_WhenCalled_ReturnsOkResult()
@@ -55,7 +43,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void GetAll_WhenCalled_ReturnsAllLevels()
+        public void GetAll_WhenCalled_ReturnsAllRooms()
         {
             _mockRepo.Setup(repo => repo.GetRooms())
                 .Returns(new List<Room>() { new Room(), new Room(), new Room() });
