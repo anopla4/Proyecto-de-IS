@@ -164,9 +164,11 @@ namespace Cine__backend.Repositories
             return _context.PurchaseOrders.Include(c => c.Items).Include(c => c.User).ToList();
         }
 
-        public void PayPurchaseOrder(Guid purchaseOrderId)
+        public void PayPurchaseOrder(Guid purchaseOrderId, string creditCard)
         {
             var purchaseOrder = _context.PurchaseOrders.Include(c => c.Items).Include(c => c.User).SingleOrDefault(c => c.Id == purchaseOrderId);
+            purchaseOrder.CreditCard = creditCard;
+            _context.PurchaseOrders.Update(purchaseOrder);
             if (purchaseOrder == null)
                 throw new KeyNotFoundException("No se encuentra la orden de compra especificada");
             if (!(purchaseOrder.State == StatePurchaseOrder.pending))

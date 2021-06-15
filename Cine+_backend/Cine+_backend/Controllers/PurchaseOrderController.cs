@@ -54,6 +54,20 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        [HttpPatch("{purchaseOrderId}/{creditCard}")]
+        public IActionResult PayPurchaseOrder(Guid purchaseOrderId, string creditCard)
+        {
+            try
+            {
+                _rep.PayPurchaseOrder(purchaseOrderId, creditCard);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         [HttpPost]
         public IActionResult AddPurchaseOrder([FromForm] PurchaseOrder purchaseOrder)
