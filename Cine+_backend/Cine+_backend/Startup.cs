@@ -42,6 +42,8 @@ namespace Cine__backend
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISeatRepository, SeatRepository>();
             services.AddScoped<IRoomRepository,RoomRepository>();
+            services.AddScoped<IClubMemberRepository, ClubMemberRepository>();
+
             services.AddScoped<ISectionRepository, SectionRepository>();
             services.AddScoped<ILevelRepository, LevelRepository>();
             services.AddScoped<IFilmRepository, FilmRepository>();

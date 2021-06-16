@@ -8,6 +8,7 @@ import {
   ListGroupItem,
   Image,
   Button,
+  Modal,
 } from "react-bootstrap";
 import { TrashFill } from "react-bootstrap-icons";
 import Add from "../Add/Add";
@@ -17,6 +18,8 @@ class ClubMemberForm extends Component {
   state = {
     genres: [],
     selectedGenres: [],
+    validated: false,
+    error: "",
   };
 
   componentWillMount() {
@@ -51,49 +54,63 @@ class ClubMemberForm extends Component {
 
   onFormSubmit = (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validated: true });
+    } else {
+      let formElements = e.target.elements;
+      const name = formElements.name.value;
+      const birthdate = formElements.birthdate.value;
+      const nationality = formElements.nationality.value;
+      let member = {
+        name,
+        birthdate,
+        nationality,
+      };
 
-    let formElements = e.target.elements;
-    const name = formElements.name.value;
-    const birthdate = formElements.birthdate.value;
-    const nationality = formElements.nationality.value;
-    let film = {
-      name,
-      birthdate,
-      nationality,
-    };
+      var formdata = new FormData();
+      formdata.append("clubMember.name", member.name);
+      formdata.append("clubMember.dateOfBirth", member.birthdate);
+      formdata.append("clubMember.nationality", member.nationality);
+      formdata.append(
+        "clubMember.userId",
+        JSON.parse(localStorage.getItem("loggedUser")).userId
+      );
 
-    var formdata = new FormData();
-    formdata.append("film.name", film.name);
-    formdata.append("film.birthdate", film.birthdate);
-    formdata.append("film.nationality", film.nationality);
-    if (this.state.file)
-      formdata.append("film.img", this.state.file, this.state.file.name);
-    for (let i = 0; i < this.state.selectedGenres.length; i++) {
-      formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
-      formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
-    }
-    let postUrl = `https://localhost:44313/api/ClubMember/${
-      JSON.parse(localStorage.getItem("loggedUser")).userId
-    }`;
-    fetch(postUrl, {
-      mode: "cors",
-      headers: {
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: "POST",
-      body: formdata,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+      if (this.state.file)
+        formdata.append("film.img", this.state.file, this.state.file.name);
+      for (let i = 0; i < this.state.selectedGenres.length; i++) {
+        formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
+        formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
+      }
+      let postUrl = `https://localhost:44313/api/ClubMember/${
+        JSON.parse(localStorage.getItem("loggedUser")).userId
+      }`;
+      fetch(postUrl, {
+        mode: "cors",
+        headers: {
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: "POST",
+        body: formdata,
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
-    // this.props.history.push("/");
+        .then((response) => {
+          if (!response.ok) {
+            this.setState({ error: `${response.status}` });
+          } else {
+            this.props.history.push("/");
+          }
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+    }
   };
 
   addNewGenre = (e) => {
@@ -107,7 +124,6 @@ class ClubMemberForm extends Component {
       if (!element) {
         let newG = this.state.genres.find((c) => c.id === g);
         let newGenres = [...this.state.selectedGenres, newG];
-        console.log(newGenres);
         this.setState({ selectedGenres: newGenres });
       }
     }
@@ -122,12 +138,36 @@ class ClubMemberForm extends Component {
     return (
       <Container className="mt-5">
         <h3>Formulario para convertirse en miembro del club de Cine+</h3>
-        <Form onSubmit={this.onFormSubmit}>
+        {this.state.error !== "" && (
+          <Modal.Dialog>
+            <Modal.Header>
+              <Modal.Title>Atención</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <p>{this.state.error}</p>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button
+                onClick={() => this.setState({ error: "" })}
+                variant="secondary"
+              >
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        )}
+        <Form
+          noValidate
+          validated={this.state.validated}
+          onSubmit={this.onFormSubmit}
+        >
           <Row className="mt-5">
             <Col>
               <Form.Group style={{ width: "100%" }} controlId="name">
                 <Form.Label>Nombre:</Form.Label>
-                <Form.Control type="text" />
+                <Form.Control required type="text" />
               </Form.Group>
             </Col>
             <Col>

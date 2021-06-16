@@ -44,6 +44,28 @@ class BookEntry extends Component {
     expense: true,
   };
 
+  componentWillMount() {
+    fetch("https://localhost:44313/api/BookEntry", {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ bookEntriesokEntries: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+  }
+
   componentDidMount() {
     if (this.props.location.state !== undefined)
       this.setState({ expense: false });

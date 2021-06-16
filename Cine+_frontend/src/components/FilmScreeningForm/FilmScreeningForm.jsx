@@ -33,6 +33,7 @@ class FilmScreeningForm extends Component {
     optional: false,
     error: "",
     validated: false,
+    validatedMod: false,
   };
 
   componentWillMount() {
@@ -215,36 +216,47 @@ class FilmScreeningForm extends Component {
   };
 
   handleAddNewMod = (e) => {
-    let formElements = e.target.elements;
-    const name = formElements.name.value;
-    const description = formElements.description.value;
-    const value = formElements.value.value;
-    const type = e.target.options.selectedIndex;
-    let mod = {
-      name,
-      description,
-      value,
-      type,
-    };
-    fetch("https://localhost:44313/api/PriceModification", {
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: "POST",
-      body: JSON.stringify(mod),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validatedMod: true });
+    } else {
+      let formElements = e.target.elements;
+      const name = formElements.name.value;
+      const description = formElements.description.value;
+      const value = formElements.value.value;
+      const type = e.target.options.selectedIndex;
+      let mod = {
+        name,
+        description,
+        value,
+        type,
+      };
+      fetch("https://localhost:44313/api/PriceModification", {
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: "POST",
+        body: JSON.stringify(mod),
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+    }
     this.setState({ addNewMod: false });
   };
 
@@ -555,6 +567,8 @@ class FilmScreeningForm extends Component {
                     )}
                     {this.state.addNewMod && (
                       <Form
+                        noValidate
+                        validated={this.state.validatedMod}
                         style={{ width: "100%" }}
                         onSubmit={this.handleAddNewMod}
                       >
@@ -564,22 +578,27 @@ class FilmScreeningForm extends Component {
 
                         <Form.Group controlId="name">
                           <Form.Label>Nombre:</Form.Label>
-                          <Form.Control type="text" />
+                          <Form.Control required type="text" />
                         </Form.Group>
                         <Form.Group controlId="type">
                           <Form.Label>Tipo:</Form.Label>
-                          <Form.Control as="select" custom>
+                          <Form.Control required as="select" custom>
                             <option id={"Descuento"}>Descuento</option>
                             <option id={"Aumento"}>Aumento</option>
                           </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="value">
                           <Form.Label>Valor (en por ciento):</Form.Label>
-                          <Form.Control type="number" min={0} max={100} />
+                          <Form.Control
+                            required
+                            type="number"
+                            min={0}
+                            max={100}
+                          />
                         </Form.Group>
                         <Form.Group controlId="description">
                           <Form.Label>Descripción:</Form.Label>
-                          <Form.Control as="textarea" rows={3} />
+                          <Form.Control required as="textarea" rows={3} />
                         </Form.Group>
                         <Button type="submit">Aceptar</Button>
                         <Button

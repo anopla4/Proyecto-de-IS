@@ -32,6 +32,10 @@ class FilmForm extends Component {
     selectedRols: [],
     file: undefined,
     fileTmpURL: undefined,
+    validated: false,
+    validatedRol: false,
+    validatedGenre: false,
+    error: "",
   };
 
   componentWillMount() {
@@ -96,62 +100,73 @@ class FilmForm extends Component {
   };
 
   onFormSubmit = (e) => {
-    let formElements = e.target.elements;
-    const name = formElements.name.value;
-    const year = formElements.year.value;
-    const country = formElements.country.value;
-    let film = {
-      name,
-      year,
-      country,
-    };
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validated: true });
+    } else {
+      let formElements = e.target.elements;
+      const name = formElements.name.value;
+      const year = formElements.year.value;
+      const country = formElements.country.value;
+      let film = {
+        name,
+        year,
+        country,
+      };
 
-    var formdata = new FormData();
-    formdata.append("film.name", film.name);
-    formdata.append("film.country", film.country);
-    formdata.append("film.year", film.year);
-    if (this.state.file)
-      formdata.append("film.img", this.state.file, this.state.file.name);
-    for (let i = 0; i < this.state.selectedGenres.length; i++) {
-      formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
-      formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
-    }
-    for (let i = 0; i < this.state.selectedRols.length; i++) {
-      formdata.append(
-        `membersRol[${i}].rol.id`,
-        this.state.selectedRols[i].rol.id
-      );
-      formdata.append(
-        `membersRol[${i}].rol.name`,
-        this.state.selectedRols[i].rol.name
-      );
-      formdata.append(
-        `membersRol[${i}].member`,
-        this.state.selectedRols[i].member
-      );
-    }
-    let postUrl =
-      "https://localhost:44313/api/Film" +
-      (this.state.edit ? `/${this.state.filmEdit.film.id}` : "");
-    fetch(postUrl, {
-      mode: "cors",
-      headers: {
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: this.state.edit ? "PATCH" : "POST",
-      body: formdata,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+      var formdata = new FormData();
+      formdata.append("film.name", film.name);
+      formdata.append("film.country", film.country);
+      formdata.append("film.year", film.year);
+      if (this.state.file)
+        formdata.append("film.img", this.state.file, this.state.file.name);
+      for (let i = 0; i < this.state.selectedGenres.length; i++) {
+        formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
+        formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
+      }
+      for (let i = 0; i < this.state.selectedRols.length; i++) {
+        formdata.append(
+          `membersRol[${i}].rol.id`,
+          this.state.selectedRols[i].rol.id
+        );
+        formdata.append(
+          `membersRol[${i}].rol.name`,
+          this.state.selectedRols[i].rol.name
+        );
+        formdata.append(
+          `membersRol[${i}].member`,
+          this.state.selectedRols[i].member
+        );
+      }
+      let postUrl =
+        "https://localhost:44313/api/Film" +
+        (this.state.edit ? `/${this.state.filmEdit.film.id}` : "");
+      fetch(postUrl, {
+        mode: "cors",
+        headers: {
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: this.state.edit ? "PATCH" : "POST",
+        body: formdata,
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
-    this.props.history.push({ pathname: "/films", state: { edited: true } });
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+      this.props.history.push({ pathname: "/films", state: { edited: true } });
+    }
   };
 
   addNewGenre = (e) => {
@@ -225,59 +240,81 @@ class FilmForm extends Component {
   };
 
   onFormSubmitGenre = (e) => {
-    let formElements = e.target.elements;
-    const name = formElements.name.value;
-    let genre = {
-      name,
-    };
-    fetch("https://localhost:44313/api/Genre", {
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: "POST",
-      body: JSON.stringify(genre),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validatedGenre: true });
+    } else {
+      let formElements = e.target.elements;
+      const name = formElements.name.value;
+      let genre = {
+        name,
+      };
+      fetch("https://localhost:44313/api/Genre", {
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: "POST",
+        body: JSON.stringify(genre),
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
-    this.setState({ addGenre: false });
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+      this.setState({ addGenre: false });
+    }
   };
 
   onFormSubmitRol = (e) => {
-    let formElements = e.target.elements;
-    const name = formElements.name.value;
-    let rol = {
-      name,
-    };
-    fetch("https://localhost:44313/api/FilmRol", {
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: "POST",
-      body: JSON.stringify(rol),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validatedRol: true });
+    } else {
+      let formElements = e.target.elements;
+      const name = formElements.name.value;
+      let rol = {
+        name,
+      };
+      fetch("https://localhost:44313/api/FilmRol", {
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: "POST",
+        body: JSON.stringify(rol),
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
-    this.setState({ addRol: false });
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+      this.setState({ addRol: false });
+    }
   };
 
   handleCloseAdd = () => {
@@ -302,6 +339,8 @@ class FilmForm extends Component {
         <Row alignSelf="center" className="mt-4">
           <Col className="center">
             <Form
+              noValidate
+              validated={this.state.validated}
               onSubmit={this.onFormSubmit}
               style={{ width: "100%", alignItems: "center" }}
             >
@@ -310,6 +349,7 @@ class FilmForm extends Component {
                   <Form.Group style={{ width: "100%" }} controlId="name">
                     <Form.Label>Nombre:</Form.Label>
                     <Form.Control
+                      required
                       type="text"
                       defaultValue={film ? film.name : ""}
                     />
@@ -347,6 +387,7 @@ class FilmForm extends Component {
                   <Form.Group controlId="year">
                     <Form.Label>Año:</Form.Label>
                     <Form.Control
+                      required
                       defaultValue={film ? film.year : ""}
                       type="text"
                       name="year"
@@ -360,6 +401,7 @@ class FilmForm extends Component {
                   <Form.Group controlId="age">
                     <Form.Label>País:</Form.Label>
                     <Form.Control
+                      required
                       defaultValue={film ? film.country : ""}
                       type="text"
                       name="country"
@@ -514,11 +556,19 @@ class FilmForm extends Component {
             <Col md={3}>
               <Navbar fixed="right">
                 <Nav.Item>
-                  <Form onSubmit={this.onFormSubmitRol}>
+                  <Form
+                    noValidate
+                    validated={this.state.validatedRol}
+                    onSubmit={this.onFormSubmitRol}
+                  >
                     <Form.Group controlId="name">
                       <Form.Label>Nombre:</Form.Label>
-                      <Form.Control type="text" />
+                      <Form.Control required type="text" />
                     </Form.Group>
+                    <Form.Text muted>
+                      Este campo es requerido. La longitud máxima es de 40
+                      caracteres.
+                    </Form.Text>
                     <Button
                       className="mr-2"
                       style={{ float: "left" }}
@@ -543,10 +593,18 @@ class FilmForm extends Component {
             <Col md={3}>
               <Navbar fixed="right">
                 <Nav.Item>
-                  <Form onSubmit={this.onFormSubmitGenre}>
+                  <Form
+                    noValidate
+                    validated={this.state.validatedGenre}
+                    onSubmit={this.onFormSubmitGenre}
+                  >
                     <Form.Group controlId="name">
                       <Form.Label>Nombre:</Form.Label>
-                      <Form.Control type="text" />
+                      <Form.Control required type="text" />
+                      <Form.Text muted>
+                        Este campo es requerido. La longitud máxima es de 20
+                        caracteres.
+                      </Form.Text>
                     </Form.Group>
                     <Button
                       className="mr-2"
