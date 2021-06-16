@@ -75,7 +75,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void Add_ValidLevelPassed_ReturnsCreatedResponse()
+        public void Add_ValidLevelPassed_ReturnsOkResponse()
         {
             // Arrange
             Level level = this.SeedLevel();

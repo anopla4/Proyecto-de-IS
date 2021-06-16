@@ -74,7 +74,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void Add_ValidValuePassed_ReturnsCreatedResponse()
+        public void Add_ValidValuePassed_ReturnsOkResponse()
         {
             // Arrange
             var seed = this.SeedFilmRol();
