@@ -38,7 +38,7 @@ namespace Cine__backend.Controllers
 
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
-        public IActionResult AddSeatSeactionLevelRoom([FromForm]Guid seatId, [FromForm] Guid sectionId, [FromForm] Guid levelId, [FromForm] Guid roomId)
+        public IActionResult AddSeatSectionLevelRoom([FromForm]Guid seatId, [FromForm] Guid sectionId, [FromForm] Guid levelId, [FromForm] Guid roomId)
         {
             try
             {
@@ -52,13 +52,13 @@ namespace Cine__backend.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
         }
 
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{seatId}/{sectionId}/{levelId}/{roomId}")]
-        public IActionResult RemoveSeatSeactionLevelRomm(Guid seatId,Guid sectionId,Guid levelId,Guid roomId)
+        public IActionResult RemoveSeatSectionLevelRoom(Guid seatId,Guid sectionId,Guid levelId,Guid roomId)
         {
             try
             {
@@ -68,7 +68,6 @@ namespace Cine__backend.Controllers
             catch (Exception e)
             {
                 return NotFound(e.Message);
-                throw;
             }
         }
     }

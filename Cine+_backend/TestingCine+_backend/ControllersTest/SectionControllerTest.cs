@@ -74,7 +74,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void Add_ValidSectionPassed_ReturnsCreatedResponse()
+        public void Add_ValidSectionPassed_ReturnsOkResponse()
         {
             // Arrange
             Section Section = this.SeedSection();
