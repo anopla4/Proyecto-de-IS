@@ -30,6 +30,7 @@ class Reserve extends Component {
     prices: [],
     points: [],
     paymentMethod: 0,
+    await: false,
   };
 
   componentWillMount() {
@@ -47,6 +48,9 @@ class Reserve extends Component {
       time: filmScreeningSelected[0].startTime,
       selectedPriceModifications: selectedPriceModifications,
     });
+  }
+
+  componentDidMount() {
     fetch(
       `https://localhost:44313/api/FilmScreening/${
         this.props.location.state.filmScreeningSelected[0].film.film.id
@@ -67,30 +71,14 @@ class Reserve extends Component {
       .then((response) => {
         this.setState({
           seats: response,
+          grouped: groupBy(response, ["room.id", "level.id", "section.id"]),
+          selectedRoom: response[0].room.id,
+          availables: response.filter((c) => c.available === true).length,
         });
       })
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
       });
-  }
-
-  componentDidMount() {
-    console.log(this.state.seats);
-    const grouped = groupBy(this.state.seats, [
-      "room.id",
-      "level.id",
-      "section.id",
-    ]);
-    console.log(grouped);
-    let temp = grouped[0].room.id;
-    let availables = this.state.seats.filter(
-      (c) => c.available === true
-    ).length;
-    this.setState({
-      availables: availables,
-      grouped: grouped,
-      selectedRoom: temp,
-    });
   }
 
   onChangeSelectedRoom = (e) => {
@@ -129,7 +117,22 @@ class Reserve extends Component {
     let seats = this.state.seats
       .filter((c) => c.available === true)
       .slice(0, e.target.value);
-    this.setState({ takenSeats: seats });
+    let newPoints = [...this.state.points];
+    let newPrices = [...this.state.prices];
+    let newSeats = [...this.state.takenSeats];
+
+    seats.forEach((element) => {
+      let price = this.setPrice(
+        element.level.percentOfPriceIncrement,
+        this.state.filmScreeningSelected[0]
+      );
+      let point = this.state.filmScreeningSelected[0].points;
+      let seat = element.seat;
+      newSeats = [...newSeats, seat];
+      newPrices = [...newPrices, price];
+      newPoints = [...newPoints, point];
+    });
+    this.setState({ takenSeats: seats, prices: newPrices, points: newPoints });
   };
 
   setBoxOffice = (e) => {
@@ -181,6 +184,7 @@ class Reserve extends Component {
     let filmScreening = this.state.filmScreeningSelected.filter(
       (c) => c.room.id === this.state.selectedRoom
     )[0];
+    console.log(filmScreening);
     let takenSeats = this.state.takenSeats;
     let prices = this.state.prices;
     let points = this.state.points;
@@ -191,31 +195,39 @@ class Reserve extends Component {
     var formdata = new FormData();
     formdata.append("purchaseOrder.userId", userId);
     formdata.append("purchaseOrder.date", this.state.date);
-    formdata.append("purchaseOrder.time", this.state.time);
+    formdata.append("purchaseOrder.purchaseTime", this.state.time);
     if (
       JSON.parse(localStorage.getItem("loggedUser")).roles.includes("Worker") ||
       JSON.parse(localStorage.getItem("loggedUser")).roles.includes("WebMaster")
     )
-      formdata.append("purchaseOrder.boxOffice", this.state.boxOffice);
+      formdata.append(
+        "purchaseOrder.boxOffice",
+        this.state.boxOffice === undefined ? "" : this.state.boxOffice
+      );
     if (this.state.paymentMethod === 0)
       formdata.append("purchaseOrder.paidByPoints", true);
     else formdata.append("purchaseOrder.paidByPoints", false);
     for (let i = 0; i < this.state.takenSeats.length; i++) {
-      formdata.append(`items[${i}].filmScreeningId`, filmScreening.id);
       formdata.append(
-        `items[${i}].seatSeatId`,
+        `purchaseOrder.items[${i}].filmScreeningId`,
+        filmScreening.filmScreeningId
+      );
+      formdata.append(`purchaseOrder.items[${i}].price`, prices[i]);
+      formdata.append(`purchaseOrder.items[${i}].points`, points[i]);
+      formdata.append(
+        `purchaseOrder.items[${i}].seatSeatId`,
         this.state.takenSeats[i].seat.id
       );
       formdata.append(
-        `items[${i}].seatSectionId`,
+        `purchaseOrder.items[${i}].seatSectionId`,
         this.state.takenSeats[i].section.id
       );
       formdata.append(
-        `items[${i}].seatLevelId`,
+        `purchaseOrder.items[${i}].seatLevelId`,
         this.state.takenSeats[i].level.id
       );
       formdata.append(
-        `items[${i}].seatRoomId`,
+        `purchaseOrder.items[${i}].seatRoomId`,
         this.state.takenSeats[i].room.id
       );
     }
@@ -226,7 +238,7 @@ class Reserve extends Component {
           "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
       },
       method: "POST",
-      body: JSON.stringify(formdata),
+      body: formdata,
     })
       .then((response) => {
         if (!response.ok) {
@@ -258,7 +270,7 @@ class Reserve extends Component {
       <Container className="mt-5">
         <Row>
           <Col>
-            <h4>Reserva para la película {this.state.film.name}</h4>
+            <h4>Reserva para la película {this.state.film.film.name}</h4>
             <h6>
               {formatDateRequest(this.state.date)} - {this.state.time}
             </h6>
@@ -288,7 +300,7 @@ class Reserve extends Component {
                       {this.state.takenSeats.map((item, index) => (
                         <ListGroupItem>
                           {item.room.name}-{item.level.name}-{item.section.name}
-                          -{item.seat.id}
+                          -{item.seat.code}
                           <Button
                             className="ml-3"
                             style={{ padding: "0px", float: "right" }}
@@ -455,20 +467,17 @@ class Reserve extends Component {
                             <ListGroup>
                               {s._items.map((seat, index) => (
                                 <ListGroupItem
-                                  style={{ width: "180px" }}
+                                  style={{ width: "200px" }}
                                   variant={
                                     seat.available ? "success" : "danger"
                                   }
                                   id={seat.seat.id}
                                 >
                                   <Row>
-                                    <Col md={1}>
-                                      {seat.section.name}
-                                      {seat.seat.code}
-                                    </Col>
+                                    <Col md={3}>{seat.seat.code}</Col>
 
                                     {seat.available && (
-                                      <Col style={{ alignItems: "center" }}>
+                                      <Col>
                                         <OverlayTrigger
                                           overlay={
                                             <Tooltip id="price/points">

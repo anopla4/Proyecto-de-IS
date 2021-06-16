@@ -19,7 +19,7 @@ namespace Cine__backend.Repositories
         {
             purchaseOrder.Id = Guid.NewGuid();
 
-            if (purchaseOrder.BoxOffice.Count() > 0)
+            if (purchaseOrder.BoxOffice != null)
             {
                 double? income = 0;
                 int pointsAdd = 0;
@@ -51,7 +51,7 @@ namespace Cine__backend.Repositories
                 foreach (Reservation reservation in purchaseOrder.Items)
                 {
                     reservation.Id = Guid.NewGuid();
-                    _context.Items.Add(reservation);
+                    _context.Reservations.Add(reservation);
                     points += reservation.Points;
                 }
                 if(points > _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId).Points)
@@ -67,7 +67,7 @@ namespace Cine__backend.Repositories
             foreach (Reservation reservation in purchaseOrder.Items)
             {
                 reservation.Id = Guid.NewGuid();
-                _context.Items.Add(reservation);
+                _context.Reservations.Add(reservation);
             }
             _context.SaveChanges();
             return purchaseOrder;

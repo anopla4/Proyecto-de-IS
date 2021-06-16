@@ -21,7 +21,7 @@ namespace Cine__backend.Models
         public string UserId { get; set; }
         public User User { get; set; }
         [Required]
-        public List<Item> Items { get; set; }
+        public List<Reservation> Items { get; set; }
         [Required]
         public DateTime Date { get; set; }
         [Required]
