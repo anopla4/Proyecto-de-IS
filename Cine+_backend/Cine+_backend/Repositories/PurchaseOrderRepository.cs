@@ -255,6 +255,7 @@ namespace Cine__backend.Repositories
                     _context.ClubMembers.Update(currMember);
                 }
                 _context.SaveChanges();
+                return;
 
             }
             if (purchaseOrder.CreditCard != null && purchaseOrder.CreditCard.Count() == 19)//Ver cantidad del números de una tarjeta
@@ -266,6 +267,11 @@ namespace Cine__backend.Repositories
                     currMember.Points -= pointsRest;
                     _context.ClubMembers.Update(currMember);
                 }
+                _context.SaveChanges();
+                return;
+            }
+            if (purchaseOrder.State == StatePurchaseOrder.pending)
+            {
                 _context.SaveChanges();
                 return;
             }
