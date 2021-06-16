@@ -47,7 +47,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void GetAll_WhenCalled_ReturnsAllRoles()
+        public void GetAll_WhenCalled_ReturnsAllClubMembers()
         {
             _mockRepo.Setup(repo => repo.GetClubMembers())
                 .Returns(new List<ClubMember>() { new ClubMember(), new ClubMember(), new ClubMember() });

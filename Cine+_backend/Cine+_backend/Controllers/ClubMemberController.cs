@@ -67,7 +67,6 @@ namespace Cine__backend.Controllers
                 this.SaveFile(clubMember);
                 clubMember = _clubMemberRep.AddClubMember(userId, clubMember);
                 return Ok(clubMember);
-                //return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + clubMember.UserId, clubMember);
             }
             catch (Exception e)
             {

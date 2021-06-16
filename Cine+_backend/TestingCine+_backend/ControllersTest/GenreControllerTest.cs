@@ -43,7 +43,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void GetAll_WhenCalled_ReturnsAllRoles()
+        public void GetAll_WhenCalled_ReturnsAllGenres()
         {
             _mockRepo.Setup(repo => repo.GetGenres())
                 .Returns(new List<Genre>() { new Genre(), new Genre(), new Genre() });
