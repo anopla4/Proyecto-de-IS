@@ -73,7 +73,7 @@ namespace Cine__backend.Controllers
             var file = film.Img;
             var folderName = Path.Combine("Resources", "Images");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            if (file.Length > 0)
+            if (!(file is null) && file.Length > 0)
             {
                 var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                 var fullPath = Path.Combine(pathToSave, fileName);
@@ -96,7 +96,6 @@ namespace Cine__backend.Controllers
                 this.SaveFile(film);
                 var newDTOFilmStaff = _filmRep.AddFilm(film, genres, membersRol);
                 return Ok(newDTOFilmStaff);
-                //return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newDTOFilm.Film.Id, newDTOFilm);
             }
             catch (Exception e)
             {

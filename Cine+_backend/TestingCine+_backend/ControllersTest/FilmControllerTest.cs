@@ -118,7 +118,6 @@ namespace TestingCine__backend.ControllersTest
         [Fact]
         public void GetById_WhenCalled_ReturnsOkResultAndCorrectObject()
         {
-            //var seed = this.SeedFilm("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
             var seedDto = this.SeedDTOFilm("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
             _mockRepo.Setup(p => p.GetFilm(new Guid("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"))).Returns(seedDto);
             var okResult = _controller.GetFilm(new Guid("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"));
@@ -156,12 +155,10 @@ namespace TestingCine__backend.ControllersTest
             Assert.IsType<NotFoundObjectResult>(notFoundResult);
         }
 
-
         [Fact]
         public void Add_ValidValuePassed_ReturnsOkResponse()
         {
             // Arrange
-            //var seed = this.SeedFilm();
             var seedDto = this.SeedDTOFilmStaff();
             _mockRepo.Setup(repo => repo.AddFilm(seedDto.Film, (List<Genre>)seedDto.Genres, (List<DTOMemberRol>)seedDto.Staff))
                 .Returns(this.SeedDTOFilmStaff(new Guid().ToString()));
@@ -175,7 +172,6 @@ namespace TestingCine__backend.ControllersTest
         public void Add_ValidValuePassed_ReturnedResponseHasCreatedItem()
         {
             // Arrange
-            //var seed = this.SeedFilm();
             var seedDto = this.SeedDTOFilmStaff();
             _mockRepo.Setup(repo => repo.AddFilm(seedDto.Film, (List<Genre>)seedDto.Genres, (List<DTOMemberRol>)seedDto.Staff))
                 .Returns(this.SeedDTOFilmStaff(new Guid().ToString()));
@@ -193,7 +189,7 @@ namespace TestingCine__backend.ControllersTest
             // Arrange
             DTOFilmStaff dto_fs = null;
             _mockRepo.Setup(repo => repo.AddFilm(It.IsAny<Film>(), It.IsAny<List<Genre>>(), It.IsAny<List<DTOMemberRol>>()))
-                .Callback<DTOFilmStaff>(x => dto_fs = x);
+                .Callback<Film,List<Genre>,List<DTOMemberRol>>((x,y,z) => dto_fs = new DTOFilmStaff { Film=x, Genres=y, Staff=z });
             var seed = this.SeedDTOFilmStaff();
             // Act
             _controller.AddFilm(seed.Film, (List<Genre>)seed.Genres, (List<DTOMemberRol>)seed.Staff);
@@ -231,9 +227,8 @@ namespace TestingCine__backend.ControllersTest
                 .Returns(this.SeedDTOFilm("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"));
             _mockRepo.Setup(p => p.UpdateFilm(dto_fs.Film, (List<Genre>)dto_fs.Genres, (List<DTOMemberRol>)dto_fs.Staff))
                 .Returns(dto_fs);
-            var newDto = this.SeedDTOFilmStaff();
             var okResult = _controller.UpdateFilm(new Guid("43aaaa9c-17bd-4e17-b2ec-7603644b8f27"),
-                newDto.Film, (List<Genre>)newDto.Genres, (List<DTOMemberRol>)newDto.Staff);
+                dto_fs.Film, (List<Genre>)dto_fs.Genres, (List<DTOMemberRol>)dto_fs.Staff);
             var result = Assert.IsType<OkObjectResult>(okResult);
             var item = Assert.IsType<DTOFilmStaff>(result.Value);
             Assert.Equal(dto_fs.Film.Id, item.Film.Id);
