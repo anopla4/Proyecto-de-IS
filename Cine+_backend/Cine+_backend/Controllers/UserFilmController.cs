@@ -82,6 +82,8 @@ namespace Cine__backend.Controllers
             catch (Exception e)
             {
                 var t = e.GetType();
+                if (t == typeof(KeyNotFoundException))
+                    return NotFound(e.Message);
                 if (t == typeof(ArgumentOutOfRangeException) || t == typeof(InvalidOperationException))
                 {
                     return BadRequest(e.Message);
@@ -105,24 +107,25 @@ namespace Cine__backend.Controllers
                 throw;
             }
         }
-        [HttpPatch("{userid}/{filmId}")]
-        [Authorize(Roles = "WebMaster,Admin,User")]
+   
+        //[HttpPatch("{userid}/{filmId}")]
+        //[Authorize(Roles = "WebMaster,Admin,User")]
 
-        public IActionResult UpdateFilm(string userId, Guid filmId, int rating)
-        {
-            try
-            {
-                _userFilmRep.UpdateUserFilm(userId, filmId, rating);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                if(e.GetType() == typeof(ArgumentOutOfRangeException))
-                {
-                    return BadRequest(e.Message);
-                }
-                return NotFound(e.Message);
-            }
-        }
+        //public IActionResult UpdateFilm(string userId, Guid filmId, int rating)
+        //{
+        //    try
+        //    {
+        //        _userFilmRep.UpdateUserFilm(userId, filmId, rating);
+        //        return Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        if(e.GetType() == typeof(ArgumentOutOfRangeException))
+        //        {
+        //            return BadRequest(e.Message);
+        //        }
+        //        return NotFound(e.Message);
+        //    }
+        //}
     }
 }
