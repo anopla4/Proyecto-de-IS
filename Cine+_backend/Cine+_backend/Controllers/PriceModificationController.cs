@@ -37,6 +37,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddPriceModification(PriceModification priceModification)
@@ -44,7 +45,8 @@ namespace Cine__backend.Controllers
             try
             {
                 priceModification = _rep.AddPriceModification(priceModification);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + priceModification.Id, priceModification);
+                return Ok(priceModification);
+                //return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + priceModification.Id, priceModification);
             }
             catch (Exception e)
             {
@@ -53,7 +55,7 @@ namespace Cine__backend.Controllers
         }
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{priceModificationId}")]
-        public IActionResult UpdatePriceModifiation(Guid priceModificationId, PriceModification priceModification)
+        public IActionResult UpdatePriceModification(Guid priceModificationId, PriceModification priceModification)
         {
             try
             {
@@ -67,11 +69,11 @@ namespace Cine__backend.Controllers
         }
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{priceModificationId}")]
-        public IActionResult RemovePriceModification(Guid priceModificationId, PriceModification priceModification)
+        public IActionResult RemovePriceModification(Guid priceModificationId)
         {
             try
             {
-                _rep.RemovePriceModifiation(priceModificationId);
+                _rep.RemovePriceModification(priceModificationId);
                 return Ok();
             }
             catch(Exception e)

@@ -12,6 +12,6 @@ namespace Cine__backend.Interfaces
         PriceModification GetPriceModification(Guid priceModificationId);
         PriceModification AddPriceModification(PriceModification priceModification);
         PriceModification UpdatePriceModification(PriceModification priceModification);
-        void RemovePriceModifiation(Guid priceModificationId);
+        void RemovePriceModification(Guid priceModificationId);
     }
 }

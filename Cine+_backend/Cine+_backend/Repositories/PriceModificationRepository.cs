@@ -31,12 +31,13 @@ namespace Cine__backend.Repositories
             }
             return priceModification;
         }
+        
         public List<PriceModification> GetPriceModifications()
         {
             return _context.PriceModifications.ToList();
         }
 
-        public void RemovePriceModifiation(Guid priceModificationId)
+        public void RemovePriceModification(Guid priceModificationId)
         {
             var currPriceModification = _context.PriceModifications.Find(priceModificationId);
             if (currPriceModification == null)
