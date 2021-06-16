@@ -17,18 +17,19 @@ namespace Cine__backend.Repositories
             _context = context;
         }
 
-        public FilmScreening AddFilmScreening(FilmScreening filmScreening, List<DTOPriceModification> priceModifications)
+        public FilmScreening AddFilmScreening(FilmScreening filmScreening, List<DTOPriceModificationId> priceModificationsIds)
         {
             filmScreening.Id = Guid.NewGuid();
             if (filmScreening.Time.Length > 8 || int.Parse(filmScreening.Time.Split(":")[0]) > 12 || int.Parse(filmScreening.Time.Split(":")[1].Split()[0]) > 59 || (filmScreening.Time.Split(":")[1].Split()[1] != "AM" && filmScreening.Time.Split(":")[1].Split()[1] != "PM"))
                 throw new FormatException($"La hora {filmScreening.Time} para la puesta en escena no es válida");
-            foreach(var priceModification in priceModifications)
+            foreach(var priceModificationId in priceModificationsIds)
             {
-                if (_context.PriceModifications.Find(priceModification.PriceModification.Id) == null)
+                var priceModification = _context.PriceModifications.Find(priceModificationId.Id);
+                if (priceModification == null)
                 {
-                    throw new KeyNotFoundException($"No se encuentra la modificación de precios {priceModification.PriceModification.Name}");
+                    throw new KeyNotFoundException($"No se encuentra la modificación de precios {priceModificationId.Id}");
                 }
-                _context.FilmScreeningPriceModifications.Add(new FilmScreeningPriceModification { FilmScreeningId = filmScreening.Id, PriceModificationId = priceModification.PriceModification.Id, Optional = priceModification.Optional });
+                _context.FilmScreeningPriceModifications.Add(new FilmScreeningPriceModification { FilmScreeningId = filmScreening.Id, PriceModificationId = priceModificationId.Id, Optional = priceModificationId.Optional });
             }
             _context.FilmScreenings.Add(filmScreening);
             _context.SaveChanges();
@@ -81,7 +82,7 @@ namespace Cine__backend.Repositories
             return filmScreeningsDTO;
         }
 
-        public FilmScreening UpdateFilmScreening(FilmScreening filmScreening, List<DTOPriceModification> priceModifications)
+        public FilmScreening UpdateFilmScreening(FilmScreening filmScreening, List<DTOPriceModificationId> priceModificationsIds)
         {
             var currFilmScreening = _context.FilmScreenings.Find(filmScreening.Id);
             if (currFilmScreening == null)
@@ -97,9 +98,12 @@ namespace Cine__backend.Repositories
             {
                 _context.FilmScreeningPriceModifications.Remove(priceModification);
             }
-            foreach (var priceModification in priceModifications)
+            foreach (var priceModificationId in priceModificationsIds)
             {
-                _context.FilmScreeningPriceModifications.Add(new FilmScreeningPriceModification { FilmScreeningId = filmScreening.Id, PriceModificationId = priceModification.PriceModification.Id, Optional = priceModification.Optional});
+                var priceModification = _context.PriceModifications.Find(priceModificationId.Id);
+                if (priceModification == null)
+                    throw new KeyNotFoundException($"No se encuentra la modificación de precio con id = {priceModificationId.Id}");
+                _context.FilmScreeningPriceModifications.Add(new FilmScreeningPriceModification { FilmScreeningId = filmScreening.Id, PriceModificationId = priceModification.Id, Optional = priceModificationId.Optional});
             }
             _context.FilmScreenings.Update(currFilmScreening);
             _context.SaveChanges();

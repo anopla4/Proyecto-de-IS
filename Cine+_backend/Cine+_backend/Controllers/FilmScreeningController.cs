@@ -53,13 +53,13 @@ namespace Cine__backend.Controllers
         }
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
-        public IActionResult AddFilmScreening([FromForm]Film film, [FromForm]DateTime date, [FromForm]List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModification> priceModifications)
+        public IActionResult AddFilmScreening([FromForm]Guid filmId, [FromForm]DateTime date, [FromForm]List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModificationId> priceModifications)
         {
             try
             {
                 foreach( var roomTime in roomTimes)
                 {
-                    var filmScreening = new FilmScreening { FilmId = film.Id, RoomId = roomTime.Room.Id, Time = roomTime.Time, Date = date };
+                    var filmScreening = new FilmScreening { FilmId = filmId, RoomId = roomTime.Room.Id, Time = roomTime.Time, Date = date };
                     filmScreening = _rep.AddFilmScreening(filmScreening, priceModifications);
                 }
                 
@@ -72,11 +72,12 @@ namespace Cine__backend.Controllers
         }
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{filmScreeningId}")]
-        public IActionResult UpdateFilmScreening( Guid filmScreeningId,[FromForm]FilmScreening filmScreening, [FromForm] List<DTOPriceModification> priceModifications)
+        public IActionResult UpdateFilmScreening( Guid filmScreeningId,[FromForm]FilmScreening filmScreening, [FromForm] List<DTOPriceModificationId> priceModificationsIds)
         {
             try
             {
-                filmScreening = _rep.UpdateFilmScreening(filmScreening, priceModifications);
+                filmScreening.Id = filmScreeningId;
+                filmScreening = _rep.UpdateFilmScreening(filmScreening, priceModificationsIds);
                 return Ok(filmScreening);
             }
             catch (Exception e)
