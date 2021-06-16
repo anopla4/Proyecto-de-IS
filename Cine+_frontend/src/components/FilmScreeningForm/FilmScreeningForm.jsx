@@ -195,9 +195,11 @@ class FilmScreeningForm extends Component {
     if (mod) {
       let element = this.state.priceModifications.find((c) => c.id === mod);
       if (element) {
-        let oldMod = this.state.selectedPriceMod.find((c) => c.mod.id === mod);
+        let oldMod = this.state.selectedPriceMod.find(
+          (c) => c.priceModification.id === mod
+        );
 
-        if (!oldMod || oldMod.mod.id !== mod) {
+        if (!oldMod || oldMod.priceModification.id !== mod) {
           let newM = this.state.priceModifications.find((c) => c.id === mod);
           let item = { priceModification: newM, optional: opt };
           let newMods = [...this.state.selectedPriceMod, item];
@@ -254,7 +256,9 @@ class FilmScreeningForm extends Component {
   };
 
   handleDeleteMod = (mod, index) => {
-    let newMods = this.state.selectedPriceMod.filter((c) => c.id !== mod.id);
+    let newMods = this.state.selectedPriceMod.filter(
+      (c) => c.priceModification.id !== mod.priceModification.id
+    );
     this.setState({ selectedPriceMod: newMods });
   };
 
@@ -272,7 +276,8 @@ class FilmScreeningForm extends Component {
       let filmId = "";
       let date = undefined;
       if (this.state.edit) {
-        filmId = this.props.location.state.film.id;
+        console.log(this.props.location.state.film.film);
+        filmId = this.props.location.state.film.film.id;
         date = this.props.location.state.date;
       } else {
         const film = formElements.film;
@@ -294,13 +299,15 @@ class FilmScreeningForm extends Component {
       };
 
       var formdata = new FormData();
-      formdata.append("filmId", item.filmId);
-      formdata.append("date", item.date);
+      if (this.state.edit) {
+        formdata.append("filmId", item.filmId);
+        formdata.append("date", item.date);
+      }
+
       formdata.append("price", item.price);
       formdata.append("points", item.points);
 
       for (let i = 0; i < this.state.roomTimes.length; i++) {
-        console.log(this.state.roomTimes);
         formdata.append(
           `roomTimes[${i}].room.id`,
           this.state.roomTimes[i].room.id
@@ -312,7 +319,6 @@ class FilmScreeningForm extends Component {
         formdata.append(`roomTimes[${i}].time`, this.state.roomTimes[i].time);
       }
       for (let i = 0; i < this.state.selectedPriceMod.length; i++) {
-        console.log(this.state.selectedPriceMod);
         formdata.append(
           `priceModifications[${i}].id`,
           this.state.selectedPriceMod[i].priceModification.id
@@ -324,9 +330,7 @@ class FilmScreeningForm extends Component {
       }
       let postUrl =
         "https://localhost:44313/api/FilmScreening" +
-        (this.state.edit
-          ? `/${this.state.filmId}/${formatDateRequest(date)}`
-          : "");
+        (this.state.edit ? `/${filmId}/${formatDateRequest(date)}` : "");
       fetch(postUrl, {
         mode: "cors",
         headers: {

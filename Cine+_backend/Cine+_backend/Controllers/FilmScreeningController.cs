@@ -75,7 +75,7 @@ namespace Cine__backend.Controllers
             }
         }
         [Authorize(Roles = "WebMaster,Admin")]
-        [HttpPatch("{filmScreeningId}/{date}")]
+        [HttpPatch("{filmId}/{date}")]
         public IActionResult UpdateFilmScreening(Guid filmId, DateTime date, [FromForm] List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModificationId> priceModifications, [FromForm] double price = 20, [FromForm] int points = 20)
         {
             try
