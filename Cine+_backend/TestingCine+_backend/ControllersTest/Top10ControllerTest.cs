@@ -79,7 +79,7 @@ namespace TestingCine__backend.ControllersTest
         public void AddTop10_WhenCalled_ReturnsOkResult()
         {
             // Act
-            var okResult = _controller.AddTop10(new List<Film> { new Film(), new Film() });
+            var okResult = _controller.AddTop10(new List<Guid> { new Guid(), new Guid() });
             // Assert
             Assert.IsType<OkResult>(okResult);
         }
@@ -88,10 +88,10 @@ namespace TestingCine__backend.ControllersTest
         public void AddTop10_WhenSomeFilmIdNotValid_ReturnsNotFoundResult()
         {
             // Arrange
-            _mockRepo.Setup(repo => repo.AddTop10Film(It.IsAny<Film>()))
+            _mockRepo.Setup(repo => repo.AddTop10Film(It.IsAny<Guid>()))
                 .Throws(new KeyNotFoundException());
             // Act
-            var Result = _controller.AddTop10(new List<Film> { new Film(), new Film()});
+            var Result = _controller.AddTop10(new List<Guid> { new Guid(), new Guid()});
             // Assert
             Assert.IsType<NotFoundObjectResult>(Result);
         }
