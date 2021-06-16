@@ -119,7 +119,7 @@ namespace Cine__backend.Repositories
                 _context.SaveChanges();
 
             }
-            if (purchaseOrder.CreditCard.Count() == 19)
+            if (purchaseOrder.CreditCard != null && purchaseOrder.CreditCard.Count() == 19)
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CreditCard });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
@@ -236,6 +236,7 @@ namespace Cine__backend.Repositories
                 else
                     points += (int)reservation.Points;
             }
+            _context.PurchaseOrders.Update(purchaseOrder);
             if (purchaseOrder.PaidByPoints && _context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
             {
                 var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
@@ -244,7 +245,7 @@ namespace Cine__backend.Repositories
                 _context.SaveChanges();
                 return;
             }
-            if (purchaseOrder.BoxOffice.Count() > 0)
+            if (purchaseOrder.BoxOffice != null && purchaseOrder.BoxOffice.Count() > 0)
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.efectivo, Description = purchaseOrder.BoxOffice });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
@@ -256,7 +257,7 @@ namespace Cine__backend.Repositories
                 _context.SaveChanges();
 
             }
-            if (purchaseOrder.CreditCard.Count() == 8)//Ver cantidad del números de una tarjeta
+            if (purchaseOrder.CreditCard != null && purchaseOrder.CreditCard.Count() == 19)//Ver cantidad del números de una tarjeta
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CreditCard });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
@@ -275,7 +276,8 @@ namespace Cine__backend.Repositories
 
         bool CanCancel(DateTime date, string time)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = DateTime.Now;
+
             if (date > today.Date)
                 return true;
             int timeHour = int.Parse(time.Split(":")[0]) + ((time.Split(":")[1].Split()[1] == "PM") ? 12 : 0);

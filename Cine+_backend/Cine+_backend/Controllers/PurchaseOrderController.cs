@@ -27,7 +27,7 @@ namespace Cine__backend.Controllers
             return Ok(_rep.GetPurchaseOrders());
         }
 
-        [HttpGet("{orderId}")]
+        [HttpGet("byOrderId/{orderId}")]
         public IActionResult GetPurchaseOrder(Guid orderId)
         {
             try
@@ -41,7 +41,7 @@ namespace Cine__backend.Controllers
             }
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("byUser/{username}")]
         public IActionResult GetPurchaseOrdersOfUser(string username)
         {
             try
