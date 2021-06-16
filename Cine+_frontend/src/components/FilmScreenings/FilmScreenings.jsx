@@ -15,24 +15,6 @@ class FilmScreenings extends Component {
     });
   };
 
-  componentWillMount() {
-    // fetch("https://localhost:44313/api/FilmScreening", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ movieScreenings: response});
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
-  }
-
   render() {
     return (
       <Container className="mt-5">

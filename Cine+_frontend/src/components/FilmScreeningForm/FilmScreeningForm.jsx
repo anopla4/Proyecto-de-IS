@@ -11,58 +11,60 @@ import {
 } from "react-bootstrap";
 import { TrashFill } from "react-bootstrap-icons";
 import Add from "../Add/Add";
-import { formatDate } from "../utils";
+import { formatDateRequest } from "../utils";
 
 class FilmScreeningForm extends Component {
   state = {
-    // films: [],
-    films: [
-      {
-        film: {
-          id: 1,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-          genres: [{ name: "Thriller" }],
-        },
-        staff: [
-          { rol: { name: "Actor" }, member: "John Travolta" },
-          { rol: { name: "Director" }, member: "Quentin Tarantino" },
-        ],
-      },
-      {
-        film: {
-          id: 2,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-          genres: [{ name: "Thriller" }],
-        },
-        staff: [
-          { rol: { name: "Actor" }, member: "John Travolta" },
-          { rol: { name: "Director" }, member: "Quentin Tarantino" },
-        ],
-      },
-    ],
-    times: [],
-    rooms: [
-      { id: "1", name: "Sala A" },
-      { id: "2", name: "Sala B" },
-    ],
-    priceModifications: [
-      {
-        id: "1",
-        name: "Día de las madres",
-        type: "Descuento",
-        value: 50,
-        description:
-          "Por el día de las madres el cine hará un descuento para todas las personas",
-      },
-    ],
+    films: [],
+    // films: [
+    //   {
+    //     film: {
+    //       id: 1,
+    //       name: "Pulp Fiction",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/pulpFiction.jpg",
+    //       genres: [{ name: "Thriller" }],
+    //     },
+    //     staff: [
+    //       { rol: { name: "Actor" }, member: "John Travolta" },
+    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
+    //     ],
+    //   },
+    //   {
+    //     film: {
+    //       id: 2,
+    //       name: "Pulp Fiction",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/pulpFiction.jpg",
+    //       genres: [{ name: "Thriller" }],
+    //     },
+    //     staff: [
+    //       { rol: { name: "Actor" }, member: "John Travolta" },
+    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
+    //     ],
+    //   },
+    // ],
+    // times: [],
+    // rooms: [
+    //   { id: "1", name: "Sala A" },
+    //   { id: "2", name: "Sala B" },
+    // ],
+    // priceModifications: [
+    //   {
+    //     id: "1",
+    //     name: "Día de las madres",
+    //     type: "Descuento",
+    //     value: 50,
+    //     description:
+    //       "Por el día de las madres el cine hará un descuento para todas las personas",
+    //   },
+    // ],
+    rooms: [],
+    priceModifications: [],
     edit: false,
     selectedPriceMod: [],
     roomTimes: [],
@@ -76,51 +78,59 @@ class FilmScreeningForm extends Component {
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44313/api/Film", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ films: response});
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
-    // fetch("https://localhost:44313/api/Room", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ rooms: response});
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
-    // fetch("https://localhost:44313/api/PriceModification", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ priceModifications: response});
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/Film", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ films: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+    fetch("https://localhost:44313/api/Room", {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ rooms: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+    fetch("https://localhost:44313/api/PriceModification", {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ priceModifications: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
     let t = [
       "1:00",
       "2:00",
@@ -256,25 +266,25 @@ class FilmScreeningForm extends Component {
       value,
       type,
     };
-    // fetch("https://localhost:44313/api/PriceModification", {
-    //   mode: "cors",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    //   method: "POST",
-    //   body: JSON.stringify(mod),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/PriceModification", {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "POST",
+      body: JSON.stringify(mod),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
     this.setState({ addNewMod: false });
   };
 
@@ -304,6 +314,7 @@ class FilmScreeningForm extends Component {
       filmId = film.children[film.selectedIndex].id;
       date = formElements.date.value;
     }
+
     let item = {
       filmId,
       date,
@@ -312,24 +323,50 @@ class FilmScreeningForm extends Component {
       roomTimes,
       priceModifications,
     };
+
+    var formdata = new FormData();
+    formdata.append("film", item.filmId);
+    formdata.append("date", item.date);
+    for (let i = 0; i < this.state.roomTimes.length; i++) {
+      formdata.append(
+        `roomTimes[${i}].rol.id`,
+        this.state.roomTimes[i].room.id
+      );
+      formdata.append(
+        `roomTimes[${i}].room.name`,
+        this.state.roomTimes[i].room.name
+      );
+      formdata.append(`roomTimes[${i}].time`, this.state.roomTimes[i].time);
+    }
+    for (let i = 0; i < this.state.priceModifications.length; i++) {
+      formdata.append(
+        `priceModifications[${i}]`,
+        this.state.priceModifications[i].id
+      );
+    }
     let postUrl =
       "https://localhost:44313/api/FilmScreening" +
-      (this.state.edit ? `/${this.state.filmId}/${date}` : "");
-    // fetch(postUrl, {
-    //   mode: "cors",
-    //    headers: { "Content-Type": "application/json","Authorization": "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token },
-    //method: this.state.edit ? "PATCH" : "POST",
-    //   body: {item},
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+      (this.state.edit
+        ? `/${this.state.filmId}/${formatDateRequest(date)}`
+        : "");
+    fetch(postUrl, {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: this.state.edit ? "PATCH" : "POST",
+      body: { item },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
     this.props.history.push({
       pathname: "/filmScreenings",
       state: { edited: true },
@@ -337,6 +374,7 @@ class FilmScreeningForm extends Component {
   };
 
   render() {
+    console.log(this.state.rooms);
     return (
       <Container className="mt-5">
         <h1 className="mb-5 my-style-header">Puesta en escena</h1>

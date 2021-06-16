@@ -18,227 +18,229 @@ import { withRouter } from "react-router-dom";
 
 class MoviesScreening extends Component {
   state = {
-    movies: [
-      {
-        id: "1",
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-05",
-        time: "8:00 PM",
-        room: { id: "1", name: "Sala A" },
-        priceModifications: [
-          {
-            priceModification: {
-              id: "1",
-              name: "Día de las madres",
-              value: 20,
-              type: "Descuento",
-            },
-            optional: false,
-          },
-        ],
-      },
-      {
-        id: "2",
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-06",
-        time: "8:00 PM",
-        room: { id: "2", name: "Sala B" },
-        priceModifications: [],
-      },
+    // movies: [
+    //   {
+    //     id: "1",
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-05",
+    //     time: "8:00 PM",
+    //     room: { id: "1", name: "Sala A" },
+    //     priceModifications: [
+    //       {
+    //         priceModification: {
+    //           id: "1",
+    //           name: "Día de las madres",
+    //           value: 20,
+    //           type: "Descuento",
+    //         },
+    //         optional: false,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     id: "2",
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-06",
+    //     time: "8:00 PM",
+    //     room: { id: "2", name: "Sala B" },
+    //     priceModifications: [],
+    //   },
 
-      {
-        id: "2",
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-06",
-        time: "8:00 PM",
-        room: { id: "1", name: "Sala A" },
-        priceModifications: [],
-      },
-      {
-        id: "3",
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-05",
-        time: "10:00 PM",
-        room: { id: "2", name: "Sala B" },
-        priceModifications: [
-          {
-            priceModification: {
-              id: "1",
-              name: "Día de las madres",
-              value: 20,
-              type: "Descuento",
-            },
-            optional: false,
-          },
-        ],
-      },
-      {
-        id: "4",
-        film: {
-          id: 2,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-05",
-        priceModifications: [
-          {
-            priceModification: {
-              id: "1",
-              name: "Día de las madres",
-              value: 20,
-              type: "Descuento",
-            },
-            optional: false,
-          },
-        ],
-        time: "10:00 PM",
-        room: { id: "2", name: "Sala B" },
-      },
-    ],
-    moviesFilter: [
-      {
-        id: 1,
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-05",
-        time: "8:00 PM",
-        room: { id: "1", name: "Sala A" },
-        priceModifications: [
-          {
-            priceModification: {
-              id: "1",
-              name: "Día de las madres",
-              value: 20,
-              type: "Descuento",
-            },
-            optional: false,
-          },
-        ],
-      },
-      {
-        id: 2,
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-06",
-        time: "8:00 PM",
-        room: { id: "2", name: "Sala B" },
+    //   {
+    //     id: "2",
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-06",
+    //     time: "8:00 PM",
+    //     room: { id: "1", name: "Sala A" },
+    //     priceModifications: [],
+    //   },
+    //   {
+    //     id: "3",
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-05",
+    //     time: "10:00 PM",
+    //     room: { id: "2", name: "Sala B" },
+    //     priceModifications: [
+    //       {
+    //         priceModification: {
+    //           id: "1",
+    //           name: "Día de las madres",
+    //           value: 20,
+    //           type: "Descuento",
+    //         },
+    //         optional: false,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     id: "4",
+    //     film: {
+    //       id: 2,
+    //       name: "Pulp Fiction",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/pulpFiction.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-05",
+    //     priceModifications: [
+    //       {
+    //         priceModification: {
+    //           id: "1",
+    //           name: "Día de las madres",
+    //           value: 20,
+    //           type: "Descuento",
+    //         },
+    //         optional: false,
+    //       },
+    //     ],
+    //     time: "10:00 PM",
+    //     room: { id: "2", name: "Sala B" },
+    //   },
+    // ],
+    // moviesFilter: [
+    //   {
+    //     id: 1,
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-05",
+    //     time: "8:00 PM",
+    //     room: { id: "1", name: "Sala A" },
+    //     priceModifications: [
+    //       {
+    //         priceModification: {
+    //           id: "1",
+    //           name: "Día de las madres",
+    //           value: 20,
+    //           type: "Descuento",
+    //         },
+    //         optional: false,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     id: 2,
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-06",
+    //     time: "8:00 PM",
+    //     room: { id: "2", name: "Sala B" },
 
-        priceModifications: [],
-      },
-      {
-        id: 3,
-        film: {
-          id: 1,
-          name: "Cinema Paradiso",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/cinemaParadiso.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-05",
-        time: "10:00 PM",
-        room: { id: "1", name: "Sala A" },
+    //     priceModifications: [],
+    //   },
+    //   {
+    //     id: 3,
+    //     film: {
+    //       id: 1,
+    //       name: "Cinema Paradiso",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/cinemaParadiso.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-05",
+    //     time: "10:00 PM",
+    //     room: { id: "1", name: "Sala A" },
 
-        priceModifications: [
-          {
-            priceModification: {
-              id: "1",
-              name: "Día de las madres",
-              value: 20,
-              type: "Descuento",
-            },
-            optional: false,
-          },
-        ],
-      },
-      {
-        id: 4,
-        film: {
-          id: 2,
-          name: "Pulp Fiction",
-          year: "1988",
-          genre: { name: "Drama" },
-          country: "Italia",
-          imgPath: "src/images/pulpFiction.jpg",
-        },
-        price: 20,
-        points: 20,
-        date: "2021-06-05",
-        time: "10:00 PM",
-        room: { id: "2", name: "Sala B" },
+    //     priceModifications: [
+    //       {
+    //         priceModification: {
+    //           id: "1",
+    //           name: "Día de las madres",
+    //           value: 20,
+    //           type: "Descuento",
+    //         },
+    //         optional: false,
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     id: 4,
+    //     film: {
+    //       id: 2,
+    //       name: "Pulp Fiction",
+    //       year: "1988",
+    //       genre: { name: "Drama" },
+    //       country: "Italia",
+    //       imgPath: "src/images/pulpFiction.jpg",
+    //     },
+    //     price: 20,
+    //     points: 20,
+    //     date: "2021-06-05",
+    //     time: "10:00 PM",
+    //     room: { id: "2", name: "Sala B" },
 
-        priceModifications: [
-          {
-            priceModification: {
-              id: "1",
-              name: "Día de las madres",
-              value: 20,
-              type: "Descuento",
-            },
-            optional: false,
-          },
-        ],
-      },
-    ],
+    //     priceModifications: [
+    //       {
+    //         priceModification: {
+    //           id: "1",
+    //           name: "Día de las madres",
+    //           value: 20,
+    //           type: "Descuento",
+    //         },
+    //         optional: false,
+    //       },
+    //     ],
+    //   },
+    // ],
+    movies: [],
+    moviesFilter: [],
     grouped: [],
     inputName: "",
     inputTime: "",
@@ -246,23 +248,26 @@ class MoviesScreening extends Component {
   };
 
   componentDidMount() {
-    let grouped = groupBy(this.state.movies, ["film.id", "date", "time"]);
-    this.setState({ grouped: grouped });
-    // fetch("https://localhost:44313/api/FilmScreening/WithTimes", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ movies: response, moviesFilter: response });
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/FilmScreening", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        let grouped = groupBy(this.state.movies, ["film.id", "date", "time"]);
+        this.setState({
+          movies: response,
+          moviesFilter: response,
+          grouped: grouped,
+        });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   }
 
   handleInputChangeTypeahead = (text, e) => {
@@ -389,7 +394,6 @@ class MoviesScreening extends Component {
         filmScreenings.push(d);
       });
     });
-    console.log(filmScreenings);
     let roomTimes = [];
     let date = filmScreenings[0].date;
     let film = filmScreenings[0].film;
@@ -399,7 +403,6 @@ class MoviesScreening extends Component {
     filmScreenings.forEach((element) => {
       roomTimes.push({ room: element.room, time: element.time });
     });
-    console.log(filmScreenings);
     this.props.history.push({
       pathname: "/filmScreeningForm",
       state: {
