@@ -20,78 +20,7 @@ import { withRouter } from "react-router-dom";
 class Reserve extends Component {
   state = {
     selectedPriceModifications: [],
-    seats: [
-      {
-        room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "2", name: "B" },
-        seat: { id: "1" },
-        available: false,
-      },
-      {
-        room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "2" },
-        available: true,
-      },
-      {
-        room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "3" },
-        available: true,
-      },
-      {
-        room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "4" },
-        available: false,
-      },
-      {
-        room: { id: "1", name: "Sala A" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "5" },
-        available: true,
-      },
-      {
-        room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "6" },
-        available: true,
-      },
-      {
-        room: { id: "2", name: "Sala B" },
-        level: { id: "2", name: "Platea Alta", percentOfPriceIncrement: 10 },
-        section: { id: "1", name: "A" },
-        seat: { id: "7" },
-        available: true,
-      },
-      {
-        room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "8" },
-        available: true,
-      },
-      {
-        room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "9" },
-        available: false,
-      },
-      {
-        room: { id: "2", name: "Sala B" },
-        level: { id: "1", name: "Platea Baja", percentOfPriceIncrement: 0 },
-        section: { id: "1", name: "A" },
-        seat: { id: "10" },
-        available: true,
-      },
-    ],
+    seats: [],
     selectedRoom: undefined,
     availables: undefined,
     filmScreeningSelected: undefined,
@@ -104,29 +33,8 @@ class Reserve extends Component {
   };
 
   componentWillMount() {
-    // fetch(`https://localhost:44313/api/FilmScreening/${this.props.location.state.film[0].film.id}/
-    //${ formatDateRequest(this.props.location.state.film[0].date) } /${this.props.location.state.film[0].time}`, {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ seats: response });
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
-    let filmScreeningSelected = this.props.location.state.film;
-    let grouped = groupBy(this.state.seats, [
-      "room.id",
-      "level.id",
-      "section.id",
-    ]);
-    let selectedRoom = grouped[0].room.id;
+    let filmScreeningSelected = this.props.location.state.filmScreeningSelected;
+
     let selectedPriceModifications = [];
     filmScreeningSelected[0].priceModifications.forEach((element) => {
       var selected = element.optional ? false : true;
@@ -136,19 +44,52 @@ class Reserve extends Component {
       filmScreeningSelected: filmScreeningSelected,
       film: filmScreeningSelected[0].film,
       date: filmScreeningSelected[0].date,
-      time: filmScreeningSelected[0].time,
-      grouped: grouped,
-      selectedRoom: selectedRoom,
+      time: filmScreeningSelected[0].startTime,
       selectedPriceModifications: selectedPriceModifications,
     });
+    fetch(
+      `https://localhost:44313/api/FilmScreening/${
+        this.props.location.state.filmScreeningSelected[0].film.film.id
+      }/
+    ${formatDateRequest(
+      this.props.location.state.filmScreeningSelected[0].date
+    )}/${this.props.location.state.filmScreeningSelected[0].startTime}`,
+      {
+        mode: "cors",
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({
+          seats: response,
+        });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   }
 
   componentDidMount() {
+    console.log(this.state.seats);
+    const grouped = groupBy(this.state.seats, [
+      "room.id",
+      "level.id",
+      "section.id",
+    ]);
+    console.log(grouped);
+    let temp = grouped[0].room.id;
     let availables = this.state.seats.filter(
       (c) => c.available === true
     ).length;
     this.setState({
       availables: availables,
+      grouped: grouped,
+      selectedRoom: temp,
     });
   }
 
@@ -245,17 +186,17 @@ class Reserve extends Component {
     let points = this.state.points;
     let paymentMethod = this.state.paymentMethod;
     let modifiedPrice = this.modifiedPrice();
-    // let userId = JSON.parse(localStorage.getItem("loggedUser")).userId;
+    let userId = JSON.parse(localStorage.getItem("loggedUser")).userId;
     let purchaseOrderId = undefined;
     var formdata = new FormData();
-    // formdata.append("purchaseOrder.userId", userId);
+    formdata.append("purchaseOrder.userId", userId);
     formdata.append("purchaseOrder.date", this.state.date);
     formdata.append("purchaseOrder.time", this.state.time);
-    // if (
-    //   JSON.parse(localStorage.getItem("loggedUser")).roles.includes("Worker") ||
-    //   JSON.parse(localStorage.getItem("loggedUser")).roles.includes("WebMaster")
-    // )
-    //   formdata.append("purchaseOrder.boxOffice", this.state.boxOffice);
+    if (
+      JSON.parse(localStorage.getItem("loggedUser")).roles.includes("Worker") ||
+      JSON.parse(localStorage.getItem("loggedUser")).roles.includes("WebMaster")
+    )
+      formdata.append("purchaseOrder.boxOffice", this.state.boxOffice);
     if (this.state.paymentMethod === 0)
       formdata.append("purchaseOrder.paidByPoints", true);
     else formdata.append("purchaseOrder.paidByPoints", false);
@@ -278,26 +219,26 @@ class Reserve extends Component {
         this.state.takenSeats[i].room.id
       );
     }
-    // fetch("https://localhost:44313/api/PurchaseOrder", {
-    //   mode: "cors",
-    //   headers: {
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    //   method: "POST",
-    //   body: JSON.stringify(formdata),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     } else {
-    //       purchaseOrderId = response.id;
-    //       return response.json();
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/PurchaseOrder", {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "POST",
+      body: JSON.stringify(formdata),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        } else {
+          purchaseOrderId = response.id;
+          return response.json();
+        }
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
 
     this.props.history.push({
       pathname: "/purchaseOrder",
@@ -499,89 +440,94 @@ class Reserve extends Component {
               </Col>
             </Row>
             <Row style={{ width: "100%" }}>
-              {this.state.grouped
-                .filter((c) => c.room.id === this.state.selectedRoom)[0]
-                ._items.map((l) => (
-                  <Row className="mt-3" style={{ width: "100%" }}>
-                    <Row style={{ width: "100%" }}>
-                      <h4>{l.level.name}</h4>
-                    </Row>
-                    <Row>
-                      {l._items.map((s) => (
-                        <Col style={{ width: "100%" }}>
-                          <h5>{s.section.name}</h5>
-                          <ListGroup>
-                            {s._items.map((seat, index) => (
-                              <ListGroupItem
-                                style={{ width: "180px" }}
-                                variant={seat.available ? "success" : "danger"}
-                                id={seat.seat.id}
-                              >
-                                <Row>
-                                  <Col md={1}>
-                                    {seat.section.name}
-                                    {index + 1}
-                                  </Col>
-
-                                  {seat.available && (
-                                    <Col style={{ alignItems: "center" }}>
-                                      <OverlayTrigger
-                                        overlay={
-                                          <Tooltip id="price/points">
-                                            CUP/Puntos
-                                          </Tooltip>
-                                        }
-                                      >
-                                        <span className="d-inline-block">
-                                          <Button
-                                            bsPrefix="transparent-button"
-                                            id={seat.seat.id}
-                                            size="sm"
-                                          >
-                                            {this.setPrice(
-                                              l.level.percentOfPriceIncrement,
-                                              this.state
-                                                .filmScreeningSelected[0]
-                                            )}
-                                            /
-                                            {
-                                              this.state
-                                                .filmScreeningSelected[0].points
-                                            }
-                                          </Button>
-                                        </span>
-                                      </OverlayTrigger>
-                                    </Col>
-                                  )}
-                                  {seat.available && (
+              {this.state.seats.length > 0 &&
+                groupBy(this.state.seats, ["room.id", "level.id", "section.id"])
+                  .filter((c) => c.room.id === this.state.selectedRoom)[0]
+                  ._items.map((l) => (
+                    <Row className="mt-3" style={{ width: "100%" }}>
+                      <Row style={{ width: "100%" }}>
+                        <h4>{l.level.name}</h4>
+                      </Row>
+                      <Row>
+                        {l._items.map((s) => (
+                          <Col style={{ width: "100%" }}>
+                            <h5>{s.section.name}</h5>
+                            <ListGroup>
+                              {s._items.map((seat, index) => (
+                                <ListGroupItem
+                                  style={{ width: "180px" }}
+                                  variant={
+                                    seat.available ? "success" : "danger"
+                                  }
+                                  id={seat.seat.id}
+                                >
+                                  <Row>
                                     <Col md={1}>
-                                      <Button
-                                        variant="success"
-                                        id={seat.seat.id}
-                                        size="sm"
-                                        style={{ float: "right" }}
-                                        onClick={(e) =>
-                                          this.onSelectSeat(
-                                            e,
-                                            seat,
-                                            this.state.filmScreeningSelected[0],
-                                            l.level.percentOfPriceIncrement
-                                          )
-                                        }
-                                      >
-                                        <CartPlus id={seat.seat.id} />
-                                      </Button>
+                                      {seat.section.name}
+                                      {seat.seat.code}
                                     </Col>
-                                  )}
-                                </Row>
-                              </ListGroupItem>
-                            ))}
-                          </ListGroup>
-                        </Col>
-                      ))}
+
+                                    {seat.available && (
+                                      <Col style={{ alignItems: "center" }}>
+                                        <OverlayTrigger
+                                          overlay={
+                                            <Tooltip id="price/points">
+                                              CUP/Puntos
+                                            </Tooltip>
+                                          }
+                                        >
+                                          <span className="d-inline-block">
+                                            <Button
+                                              bsPrefix="transparent-button"
+                                              id={seat.seat.id}
+                                              size="sm"
+                                            >
+                                              {this.setPrice(
+                                                l.level.percentOfPriceIncrement,
+                                                this.state
+                                                  .filmScreeningSelected[0]
+                                              )}
+                                              /
+                                              {
+                                                this.state
+                                                  .filmScreeningSelected[0]
+                                                  .points
+                                              }
+                                            </Button>
+                                          </span>
+                                        </OverlayTrigger>
+                                      </Col>
+                                    )}
+                                    {seat.available && (
+                                      <Col md={1}>
+                                        <Button
+                                          variant="success"
+                                          id={seat.seat.id}
+                                          size="sm"
+                                          style={{ float: "right" }}
+                                          onClick={(e) =>
+                                            this.onSelectSeat(
+                                              e,
+                                              seat,
+                                              this.state
+                                                .filmScreeningSelected[0],
+                                              l.level.percentOfPriceIncrement
+                                            )
+                                          }
+                                        >
+                                          <CartPlus id={seat.seat.id} />
+                                        </Button>
+                                      </Col>
+                                    )}
+                                  </Row>
+                                </ListGroupItem>
+                              ))}
+                            </ListGroup>
+                          </Col>
+                        ))}
+                      </Row>
                     </Row>
-                  </Row>
-                ))}
+                  ))}
             </Row>
           </Col>
         </Row>

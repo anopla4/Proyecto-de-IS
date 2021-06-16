@@ -217,7 +217,12 @@ class MoviesScreening extends Component {
   };
 
   reserve = (film) => {
-    this.props.history.push({ pathname: "/reserve", state: { film } });
+    console.log(film);
+
+    this.props.history.push({
+      pathname: "/reserve",
+      state: { filmScreeningSelected: film },
+    });
   };
 
   render() {

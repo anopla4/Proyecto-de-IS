@@ -79,8 +79,6 @@ class Films extends Component {
     let film = this.state.filmsRated.find((c) => c.id === idF);
     let temp = [...this.state.filmsRated];
     let rate = this.state.ratings.find((c) => c.film.id === idF);
-    console.log(rate);
-    console.log(newRate);
 
     if (film) {
       let index = temp.indexOf(film);
