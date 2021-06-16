@@ -19,12 +19,14 @@ namespace Cine__backend.Controllers
         {
             this._clubMemberRep = clubMemberRep;
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpGet]
-        public IActionResult GetClubmembers()
+        public IActionResult GetClubMembers()
         {
             return Ok(_clubMemberRep.GetClubMembers());
         }
+
         [HttpGet("{userId}")]
         public IActionResult GetClubMember(string userId)
         {
@@ -44,7 +46,7 @@ namespace Cine__backend.Controllers
             var file = clubMember.Img;
             var folderName = Path.Combine("Resources", "Images");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            if (file.Length > 0)
+            if (!(file is null) && file.Length > 0)
             {
                 var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                 var fullPath = Path.Combine(pathToSave, fileName);
@@ -64,13 +66,15 @@ namespace Cine__backend.Controllers
             {
                 this.SaveFile(clubMember);
                 clubMember = _clubMemberRep.AddClubMember(userId, clubMember);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + clubMember.UserId, clubMember);
+                return Ok(clubMember);
+                //return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + clubMember.UserId, clubMember);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{userId}")]
         public IActionResult DeleteClubMember(string userId)
@@ -85,6 +89,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
         [HttpPatch]
         public IActionResult UpdateClubMember([FromForm]ClubMember clubMember)
         {
