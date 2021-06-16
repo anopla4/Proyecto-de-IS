@@ -131,20 +131,151 @@ namespace TestingCine__backend.ControllersTest
             Assert.Equal(PurchaseOrder.Items, item.Items);
         }
 
-        //[Fact]
-        //public void PayPurchaseOrder_ValidPurchaseOrderIdAndCreditCard_ReturnedOkResponse()
-        //{
-        //    // Arrange
-        //    PurchaseOrder PurchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    string CreditCard = "2344 0234 4546 0000";
-        //    _mockRepo.Setup(repo => repo.PayPurchaseOrder(PurchaseOrder))
-        //        .Returns(new PurchaseOrder { Id = PurchaseOrder.Id, Income = 30, Expense = PurchaseOrder.Expense, Date = PurchaseOrder.Date, PaymentMethod = PaymentMethod.crédito, Description = PurchaseOrder.Description });
-        //    // Act
-        //    var createdResponse = _controller.UpdatePurchaseOrder(PurchaseOrder.Id, PurchaseOrder);
-        //    // Assert
-        //    Assert.IsType<OkObjectResult>(createdResponse);
-        //}
+        [Fact]
+        public void PayPurchaseOrder_ValidPurchaseOrderIdAndCreditCard_ReturnedOkResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            string creditCard = "2344 0234 4546 0000";
+            // Act
+            var createdResponse = _controller.PayPurchaseOrder(purchaseOrder.Id, creditCard);
+            // Assert
+            Assert.IsType<OkResult>(createdResponse);
+        }
 
+        [Fact]
+        public void PayPurchaseOrder_NotValidPurchaseOrderId_ReturnedNotFoundResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            string creditCard = "2344 0234 4546 0000";
+            _mockRepo.Setup(repo => repo.PayPurchaseOrder(It.IsAny<Guid>(), It.IsAny<string>())).Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.PayPurchaseOrder(purchaseOrder.Id, creditCard);
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void PayPurchaseOrder_NotValidCreditCard_ReturnedBadRequestResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            string creditCard = "2344 0234 4546 0000";
+            _mockRepo.Setup(repo => repo.PayPurchaseOrder(It.IsAny<Guid>(), It.IsAny<string>())).Throws(new Exception());
+            // Act
+            var createdResponse = _controller.PayPurchaseOrder(purchaseOrder.Id, creditCard);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void RemoveItems_ValidPurchaseOrderIdAndItemsIds_ReturnedOkResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            List<Guid> items = new List<Guid>();
+            // Act
+            var createdResponse = _controller.RemoveItems(purchaseOrder.Id, items);
+            // Assert
+            Assert.IsType<OkResult>(createdResponse);
+        }
+
+        [Fact]
+        public void RemoveItems_NotValidPurchaseOrderIdOrSomeNotValidItemId_ReturnedNotFoundResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            List<Guid> items = new List<Guid>();
+            _mockRepo.Setup(repo => repo.RemoveItems(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.RemoveItems(purchaseOrder.Id, items);
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void RemoveItems_IfErrorRemoving_ReturnedBadRequestResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            List<Guid> items = new List<Guid>();
+            _mockRepo.Setup(repo => repo.RemoveItems(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Throws(new Exception());
+            // Act
+            var createdResponse = _controller.RemoveItems(purchaseOrder.Id, items);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void CheckPendingPurchaseOrder_ValidPurchaseOrderId_ReturnedOkResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            // Act
+            var createdResponse = _controller.CheckPendingPurchaseOrder(purchaseOrder.Id);
+            // Assert
+            Assert.IsType<OkResult>(createdResponse);
+        }
+
+        [Fact]
+        public void CheckPendingPurchaseOrder_NotValidPurchaseOrderId_ReturnedNotFoundResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.CheckPendingToCancel(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.CheckPendingPurchaseOrder(purchaseOrder.Id);
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void CheckPendingPurchaseOrder_IfError_ReturnedBadRequestResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.CheckPendingToCancel(It.IsAny<Guid>())).Throws(new Exception());
+            // Act
+            var createdResponse = _controller.CheckPendingPurchaseOrder(purchaseOrder.Id);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void CancelPurchaseOrder_ValidPurchaseOrderId_ReturnedOkResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            // Act
+            var createdResponse = _controller.CancelPurchaseOrder(purchaseOrder.Id);
+            // Assert
+            Assert.IsType<OkResult>(createdResponse);
+        }
+
+        [Fact]
+        public void CancelPurchaseOrder_NotValidPurchaseOrderId_ReturnedNotFoundResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.CancelPurchaseOrder(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.CancelPurchaseOrder(purchaseOrder.Id);
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void CancelPurchaseOrder_IfError_ReturnedBadRequestResponse()
+        {
+            // Arrange
+            PurchaseOrder purchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.CancelPurchaseOrder(It.IsAny<Guid>())).Throws(new Exception());
+            // Act
+            var createdResponse = _controller.CancelPurchaseOrder(purchaseOrder.Id);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(createdResponse);
+        }
         //[Fact]
         //public void Update_ValidPurchaseOrderPassed_ReturnedObjectUpdated()
         //{

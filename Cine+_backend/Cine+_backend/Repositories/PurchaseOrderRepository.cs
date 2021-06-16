@@ -133,7 +133,10 @@ namespace Cine__backend.Repositories
 
         public void CheckPendingToCancel(Guid purchaseOrderId)
         {
+            
             PurchaseOrder purchaseOrder = _context.PurchaseOrders.Include(c => c.Items).Include(c => c.User).SingleOrDefault(c => c.Id == purchaseOrderId);
+            if (purchaseOrder == null)
+                throw new KeyNotFoundException("No se encuentra la orden de compra especificada");
             if (purchaseOrder.State == StatePurchaseOrder.pending)
                 purchaseOrder.State = StatePurchaseOrder.canceled;
             foreach (Reservation reservation in purchaseOrder.Items)

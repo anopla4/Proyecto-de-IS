@@ -54,6 +54,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+        
         [HttpPatch("{purchaseOrderId}/{creditCard}")]
         public IActionResult PayPurchaseOrder(Guid purchaseOrderId, string creditCard)
         {
@@ -64,6 +65,8 @@ namespace Cine__backend.Controllers
             }
             catch(Exception e)
             {
+                if (e is KeyNotFoundException)
+                    return NotFound(e.Message);
                 return BadRequest(e.Message);
             }
         }
@@ -75,7 +78,7 @@ namespace Cine__backend.Controllers
             try
             {
                 purchaseOrder = _rep.AddPurchaseOrder(purchaseOrder);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + purchaseOrder.Id, purchaseOrder);
+                return Ok(purchaseOrder);
             }
             catch(Exception e)
             {
