@@ -44,8 +44,7 @@ namespace Cine__backend.Controllers
             try
             {
                 seat = _seatRep.AddSeat(seat);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + seat.Id, seat);
-
+                return Ok(seat);
             }
             catch (Exception e)
             {
