@@ -46,7 +46,7 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
-        public void GetAll_WhenCalled_ReturnsAllRoles()
+        public void GetAll_WhenCalled_ReturnsAllPriceMod()
         {
             _mockRepo.Setup(repo => repo.GetPriceModifications())
                 .Returns(new List<PriceModification>() { new PriceModification(), new PriceModification(), new PriceModification() });
