@@ -39,6 +39,7 @@ namespace Cine__backend.Repositories
                     currMember.Points += pointsAdd;
                     _context.ClubMembers.Update(currMember);
                 }
+                _context.PurchaseOrders.Add(purchaseOrder);
                 _context.SaveChanges();
                 return purchaseOrder;
             }
@@ -58,6 +59,7 @@ namespace Cine__backend.Repositories
                         throw new Exception("No tiene los puntos necesarios para pagar esta orden de compra.");
                 var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
                 currMember.Points -= (int)points;
+                _context.PurchaseOrders.Add(purchaseOrder);
                 _context.ClubMembers.Update(currMember);
                 _context.SaveChanges();
                 return purchaseOrder;
@@ -69,6 +71,7 @@ namespace Cine__backend.Repositories
                 reservation.Id = Guid.NewGuid();
                 _context.Reservations.Add(reservation);
             }
+            _context.PurchaseOrders.Add(purchaseOrder);
             _context.SaveChanges();
             return purchaseOrder;
         }
@@ -86,6 +89,7 @@ namespace Cine__backend.Repositories
             int points = 0;
             int pointRest = 0;
             purchaseOrder.State = StatePurchaseOrder.canceled;
+            _context.PurchaseOrders.Update(purchaseOrder);
             foreach (Reservation reservation in purchaseOrder.Items)
             {
                 pointRest += 5;
@@ -103,7 +107,7 @@ namespace Cine__backend.Repositories
                 _context.SaveChanges();
                 return;
             }
-            if (purchaseOrder.BoxOffice.Count() > 0)
+            if (purchaseOrder.BoxOffice != null && purchaseOrder.BoxOffice.Count() > 0)
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.efectivo, Description = purchaseOrder.BoxOffice });
                 if(_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
@@ -115,7 +119,7 @@ namespace Cine__backend.Repositories
                 _context.SaveChanges();
 
             }
-            if (purchaseOrder.CreditCard.Count() == 8 && purchaseOrder.State == StatePurchaseOrder.completed)//Ver cantidad del números de una tarjeta
+            if (purchaseOrder.CreditCard.Count() == 19)
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = price, Date = purchaseOrder.Date, Income = 0, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CreditCard });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
@@ -178,7 +182,7 @@ namespace Cine__backend.Repositories
                 throw new Exception("Ya esta orden de compra fue completada");
             double price = 0;
             int pointAdd = 0;
-            purchaseOrder.State = StatePurchaseOrder.canceled;
+            purchaseOrder.State = StatePurchaseOrder.completed;
             foreach (Reservation reservation in purchaseOrder.Items)
             {
                 if (!_context.Reservations.Any(c => c.Id == reservation.Id))
@@ -188,7 +192,7 @@ namespace Cine__backend.Repositories
                 pointAdd += 5;
                 price += (double)reservation.Price;    
             }
-            if (purchaseOrder.CreditCard.Count() == 8)//Ver cantidad del números de una tarjeta
+            if (purchaseOrder.CreditCard.Count() == 19)//Ver cantidad del números de una tarjeta
             {
                 _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = 0, Date = purchaseOrder.Date, Income = price, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CreditCard });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))

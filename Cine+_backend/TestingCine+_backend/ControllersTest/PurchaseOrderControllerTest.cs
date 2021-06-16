@@ -29,7 +29,7 @@ namespace TestingCine__backend.ControllersTest
             PurchaseOrder seedPurchaseOrder = new PurchaseOrder
             {
                 UserId = "43aaaa9c-17bd-4e17-b2ec-7603644b8f27",
-                Items = new List<Item>(),
+                Items = new List<Reservation>(),
                 Date = DateTime.Today,
                 PaidByPoints = true,
                 PurchaseTime = "12:20 am"
