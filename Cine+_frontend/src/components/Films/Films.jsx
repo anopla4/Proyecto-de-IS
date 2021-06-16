@@ -9,13 +9,15 @@ import {
   ListGroupItem,
   CardDeck,
   ListGroup,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import "../../containers/App/App.css";
 import "./Films.css";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
 import ReactStars from "react-rating-stars-component";
-import { ThreeDots } from "react-bootstrap-icons";
+import { ThreeDots, Star } from "react-bootstrap-icons";
 import "./Films.css";
 import { isLoggedIn } from "../utils";
 
@@ -60,7 +62,6 @@ class Films extends Component {
           return response.json();
         })
         .then((response) => {
-          console.log(response);
           this.setState({ ratings: response });
         })
         .catch(function (error) {
@@ -78,6 +79,9 @@ class Films extends Component {
     let film = this.state.filmsRated.find((c) => c.id === idF);
     let temp = [...this.state.filmsRated];
     let rate = this.state.ratings.find((c) => c.film.id === idF);
+    console.log(rate);
+    console.log(newRate);
+
     if (film) {
       let index = temp.indexOf(film);
       if (rate === newRate) temp = temp.filter((c) => c.id !== idF);
@@ -88,20 +92,15 @@ class Films extends Component {
     this.setState({ filmsRated: temp });
   };
 
-  componentWillUnmount() {
+  handleAddRatings = () => {
     this.state.filmsRated.forEach((element) => {
       var formdata = new FormData();
-      formdata.append("id", element.name);
+      formdata.append("filmId", element.id);
       formdata.append(
         "userId",
         JSON.parse(localStorage.getItem("loggedUser")).userId
       );
       formdata.append("rating", element.rate);
-
-      for (let i = 0; i < this.state.selectedGenres.length; i++) {
-        formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
-        formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
-      }
 
       let postUrl = `https://localhost:44313/api/UserFilm`;
       fetch(postUrl, {
@@ -126,7 +125,7 @@ class Films extends Component {
           );
         });
     });
-  }
+  };
 
   handleOnDelete = (id, index) => {
     fetch(`https://localhost:44313/api/Film/${id}`, {
@@ -168,11 +167,15 @@ class Films extends Component {
                   <Row className="justify-content-center">
                     <ReactStars
                       value={
-                        this.state.ratings.length > 0
-                          ? this.state.ratings[index]
+                        isLoggedIn() &&
+                        this.state.ratings.find(
+                          (c) => c.film.id === film.film.id
+                        )
+                          ? this.state.ratings.find(
+                              (c) => c.film.id === film.film.id
+                            ).rating
                           : 0
                       }
-                      // defaultValue={this.state.ratings[index]}
                       count={5}
                       onChange={(newRate) =>
                         this.addRated(newRate, film.film.id)
@@ -244,7 +247,24 @@ class Films extends Component {
           </CardDeck>
         </Col>
         <Col md={1}>
-          <Add onClick={this.handleAdd} />
+          <Row>
+            <OverlayTrigger
+              key="moviesRate"
+              placement="top"
+              overlay={<Tooltip id={`moviesRate`}>Evaluar películas.</Tooltip>}
+            >
+              <Button
+                size="sm"
+                onClick={this.handleAddRatings}
+                variant="outline-secondary"
+              >
+                <Star />
+              </Button>
+            </OverlayTrigger>
+          </Row>
+          <Row className="mt-3">
+            <Add onClick={this.handleAdd} />
+          </Row>
         </Col>
       </Row>
     );
