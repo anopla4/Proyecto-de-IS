@@ -45,7 +45,7 @@ namespace Cine__backend.Controllers
             try
             {
                 section = _sectionRep.AddSection(section);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + section.Id, section);
+                return Ok(section);
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace Cine__backend.Controllers
 
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{sectionId}")]
-        public IActionResult UpdateSect(Guid sectionId, Section section)
+        public IActionResult UpdateSection(Guid sectionId, Section section)
         {
             try
             {

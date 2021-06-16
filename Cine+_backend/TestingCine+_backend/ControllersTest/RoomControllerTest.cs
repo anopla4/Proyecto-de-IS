@@ -161,8 +161,5 @@ namespace TestingCine__backend.ControllersTest
                 new Room());
             Assert.IsType<NotFoundObjectResult>(notFoundResult);
         }
-
-
-
     }
 }
