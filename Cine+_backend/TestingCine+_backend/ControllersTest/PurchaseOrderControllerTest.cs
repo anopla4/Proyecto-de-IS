@@ -276,50 +276,5 @@ namespace TestingCine__backend.ControllersTest
             // Assert
             Assert.IsType<BadRequestObjectResult>(createdResponse);
         }
-        //[Fact]
-        //public void Update_ValidPurchaseOrderPassed_ReturnedObjectUpdated()
-        //{
-        //    // Arrange
-        //    PurchaseOrder PurchaseOrder = this.SeedPurchaseOrder("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    _mockRepo.Setup(repo => repo.UpdatePurchaseOrder(PurchaseOrder))
-        //        .Returns(new PurchaseOrder { Id = PurchaseOrder.Id, Income = 30, Expense = PurchaseOrder.Expense, Date = PurchaseOrder.Date, PaymentMethod = PaymentMethod.crédito, Description = PurchaseOrder.Description });
-        //    // Act
-        //    var createdResponse = _controller.UpdatePurchaseOrder(PurchaseOrder.Id, PurchaseOrder) as OkObjectResult;
-        //    var item = createdResponse.Value as PurchaseOrder;
-        //    // Assert
-        //    Assert.IsType<PurchaseOrder>(item);
-        //    Assert.Equal(PurchaseOrder.Id, item.Id);
-        //    Assert.Equal(30, item.Income);
-        //    Assert.Equal(PaymentMethod.crédito, item.PaymentMethod);
-        //}
-
-        //[Fact]
-        //public void Delete_Valid_ReturnsOkResult()
-        //{
-        //    // Act
-        //    var okResult = _controller.DeletePurchaseOrder(new Guid());
-        //    // Assert
-        //    Assert.IsType<OkResult>(okResult);
-        //}
-
-        //[Fact]
-        //public void Delete_InValid_ReturnsNotFoundsResult()
-        //{
-        //    // Arrange
-        //    _mockRepo.Setup(repo => repo.DeletePurchaseOrder(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
-        //    // Act
-        //    var notFoundResult = _controller.DeletePurchaseOrder(new Guid());
-        //    // Assert
-        //    Assert.IsType<NotFoundObjectResult>(notFoundResult);
-        //}
-
-        //[Fact]
-        //public void Update_Invalid_ReturnNotFoundResult()
-        //{
-        //    _mockRepo.Setup(p => p.UpdatePurchaseOrder(It.IsAny<PurchaseOrder>())).Throws(new KeyNotFoundException());
-        //    var notFoundResult = _controller.UpdatePurchaseOrder(new Guid("43bbbb9c-17bd-4e17-b2ec-7603644b8f27"),
-        //        new PurchaseOrder());
-        //    Assert.IsType<NotFoundObjectResult>(notFoundResult);
-        //}
     }
 }

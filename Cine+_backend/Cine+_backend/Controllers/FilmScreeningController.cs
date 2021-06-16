@@ -53,13 +53,13 @@ namespace Cine__backend.Controllers
         }
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
-        public IActionResult AddFilmScreening([FromForm]Guid filmId, [FromForm]DateTime date, [FromForm]List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModificationId> priceModifications)
+        public IActionResult AddFilmScreening([FromForm]Guid filmId, [FromForm]DateTime date, [FromForm]List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModificationId> priceModifications, [FromForm] double price = 20, [FromForm] int points = 20)
         {
             try
             {
                 foreach( var roomTime in roomTimes)
                 {
-                    var filmScreening = new FilmScreening { FilmId = filmId, RoomId = roomTime.Room.Id, Time = roomTime.Time, Date = date };
+                    var filmScreening = new FilmScreening { FilmId = filmId, RoomId = roomTime.Room.Id, Time = roomTime.Time, Date = date, Price = price, Points = points };
                     filmScreening = _rep.AddFilmScreening(filmScreening, priceModifications);
                 }
                 
@@ -67,6 +67,8 @@ namespace Cine__backend.Controllers
             }
             catch (Exception e)
             {
+                if (e is KeyNotFoundException)
+                    return NotFound(e.Message);
                 return BadRequest(e.Message);
             }
         }

@@ -34,7 +34,7 @@ namespace Cine__backend.Models
         public double Price { get; set; }
         [Required]
         [Range(0,100, ErrorMessage = "El precio de la puesta en escena en puntos está fuera del rango permitido(0,100)")]
-        public double Points { get; set; }
+        public int Points { get; set; }
 
     }
 }

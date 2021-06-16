@@ -61,7 +61,7 @@ namespace Cine__backend.Repositories
             {
                 priceModifications.Add(new DTOPriceModification { PriceModification = priceModification.PriceModification, Optional = priceModification.Optional });
             }
-            DTOFilmScreening filmScreeningDTO = new DTOFilmScreening { FilmScreeningId = filmScreeningId, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications, Date = filmScreening.Date };
+            DTOFilmScreening filmScreeningDTO = new DTOFilmScreening { FilmScreeningId = filmScreeningId, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications, Date = filmScreening.Date, Price = filmScreening.Price, Points = filmScreening.Points };
             return filmScreeningDTO;
         }
 
@@ -77,7 +77,7 @@ namespace Cine__backend.Repositories
                 {
                     priceModifications.Add(new DTOPriceModification { PriceModification = priceModification.PriceModification, Optional = priceModification.Optional });
                 }
-                filmScreeningsDTO.Add(new DTOFilmScreening { FilmScreeningId = filmScreening.Id, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications, Date = filmScreening.Date});
+                filmScreeningsDTO.Add(new DTOFilmScreening { FilmScreeningId = filmScreening.Id, Film = new DTOFilm { Film = filmScreening.Film, Genres = genres }, Room = filmScreening.Room, StartTime = filmScreening.Time, priceModifications = priceModifications, Date = filmScreening.Date, Price = filmScreening.Price, Points = filmScreening.Points});
             }
             return filmScreeningsDTO;
         }
@@ -91,6 +91,8 @@ namespace Cine__backend.Repositories
             }
             currFilmScreening.FilmId = filmScreening.FilmId;
             currFilmScreening.RoomId = filmScreening.RoomId;
+            currFilmScreening.Price = filmScreening.Price;
+            currFilmScreening.Points = filmScreening.Points;
             if (filmScreening.Time.Length > 8 || int.Parse(filmScreening.Time.Split(":")[0]) > 12 || int.Parse(filmScreening.Time.Split(":")[1].Split()[0]) > 59 || (filmScreening.Time.Split(":")[1].Split()[1] != "AM" && filmScreening.Time.Split(":")[1].Split()[1] != "PM"))
                 throw new FormatException($"La hora {filmScreening.Time} de la puesta en escena no es válida");
             currFilmScreening.Time = filmScreening.Time;
