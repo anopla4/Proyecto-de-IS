@@ -34,7 +34,9 @@ namespace Cine__backend.Controllers
             }
             catch(Exception e)
             {
-                return NotFound(e.Message);
+                if ( e is KeyNotFoundException)
+                    return NotFound(e.Message);
+                return BadRequest(e.Message);
             }
         }
 
@@ -84,9 +86,9 @@ namespace Cine__backend.Controllers
             }
             catch (Exception e)
             {
-                if (e is FormatException)
-                    return BadRequest(e.Message);
-                return NotFound(e.Message);
+                if (e is KeyNotFoundException)
+                    return NotFound(e.Message);
+                return BadRequest(e.Message);
             }
         }
         [Authorize(Roles = "WebMaster,Admin")]

@@ -115,6 +115,9 @@ namespace Cine__backend.Repositories
 
         public List<DTOSeat> GetSeats(Guid filmId, DateTime date, string time)
         {
+            if (time.Length > 8 || int.Parse(time.Split(":")[0]) > 12 || int.Parse(time.Split(":")[1].Split()[0]) > 59 || (time.Split(":")[1].Split()[1] != "AM" && time.Split(":")[1].Split()[1] != "PM"))
+                throw new FormatException($"La hora {time} para la puesta en escena no es válida");
+
             var filmScreeningsRoomsIDs = _context.FilmScreenings.Where(c => c.FilmId == filmId && c.Date == date && c.Time == time).Select(c => c.RoomId).ToList();
             if (filmScreeningsRoomsIDs.Count() == 0)
                 throw new KeyNotFoundException($"No se encuentra una puesta en escena para la película seleccionada el día {date} a las {time}");

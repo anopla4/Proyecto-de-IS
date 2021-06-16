@@ -66,6 +66,43 @@ namespace TestingCine__backend.ControllersTest
         }
 
         [Fact]
+        public void GetSeats_ValidFilmDateAndTimePasses_ReturnsOkResultAndCorrectObject()
+        {
+            // Arrange
+            var seedFilmScreening = this.SeedFilmScreening("43aaba9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(p => p.GetSeats(seedFilmScreening.FilmId, seedFilmScreening.Date, seedFilmScreening.Time)).Returns(new List<DTOSeat> { new DTOSeat(), new DTOSeat(), new DTOSeat() });
+            // Act
+            var okResult = _controller.GetSeats(seedFilmScreening.FilmId, seedFilmScreening.Date, seedFilmScreening.Time);
+            var result = Assert.IsType<OkObjectResult>(okResult);
+            var item = Assert.IsType<List<DTOSeat>>(result.Value);
+            // Assert
+            Assert.Equal(3,item.Count());
+        }
+
+        [Fact]
+        public void GetSeats_NotValidFilmIdPasses_ReturnsNotFoundResult()
+        {
+            // Arrange
+            var seedFilmScreening = this.SeedFilmScreening("43aaba9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(p => p.GetSeats(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<string>())).Throws(new KeyNotFoundException());
+            // Act
+            var Result = _controller.GetSeats(seedFilmScreening.FilmId, seedFilmScreening.Date, seedFilmScreening.Time);
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(Result);
+        }
+
+        [Fact]
+        public void GetSeats_NotValidDateOrTimePasses_ReturnsBadRequestResult()
+        {
+            // Arrange
+            var seedFilmScreening = this.SeedFilmScreening("43aaba9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(p => p.GetSeats(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<string>())).Throws(new Exception());
+            // Act
+            var Result = _controller.GetSeats(seedFilmScreening.FilmId, seedFilmScreening.Date, seedFilmScreening.Time);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(Result);
+        }
+        [Fact]
         public void GetById_WhenCalled_ReturnsOkResultAndCorrectObject()
         {
             // Arrange
@@ -127,169 +164,82 @@ namespace TestingCine__backend.ControllersTest
             // Assert
             Assert.IsType<BadRequestObjectResult>(createdResponse);
         }
-        //[Fact]
-        //public void Add_ValidFilmScreeningPassed_ReturnsCreatedFilmScreening()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening();
-        //    _mockRepo.Setup(repo => repo.AddFilmScreening(FilmScreening))
-        //        .Returns(new FilmScreening { Id = Guid.NewGuid(), UserId = FilmScreening.UserId, PurchaseTime = FilmScreening.PurchaseTime, Date = FilmScreening.Date, PaidByPoints = FilmScreening.PaidByPoints, Items = FilmScreening.Items });
-        //    // Act
-        //    var createdResponse = _controller.AddFilmScreening(FilmScreening) as OkObjectResult;
-        //    var item = createdResponse.Value as FilmScreening;
-        //    // Assert
-        //    Assert.IsType<FilmScreening>(item);
-        //    Assert.Equal(FilmScreening.UserId, item.UserId);
-        //    Assert.Equal(FilmScreening.PaidByPoints, item.PaidByPoints);
-        //    Assert.Equal(FilmScreening.Date, item.Date);
-        //    Assert.Equal(FilmScreening.PurchaseTime, item.PurchaseTime);
-        //    Assert.Equal(FilmScreening.Items, item.Items);
-        //}
 
-        //[Fact]
-        //public void PayFilmScreening_ValidFilmScreeningIdAndCreditCard_ReturnedOkResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    string creditCard = "2344 0234 4546 0000";
-        //    // Act
-        //    var createdResponse = _controller.PayFilmScreening(FilmScreening.Id, creditCard);
-        //    // Assert
-        //    Assert.IsType<OkResult>(createdResponse);
-        //}
+        [Fact]
+        public void RemoveFilmScreening_ValidFilmScreeningId_ReturnedOkResponse()
+        {
+            // Arrange
+            FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            // Act
+            var createdResponse = _controller.RemoveFilmScreening(FilmScreening.Id);
+            // Assert
+            Assert.IsType<OkResult>(createdResponse);
+        }
 
-        //[Fact]
-        //public void PayFilmScreening_NotValidFilmScreeningId_ReturnedNotFoundResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    string creditCard = "2344 0234 4546 0000";
-        //    _mockRepo.Setup(repo => repo.PayFilmScreening(It.IsAny<Guid>(), It.IsAny<string>())).Throws(new KeyNotFoundException());
-        //    // Act
-        //    var createdResponse = _controller.PayFilmScreening(FilmScreening.Id, creditCard);
-        //    // Assert
-        //    Assert.IsType<NotFoundObjectResult>(createdResponse);
-        //}
+        [Fact]
+        public void RemoveFilmScreening_NotValidFilmScreeningId_ReturnedNotFoundResponse()
+        {
+            // Arrange
+            FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.RemoveFilmScreening(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.RemoveFilmScreening(FilmScreening.Id);
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
+        
+        [Fact]
+        public void Update_ValidFilmScreeningPassed_ReturnsOkResponse()
+        {
+            // Arrange
+            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.UpdateFilmScreening(filmScreening, It.IsAny<List<DTOPriceModificationId>>()))
+                .Returns(new FilmScreening { Id = filmScreening.Id, Date =filmScreening.Date, FilmId = filmScreening.FilmId, Price = 30, Points = 50, RoomId = filmScreening.RoomId, Time = filmScreening.Time  });
+            // Act
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>());
+            // Assert
+            Assert.IsType<OkObjectResult>(createdResponse);
+        }
+        [Fact]
+        public void Update_ValidFilmScreeningPassed_ReturnsCorrectObject()
+        {
+            // Arrange
+            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.UpdateFilmScreening(filmScreening, It.IsAny<List<DTOPriceModificationId>>()))
+                .Returns(new FilmScreening { Id = filmScreening.Id, Date = filmScreening.Date, FilmId = filmScreening.FilmId, Price = 30, Points = 50, RoomId = filmScreening.RoomId, Time = filmScreening.Time });
+            // Act
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>()) as OkObjectResult;
+            var item = createdResponse.Value as FilmScreening;
+            // Assert
+            Assert.IsType<FilmScreening>(item);
+            Assert.Equal(filmScreening.Id, item.Id);
+            Assert.Equal(30, item.Price);
+            Assert.Equal(50, item.Points);
+        }
+        [Fact]
+        public void Update_NotValidFilmScreeningIdOrPriceModificationIdPassed_ReturnsNotFound()
+        {
+            // Arrange
+            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.UpdateFilmScreening(It.IsAny<FilmScreening>(), It.IsAny<List<DTOPriceModificationId>>()))
+                .Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>());
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
 
-        //[Fact]
-        //public void PayFilmScreening_NotValidCreditCard_ReturnedBadRequestResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    string creditCard = "2344 0234 4546 0000";
-        //    _mockRepo.Setup(repo => repo.PayFilmScreening(It.IsAny<Guid>(), It.IsAny<string>())).Throws(new Exception());
-        //    // Act
-        //    var createdResponse = _controller.PayFilmScreening(FilmScreening.Id, creditCard);
-        //    // Assert
-        //    Assert.IsType<BadRequestObjectResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void RemoveItems_ValidFilmScreeningIdAndItemsIds_ReturnedOkResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    List<Guid> items = new List<Guid>();
-        //    // Act
-        //    var createdResponse = _controller.RemoveItems(FilmScreening.Id, items);
-        //    // Assert
-        //    Assert.IsType<OkResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void RemoveItems_NotValidFilmScreeningIdOrSomeNotValidItemId_ReturnedNotFoundResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    List<Guid> items = new List<Guid>();
-        //    _mockRepo.Setup(repo => repo.RemoveItems(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Throws(new KeyNotFoundException());
-        //    // Act
-        //    var createdResponse = _controller.RemoveItems(FilmScreening.Id, items);
-        //    // Assert
-        //    Assert.IsType<NotFoundObjectResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void RemoveItems_IfErrorRemoving_ReturnedBadRequestResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    List<Guid> items = new List<Guid>();
-        //    _mockRepo.Setup(repo => repo.RemoveItems(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Throws(new Exception());
-        //    // Act
-        //    var createdResponse = _controller.RemoveItems(FilmScreening.Id, items);
-        //    // Assert
-        //    Assert.IsType<BadRequestObjectResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void CheckPendingFilmScreening_ValidFilmScreeningId_ReturnedOkResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    // Act
-        //    var createdResponse = _controller.CheckPendingFilmScreening(FilmScreening.Id);
-        //    // Assert
-        //    Assert.IsType<OkResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void CheckPendingFilmScreening_NotValidFilmScreeningId_ReturnedNotFoundResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    _mockRepo.Setup(repo => repo.CheckPendingToCancel(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
-        //    // Act
-        //    var createdResponse = _controller.CheckPendingFilmScreening(FilmScreening.Id);
-        //    // Assert
-        //    Assert.IsType<NotFoundObjectResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void CheckPendingFilmScreening_IfError_ReturnedBadRequestResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    _mockRepo.Setup(repo => repo.CheckPendingToCancel(It.IsAny<Guid>())).Throws(new Exception());
-        //    // Act
-        //    var createdResponse = _controller.CheckPendingFilmScreening(FilmScreening.Id);
-        //    // Assert
-        //    Assert.IsType<BadRequestObjectResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void CancelFilmScreening_ValidFilmScreeningId_ReturnedOkResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    // Act
-        //    var createdResponse = _controller.CancelFilmScreening(FilmScreening.Id);
-        //    // Assert
-        //    Assert.IsType<OkResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void CancelFilmScreening_NotValidFilmScreeningId_ReturnedNotFoundResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    _mockRepo.Setup(repo => repo.CancelFilmScreening(It.IsAny<Guid>())).Throws(new KeyNotFoundException());
-        //    // Act
-        //    var createdResponse = _controller.CancelFilmScreening(FilmScreening.Id);
-        //    // Assert
-        //    Assert.IsType<NotFoundObjectResult>(createdResponse);
-        //}
-
-        //[Fact]
-        //public void CancelFilmScreening_IfError_ReturnedBadRequestResponse()
-        //{
-        //    // Arrange
-        //    FilmScreening FilmScreening = this.SeedFilmScreening("43aaaa9c-17bd-4e17-b2ec-7603644b8f27");
-        //    _mockRepo.Setup(repo => repo.CancelFilmScreening(It.IsAny<Guid>())).Throws(new Exception());
-        //    // Act
-        //    var createdResponse = _controller.CancelFilmScreening(FilmScreening.Id);
-        //    // Assert
-        //    Assert.IsType<BadRequestObjectResult>(createdResponse);
-        //}
+        [Fact]
+        public void Update_FormatErrorOrAnotherErrorUpdatingFilmScreening_ReturnsNotFound()
+        {
+            // Arrange
+            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.UpdateFilmScreening(It.IsAny<FilmScreening>(), It.IsAny<List<DTOPriceModificationId>>()))
+                .Throws(new Exception());
+            // Act
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>());
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(createdResponse);
+        }
     }
 }
