@@ -17,25 +17,33 @@ namespace Cine__backend.Repositories
         {
             this._context = context;
         }
-        public void AddUserFilm(User user, Film film, int rating)
+        public void AddUserFilm(string userId, Guid filmId, int rating)
         {
-            if (_context.Users.Find(user.Id) == null)
+            if (_context.Users.Find(userId) == null)
             {
                 throw new KeyNotFoundException("No se encuentra el usuario especificado");
             }
-            if (_context.Films.Find(film.Id) == null)
+            if (_context.Films.Find(filmId) == null)
             {
                 throw new KeyNotFoundException("No se encuentra la película especificada");
             }
-            if(_context.UserFilms.Find(user.Id, film.Id) != null)
+            var userFilm = _context.UserFilms.Find(userId, filmId);
+            if (userFilm != null)
             {
-                throw new InvalidOperationException("Ya existe una valoración para esta película por este usuario ");
+                if (rating > 5 || rating < 1)
+                {
+                    throw new ArgumentOutOfRangeException("El valor del rating está fuera del rango válido");
+                }
+                userFilm.Rating = rating;
+                _context.UserFilms.Update(userFilm);
+                _context.SaveChanges();
+                return;
             }
             if(rating > 5 || rating < 1)
             {
                 throw new ArgumentOutOfRangeException("El valor del rating está fuera del rango válido");
             }
-            var newUserFilm = new UserFilm { FilmId = film.Id, UserId = user.Id, Rating = rating };
+            var newUserFilm = new UserFilm { FilmId = filmId, UserId = userId, Rating = rating };
             _context.UserFilms.Add(newUserFilm);
             _context.SaveChanges();
             return;

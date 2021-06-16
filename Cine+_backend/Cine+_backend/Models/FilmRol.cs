@@ -11,7 +11,7 @@ namespace Cine__backend.Models
         [Key]
         public Guid Id { get; set; }
         [Required]
-        [MaxLength(40, ErrorMessage ="El nombre del género excede el número máximo de caracteres permitidos(20)")]
+        [MaxLength(40, ErrorMessage ="El nombre del rol excede el número máximo de caracteres permitidos(20)")]
         public string Name { get; set; }
     }
 }

@@ -72,11 +72,11 @@ namespace Cine__backend.Controllers
         [HttpPost]
         [Authorize(Roles = "WebMaster,Admin,User")]
 
-        public IActionResult AddRating([FromForm] User user, [FromForm] Film film, [FromForm] int rating)
+        public IActionResult AddRating([FromForm] string userId, [FromForm] Guid filmId, [FromForm] int rating)
         {
             try
             {
-                _userFilmRep.AddUserFilm(user, film, rating);
+                _userFilmRep.AddUserFilm(userId, filmId, rating);
                 return Ok();
             }
             catch (Exception e)
