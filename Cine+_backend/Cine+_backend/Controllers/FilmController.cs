@@ -20,11 +20,13 @@ namespace Cine__backend.Controllers
         {
             this._filmRep = filmRepository;
         }
+
         [HttpGet]
         public IActionResult GetFilms()
         {
             return Ok(_filmRep.GetFilms());
         }
+
         [HttpGet("staff")]
         public IActionResult GetFilmsWithStaff()
         {
@@ -92,8 +94,9 @@ namespace Cine__backend.Controllers
             try
             {
                 this.SaveFile(film);
-                var newDTOFilm = _filmRep.AddFilm(film, genres, membersRol);
-                return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newDTOFilm.Film.Id, newDTOFilm);
+                var newDTOFilmStaff = _filmRep.AddFilm(film, genres, membersRol);
+                return Ok(newDTOFilmStaff);
+                //return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + newDTOFilm.Film.Id, newDTOFilm);
             }
             catch (Exception e)
             {
