@@ -288,7 +288,6 @@ class FilmScreeningForm extends Component {
       let filmId = "";
       let date = undefined;
       if (this.state.edit) {
-        console.log(this.props.location.state.film.film);
         filmId = this.props.location.state.film.film.id;
         date = this.props.location.state.date;
       } else {
@@ -309,7 +308,6 @@ class FilmScreeningForm extends Component {
         roomTimes,
         priceModifications,
       };
-      console.log(filmId);
       var formdata = new FormData();
       if (!this.state.edit) {
         formdata.append("filmId", item.filmId);

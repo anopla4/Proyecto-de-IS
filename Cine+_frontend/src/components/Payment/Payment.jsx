@@ -16,32 +16,43 @@ class Payment extends Component {
       modifiedPrice: this.props.location.state.modifiedPrice,
       points: this.props.location.state.points,
       purchaseOrderId: this.props.location.state.purchaseOrderId,
+      paymentMethod: this.props.location.state.paymentMethod,
     });
   }
-
+  fixCreditCardNumber = (number) => {
+    let n = "";
+    for (let index = 0; index < number.length; index++) {
+      const element = number[index];
+      if (index % 4 === 0 && index !== 0) n = n + " " + element;
+      else n = n + element;
+    }
+    console.log(n);
+    return n;
+  };
   onFormSubmit = (e) => {
+    e.preventDefault();
     let formElements = e.target.elements;
-    let income = formElements.creditCard.value;
+    let income = this.fixCreditCardNumber(formElements.creditCard.value);
     let id = this.state.purchaseOrderId;
-    // fetch(`https://localhost:44313/api/PurchaseOrder/${id}/${income}`, {
-    //   mode: "cors",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    //   method: "PATCH",
-    //   body: JSON.stringify({purchaseOrderId:id, creditCard:income}),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch(`https://localhost:44313/api/PurchaseOrder/${id}/${income}`, {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "PATCH",
+      body: JSON.stringify({ purchaseOrderId: id, creditCard: income }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        this.props.history.push("/myReservations");
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   };
 
   render() {
@@ -59,12 +70,12 @@ class Payment extends Component {
         </Row>
 
         <Row className="center-col" style={{ width: "100%" }}>
-          <Form className="mt-3">
+          <Form onSubmit={this.onFormSubmit} className="mt-3">
             <Col>
               <Form.Group controlId="creditCard">
                 <Form.Label>Número de tarjeta:</Form.Label>
                 <Form.Control
-                  disabled={this.state.paymentMethod === 1 ? false : true}
+                  disabled={this.state.paymentMethod === "1" ? false : true}
                   type="text"
                   name="creditCard"
                 />

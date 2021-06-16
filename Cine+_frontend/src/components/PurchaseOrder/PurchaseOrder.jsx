@@ -22,13 +22,14 @@ class PurchaseOrder extends Component {
     let takenSeats = this.props.location.state.takenSeats;
     let points = this.props.location.state.points;
     let prices = this.props.location.state.prices;
-
+    let paymentMethod = this.props.location.state.paymentMethod;
     let filmScreening = this.props.location.state.filmScreening;
     this.setState({
       filmScreening: filmScreening,
       takenSeats: takenSeats,
       points: points,
       prices: prices,
+      paymentMethod: paymentMethod,
     });
   }
 
@@ -49,6 +50,7 @@ class PurchaseOrder extends Component {
         points: this.state.points,
         modifiedPrice: this.props.location.state.modifiedPrice,
         purchaseOrderId: this.props.location.state.purchaseOrderId,
+        paymentMethod: this.state.paymentMethod,
       },
     });
   };

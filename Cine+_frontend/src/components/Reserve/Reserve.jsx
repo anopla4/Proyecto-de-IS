@@ -188,7 +188,6 @@ class Reserve extends Component {
     let filmScreening = this.state.filmScreeningSelected.filter(
       (c) => c.room.id === this.state.selectedRoom
     )[0];
-    console.log(filmScreening);
     let takenSeats = this.state.takenSeats;
     let prices = this.state.prices;
     let points = this.state.points;
@@ -249,20 +248,23 @@ class Reserve extends Component {
           this.setState({ error: response.status });
           throw Error(response.statusText);
         } else {
-          purchaseOrderId = response.id;
-          this.props.history.push({
-            pathname: "/purchaseOrder",
-            state: {
-              filmScreening,
-              takenSeats,
-              prices,
-              points,
-              modifiedPrice,
-              paymentMethod,
-              purchaseOrderId,
-            },
-          });
+          return response.json();
         }
+      })
+      .then((response) => {
+        purchaseOrderId = response.id;
+        this.props.history.push({
+          pathname: "/purchaseOrder",
+          state: {
+            filmScreening,
+            takenSeats,
+            prices,
+            points,
+            modifiedPrice,
+            paymentMethod,
+            purchaseOrderId,
+          },
+        });
       })
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
@@ -468,7 +470,8 @@ class Reserve extends Component {
                     as="select"
                     name="paymentMethod"
                   >
-                    <option id={0}>Puntos</option>
+                    {JSON.parse(localStorage.getItem("loggedUser"))
+                      .isClubMember && <option id={0}>Puntos</option>}
                     <option id={1}>Crédito</option>
                   </Form.Control>
                 </Form.Group>
