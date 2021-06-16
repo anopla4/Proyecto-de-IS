@@ -10,7 +10,7 @@ namespace Cine__backend.Interfaces
     {
         List<Top10Film> GetTop10();
         Top10Film GetTop10Film(Guid filmId);
-        Top10Film AddTop10Film(Film film);
+        Top10Film AddTop10Film(Guid filmId);
         void RemoveTop10Film(Guid filmId);
     }
 }

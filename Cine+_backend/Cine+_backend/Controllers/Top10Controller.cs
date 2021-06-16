@@ -37,13 +37,13 @@ namespace Cine__backend.Controllers
         [HttpPost]
         [Authorize(Roles = "WebMaster,Admin")]
 
-        public IActionResult AddTop10([FromForm] List<Film> films)
+        public IActionResult AddTop10([FromForm] List<Guid> filmsIds)
         {
             try
             {
-                foreach (var film in films)
+                foreach (var filmId in filmsIds)
                 {
-                    _rep.AddTop10Film(film);
+                    _rep.AddTop10Film(filmId);
                 }
                 return Ok();
             }

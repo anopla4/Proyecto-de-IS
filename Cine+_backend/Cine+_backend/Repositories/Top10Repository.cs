@@ -14,9 +14,10 @@ namespace Cine__backend.Repositories
         {
             _context = context;
         }
-        public Top10Film AddTop10Film(Film film)
+        public Top10Film AddTop10Film(Guid filmId)
         {
-            if (_context.Films.Find(film.Id) == null)
+            var film = _context.Films.Find(filmId);
+            if (film == null)
                 throw new KeyNotFoundException($"La lista no es válida pues la película con Id = {film.Id} no se encuentra en la Base de datos.");
             var filmTop = new Top10Film { FilmId = film.Id, Film = film };
             _context.Top10.Add(filmTop);
