@@ -104,7 +104,7 @@ class Reserve extends Component {
   };
 
   componentWillMount() {
-    // fetch(`https://localhost:44334/api/FilmScreening/${this.props.location.state.film[0].film.id}/
+    // fetch(`https://localhost:44313/api/FilmScreening/${this.props.location.state.film[0].film.id}/
     //${ formatDateRequest(this.props.location.state.film[0].date) } /${this.props.location.state.film[0].time}`, {
     //   mode: "cors",
     // })
@@ -278,7 +278,7 @@ class Reserve extends Component {
         this.state.takenSeats[i].room.id
       );
     }
-    // fetch("https://localhost:44334/api/PurchaseOrder", {
+    // fetch("https://localhost:44313/api/PurchaseOrder", {
     //   mode: "cors",
     //   headers: {
     //     Authorization:

@@ -23,7 +23,7 @@ class ClubMemberForm extends Component {
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44334/api/Genre", {
+    // fetch("https://localhost:44313/api/Genre", {
     //   mode: "cors",
     // })
     //   .then((response) => {
@@ -69,7 +69,7 @@ class ClubMemberForm extends Component {
       formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
       formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
     }
-    // let postUrl = `https://localhost:44334/api/ClubMember/${}`;
+    // let postUrl = `https://localhost:44313/api/ClubMember/${}`;
     // fetch(postUrl, {
     //   mode: "cors",
     //   headers: {

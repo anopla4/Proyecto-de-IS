@@ -7,39 +7,50 @@ class Login extends Component {
   state = {
     email: undefined,
     password: undefined,
+    validated: false,
   };
 
   onFormSubmit = (e) => {
-    let user = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    fetch("https://localhost:44313/api/User/login", {
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify(user),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+    const form = e.currentTarget;
+
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validated: true });
+    } else {
+      let user = {
+        email: this.state.email,
+        password: this.state.password,
+      };
+      fetch("https://localhost:44313/api/User/login", {
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify(user),
       })
-      .then((response) => {
-        this.props.onLoginCallback(
-          user.email,
-          user.password,
-          response.roles,
-          response.id,
-          response.userName,
-          response.token
-        );
-      })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
-    this.props.history.push("/");
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          this.props.onLoginCallback(
+            user.email,
+            user.password,
+            response.roles,
+            response.token,
+            response.id,
+            response.userName
+          );
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+      this.props.history.push("/");
+    }
   };
 
   render() {
@@ -53,23 +64,31 @@ class Login extends Component {
             <Form.Group controlId="email">
               <Form.Label>Correo electrónico</Form.Label>
               <Form.Control
+                required
                 type="email"
-                placeholder="Ponga el correo"
+                placeholder="Introduzca el correo"
                 onChange={(e) => {
                   this.setState({ email: e.target.value });
                 }}
               />
+              <Form.Control.Feedback type="invalid">
+                Debe ingresar el correo electrónico.
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group controlId="password">
               <Form.Label>Contraseña</Form.Label>
               <Form.Control
+                required
                 type="password"
                 placeholder="Contraseña"
                 onChange={(e) => {
                   this.setState({ password: e.target.value });
                 }}
               />
+              <Form.Control.Feedback type="invalid">
+                Debe ingresar el correo electrónico.
+              </Form.Control.Feedback>
             </Form.Group>
             <Button
               variant="primary"

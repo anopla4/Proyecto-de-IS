@@ -76,7 +76,7 @@ class FilmScreeningForm extends Component {
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44334/api/Film", {
+    // fetch("https://localhost:44313/api/Film", {
     //   mode: "cors",
     // })
     //   .then((response) => {
@@ -91,7 +91,7 @@ class FilmScreeningForm extends Component {
     //   .catch(function (error) {
     //     console.log("Hubo un problema con la petición Fetch:" + error.message);
     //   });
-    // fetch("https://localhost:44334/api/Room", {
+    // fetch("https://localhost:44313/api/Room", {
     //   mode: "cors",
     // })
     //   .then((response) => {
@@ -106,7 +106,7 @@ class FilmScreeningForm extends Component {
     //   .catch(function (error) {
     //     console.log("Hubo un problema con la petición Fetch:" + error.message);
     //   });
-    // fetch("https://localhost:44334/api/PriceModification", {
+    // fetch("https://localhost:44313/api/PriceModification", {
     //   mode: "cors",
     // })
     //   .then((response) => {
@@ -256,7 +256,7 @@ class FilmScreeningForm extends Component {
       value,
       type,
     };
-    // fetch("https://localhost:44334/api/PriceModification", {
+    // fetch("https://localhost:44313/api/PriceModification", {
     //   mode: "cors",
     //   headers: {
     //     "Content-Type": "application/json",
@@ -313,7 +313,7 @@ class FilmScreeningForm extends Component {
       priceModifications,
     };
     let postUrl =
-      "https://localhost:44334/api/FilmScreening" +
+      "https://localhost:44313/api/FilmScreening" +
       (this.state.edit ? `/${this.state.filmId}/${date}` : "");
     // fetch(postUrl, {
     //   mode: "cors",

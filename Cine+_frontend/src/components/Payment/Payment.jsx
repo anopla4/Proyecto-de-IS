@@ -23,7 +23,7 @@ class Payment extends Component {
     let formElements = e.target.elements;
     let income = formElements.creditCard.value;
     let id = this.state.purchaseOrderId;
-    // fetch(`https://localhost:44334/api/PurchaseOrder/${id}/${income}`, {
+    // fetch(`https://localhost:44313/api/PurchaseOrder/${id}/${income}`, {
     //   mode: "cors",
     //   headers: {
     //     "Content-Type": "application/json",

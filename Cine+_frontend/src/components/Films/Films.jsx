@@ -60,6 +60,7 @@ class Films extends Component {
           return response.json();
         })
         .then((response) => {
+          console.log(response);
           this.setState({ ratings: response });
         })
         .catch(function (error) {
@@ -88,31 +89,68 @@ class Films extends Component {
   };
 
   componentWillUnmount() {
-    this.state.filmsRated.forEach((element) => {});
+    this.state.filmsRated.forEach((element) => {
+      var formdata = new FormData();
+      formdata.append("id", element.name);
+      formdata.append(
+        "userId",
+        JSON.parse(localStorage.getItem("loggedUser")).userId
+      );
+      formdata.append("rating", element.rate);
+
+      for (let i = 0; i < this.state.selectedGenres.length; i++) {
+        formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
+        formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
+      }
+
+      let postUrl = `https://localhost:44313/api/UserFilm`;
+      fetch(postUrl, {
+        mode: "cors",
+        headers: {
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: "POST",
+        body: formdata,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+    });
   }
 
   handleOnDelete = (id, index) => {
-    // fetch(`https://localhost:44334/api/Film/${id}`, {
-    //   mode: "cors",
-    //   method: "DELETE",
-    //   headers: {
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
-    // let n_films = [...this.state.films];
-    // n_films.splice(index, 1);
-    // n_expanded.splice(index, 1);
-    // this.setState({ films: n_films, filmsExpanded:n_expanded });
+    fetch(`https://localhost:44313/api/Film/${id}`, {
+      mode: "cors",
+      method: "DELETE",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+    let n_films = [...this.state.films];
+    let n_expanded = [...this.state.filmsExpanded];
+    n_films.splice(index, 1);
+    n_expanded.splice(index, 1);
+    this.setState({ films: n_films, filmsExpanded: n_expanded });
   };
 
   handleOnEdit = (film) => {

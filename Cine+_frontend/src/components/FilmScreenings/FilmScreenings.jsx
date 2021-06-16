@@ -16,7 +16,7 @@ class FilmScreenings extends Component {
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44334/api/FilmScreening", {
+    // fetch("https://localhost:44313/api/FilmScreening", {
     //   mode: "cors",
     // })
     //   .then((response) => {

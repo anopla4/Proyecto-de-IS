@@ -32,7 +32,7 @@ class Home extends Component {
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44334/api/Top10", {
+    // fetch("https://localhost:44313/api/Top10", {
     //   mode: "cors",
     // })
     //   .then((response) => {

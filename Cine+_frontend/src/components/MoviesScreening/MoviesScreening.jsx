@@ -248,7 +248,7 @@ class MoviesScreening extends Component {
   componentDidMount() {
     let grouped = groupBy(this.state.movies, ["film.id", "date", "time"]);
     this.setState({ grouped: grouped });
-    // fetch("https://localhost:44334/api/FilmScreening/WithTimes", {
+    // fetch("https://localhost:44313/api/FilmScreening/WithTimes", {
     //   mode: "cors",
     // })
     //   .then((response) => {

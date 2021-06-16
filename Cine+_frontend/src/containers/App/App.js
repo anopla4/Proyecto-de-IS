@@ -22,6 +22,7 @@ import Payment from "../../components/Payment/Payment";
 
 class App extends Component {
   logginUserCallback = (email, password, roles, jwt_token, id, username) => {
+    console.log(jwt_token);
     localStorage.setItem(
       "loggedUser",
       JSON.stringify({

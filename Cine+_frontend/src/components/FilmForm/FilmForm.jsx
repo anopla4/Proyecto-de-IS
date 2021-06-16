@@ -46,6 +46,10 @@ class FilmForm extends Component {
 
     fetch("https://localhost:44313/api/Genre", {
       mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -62,6 +66,10 @@ class FilmForm extends Component {
 
     fetch("https://localhost:44313/api/FilmRol", {
       mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -109,42 +117,50 @@ class FilmForm extends Component {
       formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
     }
     for (let i = 0; i < this.state.selectedRols.length; i++) {
-      formdata.append(`staff[${i}].rol.id`, this.state.selectedRols[i].rol.id);
       formdata.append(
-        `staff[${i}].rol.name`,
+        `membersRol[${i}].rol.id`,
+        this.state.selectedRols[i].rol.id
+      );
+      formdata.append(
+        `membersRol[${i}].rol.name`,
         this.state.selectedRols[i].rol.name
       );
-      formdata.append(`staff[${i}].member`, this.state.selectedRols[i].member);
+      formdata.append(
+        `membersRol[${i}].member`,
+        this.state.selectedRols[i].member
+      );
     }
     let postUrl =
       "https://localhost:44313/api/Film" +
-      (this.state.edit ? `/${this.state.filmEdit.id}` : "");
-    // fetch(postUrl, {
-    //   mode: "cors",
-    //   headers: {
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    //   method: this.state.edit ? "PATCH" : "POST",
-    //   body: formdata,
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+      (this.state.edit ? `/${this.state.filmEdit.film.id}` : "");
+    fetch(postUrl, {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: this.state.edit ? "PATCH" : "POST",
+      body: formdata,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
     this.props.history.push({ pathname: "/films", state: { edited: true } });
   };
 
   addNewGenre = (e) => {
-    this.setState({ newGenre: e.target.options.selectedIndex });
+    this.setState({ newGenre: e.target.children[e.target.selectedIndex].id });
   };
   addNewMemberRol = (e) => {
-    this.setState({ newMemberRol: e.target.options.selectedIndex });
+    this.setState({
+      newMemberRol: e.target.children[e.target.selectedIndex].id,
+    });
   };
   addNewMemberName = (e) => {
     this.setState({ newMemberName: e.target.value });
@@ -242,7 +258,7 @@ class FilmForm extends Component {
     let rol = {
       name,
     };
-    fetch("https://localhost:44313/api/Rol", {
+    fetch("https://localhost:44313/api/FilmRol", {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
@@ -269,11 +285,11 @@ class FilmForm extends Component {
   };
 
   onClickAddRol = () => {
-    this.setState({ addGenre: true, addRol: false });
+    this.setState({ addGenre: false, addRol: true });
   };
 
   onClickAddGenre = () => {
-    this.setState({ addGenre: false, addRol: true });
+    this.setState({ addGenre: true, addRol: false });
   };
 
   render() {

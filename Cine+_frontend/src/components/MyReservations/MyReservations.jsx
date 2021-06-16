@@ -104,7 +104,7 @@ class MyReservations extends Component {
 
   //   componentWillMount() {
   //     fetch(
-  //       `https://localhost:44334/api/PurchaseOrder/${
+  //       `https://localhost:44313/api/PurchaseOrder/${
   //         JSON.parse(localStorage.getItem("loggedUser")).username
   //       }`,
   //       {
@@ -187,7 +187,7 @@ class MyReservations extends Component {
   };
 
   cancelPurchaseOrder = (id) => {
-    // fetch(`https://localhost:44334/api/PurchaseOrder/${id}`, {
+    // fetch(`https://localhost:44313/api/PurchaseOrder/${id}`, {
     //   mode: "cors",
     //   headers: {
     //     "Content-Type": "application/json",
@@ -215,7 +215,7 @@ class MyReservations extends Component {
     // formdata.append("purchaseOrderId", purchaseOrderId);
     formdata.append("items[0].id", reservation.id);
 
-    // fetch(`https://localhost:44334/api/PurchaseOrder/${purchaseOrderId}`, {
+    // fetch(`https://localhost:44313/api/PurchaseOrder/${purchaseOrderId}`, {
     //   mode: "cors",
     //   headers: {
     //     Authorization:

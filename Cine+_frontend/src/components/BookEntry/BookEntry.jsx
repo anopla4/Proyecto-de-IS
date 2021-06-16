@@ -64,7 +64,7 @@ class BookEntry extends Component {
       description,
       paymentMethod,
     };
-    let postUrl = "https://localhost:44334/api/BookEntry";
+    let postUrl = "https://localhost:44313/api/BookEntry";
     fetch(postUrl, {
       mode: "cors",
       headers: {
