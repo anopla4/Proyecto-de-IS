@@ -75,14 +75,18 @@ namespace Cine__backend.Controllers
             }
         }
         [Authorize(Roles = "WebMaster,Admin")]
-        [HttpPatch("{filmScreeningId}")]
-        public IActionResult UpdateFilmScreening( Guid filmScreeningId,[FromForm]FilmScreening filmScreening, [FromForm] List<DTOPriceModificationId> priceModificationsIds)
+        [HttpPatch("{filmScreeningId}/{date}")]
+        public IActionResult UpdateFilmScreening(Guid filmId, DateTime date, [FromForm] List<DTORoomTime> roomTimes, [FromForm] List<DTOPriceModificationId> priceModifications, [FromForm] double price = 20, [FromForm] int points = 20)
         {
             try
             {
-                filmScreening.Id = filmScreeningId;
-                filmScreening = _rep.UpdateFilmScreening(filmScreening, priceModificationsIds);
-                return Ok(filmScreening);
+                _rep.RemoveFilmScreenings(filmId, date);
+                foreach (var roomTime in roomTimes)
+                {
+                    var filmScreening = new FilmScreening { FilmId = filmId, RoomId = roomTime.Room.Id, Time = roomTime.Time, Date = date, Price = price, Points = points };
+                    filmScreening = _rep.AddFilmScreening(filmScreening, priceModifications);
+                }
+                return Ok();
             }
             catch (Exception e)
             {

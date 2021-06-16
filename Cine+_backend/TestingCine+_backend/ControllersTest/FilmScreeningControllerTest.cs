@@ -193,51 +193,60 @@ namespace TestingCine__backend.ControllersTest
         {
             // Arrange
             FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
-            _mockRepo.Setup(repo => repo.UpdateFilmScreening(filmScreening, It.IsAny<List<DTOPriceModificationId>>()))
-                .Returns(new FilmScreening { Id = filmScreening.Id, Date =filmScreening.Date, FilmId = filmScreening.FilmId, Price = 30, Points = 50, RoomId = filmScreening.RoomId, Time = filmScreening.Time  });
             // Act
-            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>());
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.FilmId, filmScreening.Date, new List<DTORoomTime> { new DTORoomTime { Room = new Room { Id = filmScreening.RoomId, Name = "sala 1" }, Time = filmScreening.Time } }, new List<DTOPriceModificationId>());
             // Assert
-            Assert.IsType<OkObjectResult>(createdResponse);
+            Assert.IsType<OkResult>(createdResponse);
         }
+
         [Fact]
-        public void Update_ValidFilmScreeningPassed_ReturnsCorrectObject()
+        public void Update_NotValidFilmIdPassed_ReturnsNotFound()
         {
             // Arrange
             FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
-            _mockRepo.Setup(repo => repo.UpdateFilmScreening(filmScreening, It.IsAny<List<DTOPriceModificationId>>()))
-                .Returns(new FilmScreening { Id = filmScreening.Id, Date = filmScreening.Date, FilmId = filmScreening.FilmId, Price = 30, Points = 50, RoomId = filmScreening.RoomId, Time = filmScreening.Time });
-            // Act
-            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>()) as OkObjectResult;
-            var item = createdResponse.Value as FilmScreening;
-            // Assert
-            Assert.IsType<FilmScreening>(item);
-            Assert.Equal(filmScreening.Id, item.Id);
-            Assert.Equal(30, item.Price);
-            Assert.Equal(50, item.Points);
-        }
-        [Fact]
-        public void Update_NotValidFilmScreeningIdOrPriceModificationIdPassed_ReturnsNotFound()
-        {
-            // Arrange
-            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
-            _mockRepo.Setup(repo => repo.UpdateFilmScreening(It.IsAny<FilmScreening>(), It.IsAny<List<DTOPriceModificationId>>()))
+            _mockRepo.Setup(repo => repo.RemoveFilmScreenings(It.IsAny<Guid>(), It.IsAny<DateTime>()))
                 .Throws(new KeyNotFoundException());
             // Act
-            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>());
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.FilmId, filmScreening.Date, new List<DTORoomTime> { new DTORoomTime { Room = new Room { Id = filmScreening.RoomId, Name = "sala 1" }, Time = filmScreening.Time } }, new List<DTOPriceModificationId>());
             // Assert
             Assert.IsType<NotFoundObjectResult>(createdResponse);
         }
 
         [Fact]
-        public void Update_FormatErrorOrAnotherErrorUpdatingFilmScreening_ReturnsNotFound()
+        public void Update_NotValidDatePassed_ReturnsBadRequest()
         {
             // Arrange
             FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
-            _mockRepo.Setup(repo => repo.UpdateFilmScreening(It.IsAny<FilmScreening>(), It.IsAny<List<DTOPriceModificationId>>()))
+            _mockRepo.Setup(repo => repo.RemoveFilmScreenings(It.IsAny<Guid>(), It.IsAny<DateTime>()))
                 .Throws(new Exception());
             // Act
-            var createdResponse = _controller.UpdateFilmScreening(filmScreening.Id, filmScreening, new List<DTOPriceModificationId>());
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.FilmId, filmScreening.Date, new List<DTORoomTime> { new DTORoomTime { Room = new Room { Id = filmScreening.RoomId, Name = "sala 1" }, Time = filmScreening.Time } }, new List<DTOPriceModificationId>());
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void Update_NotValidRoomIdOrPriceModificationIdPassed_ReturnsNotFound()
+        {
+            // Arrange
+            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.AddFilmScreening(It.IsAny<FilmScreening>(), It.IsAny<List<DTOPriceModificationId>>()))
+                .Throws(new KeyNotFoundException());
+            // Act
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.FilmId, filmScreening.Date, new List<DTORoomTime> { new DTORoomTime { Room = new Room { Id = filmScreening.RoomId, Name = "sala 1" }, Time = filmScreening.Time } }, new List<DTOPriceModificationId>());
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(createdResponse);
+        }
+
+        [Fact]
+        public void Update_ErrorAddingFilmScreening_ReturnsBadRequest()
+        {
+            // Arrange
+            FilmScreening filmScreening = this.SeedFilmScreening("43aaaa9c-27bd-4e17-b2ec-7603644b8f27");
+            _mockRepo.Setup(repo => repo.AddFilmScreening(It.IsAny<FilmScreening>(), It.IsAny<List<DTOPriceModificationId>>()))
+                .Throws(new Exception());
+            // Act
+            var createdResponse = _controller.UpdateFilmScreening(filmScreening.FilmId, filmScreening.Date, new List<DTORoomTime> { new DTORoomTime { Room = new Room { Id = filmScreening.RoomId, Name = "sala 1" }, Time = filmScreening.Time } }, new List<DTOPriceModificationId>());
             // Assert
             Assert.IsType<BadRequestObjectResult>(createdResponse);
         }

@@ -48,6 +48,19 @@ namespace Cine__backend.Repositories
             return;
         }
 
+        public void RemoveFilmScreenings(Guid filmId, DateTime date)
+        {
+            if (_context.Films.Find(filmId) == null)
+                throw new KeyNotFoundException("No se encuentra el filme especificado");
+            var filmScreenings = _context.FilmScreenings.Where(c => c.FilmId == filmId && c.Date == date).ToList();
+            foreach(var filmScreening in filmScreenings)
+            {
+                _context.FilmScreenings.Remove(filmScreening);
+            }
+            _context.SaveChanges();
+            return;
+        }
+
         public DTOFilmScreening GetFilmScreening(Guid filmScreeningId)
         {
             var filmScreening = _context.FilmScreenings.Include(c => c.Film).Include(c => c.Room).SingleOrDefault(c => c.Id == filmScreeningId);
