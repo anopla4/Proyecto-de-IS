@@ -11,234 +11,13 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import "./MoviesScreening.css";
-import { groupBy, onlyUnique, formatDateRequest } from "../utils";
+import { groupBy, onlyUnique, formatDateRequest, compareDates } from "../utils";
 import { Typeahead } from "react-bootstrap-typeahead";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
 import { withRouter } from "react-router-dom";
 
 class MoviesScreening extends Component {
   state = {
-    // movies: [
-    //   {
-    //     id: "1",
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-05",
-    //     time: "8:00 PM",
-    //     room: { id: "1", name: "Sala A" },
-    //     priceModifications: [
-    //       {
-    //         priceModification: {
-    //           id: "1",
-    //           name: "Día de las madres",
-    //           value: 20,
-    //           type: "Descuento",
-    //         },
-    //         optional: false,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     id: "2",
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-06",
-    //     time: "8:00 PM",
-    //     room: { id: "2", name: "Sala B" },
-    //     priceModifications: [],
-    //   },
-
-    //   {
-    //     id: "2",
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-06",
-    //     time: "8:00 PM",
-    //     room: { id: "1", name: "Sala A" },
-    //     priceModifications: [],
-    //   },
-    //   {
-    //     id: "3",
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-05",
-    //     time: "10:00 PM",
-    //     room: { id: "2", name: "Sala B" },
-    //     priceModifications: [
-    //       {
-    //         priceModification: {
-    //           id: "1",
-    //           name: "Día de las madres",
-    //           value: 20,
-    //           type: "Descuento",
-    //         },
-    //         optional: false,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     id: "4",
-    //     film: {
-    //       id: 2,
-    //       name: "Pulp Fiction",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/pulpFiction.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-05",
-    //     priceModifications: [
-    //       {
-    //         priceModification: {
-    //           id: "1",
-    //           name: "Día de las madres",
-    //           value: 20,
-    //           type: "Descuento",
-    //         },
-    //         optional: false,
-    //       },
-    //     ],
-    //     time: "10:00 PM",
-    //     room: { id: "2", name: "Sala B" },
-    //   },
-    // ],
-    // moviesFilter: [
-    //   {
-    //     id: 1,
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-05",
-    //     time: "8:00 PM",
-    //     room: { id: "1", name: "Sala A" },
-    //     priceModifications: [
-    //       {
-    //         priceModification: {
-    //           id: "1",
-    //           name: "Día de las madres",
-    //           value: 20,
-    //           type: "Descuento",
-    //         },
-    //         optional: false,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     id: 2,
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-06",
-    //     time: "8:00 PM",
-    //     room: { id: "2", name: "Sala B" },
-
-    //     priceModifications: [],
-    //   },
-    //   {
-    //     id: 3,
-    //     film: {
-    //       id: 1,
-    //       name: "Cinema Paradiso",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/cinemaParadiso.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-05",
-    //     time: "10:00 PM",
-    //     room: { id: "1", name: "Sala A" },
-
-    //     priceModifications: [
-    //       {
-    //         priceModification: {
-    //           id: "1",
-    //           name: "Día de las madres",
-    //           value: 20,
-    //           type: "Descuento",
-    //         },
-    //         optional: false,
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     id: 4,
-    //     film: {
-    //       id: 2,
-    //       name: "Pulp Fiction",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/pulpFiction.jpg",
-    //     },
-    //     price: 20,
-    //     points: 20,
-    //     date: "2021-06-05",
-    //     time: "10:00 PM",
-    //     room: { id: "2", name: "Sala B" },
-
-    //     priceModifications: [
-    //       {
-    //         priceModification: {
-    //           id: "1",
-    //           name: "Día de las madres",
-    //           value: 20,
-    //           type: "Descuento",
-    //         },
-    //         optional: false,
-    //       },
-    //     ],
-    //   },
-    // ],
     movies: [],
     moviesFilter: [],
     grouped: [],
@@ -258,7 +37,7 @@ class MoviesScreening extends Component {
         return response.json();
       })
       .then((response) => {
-        let grouped = groupBy(this.state.movies, ["film.id", "date", "time"]);
+        let grouped = groupBy(response, ["film.film.id", "date", "startTime"]);
         this.setState({
           movies: response,
           moviesFilter: response,
@@ -273,12 +52,12 @@ class MoviesScreening extends Component {
   handleInputChangeTypeahead = (text, e) => {
     let moviesTempFilter = [...this.state.movies];
     moviesTempFilter = moviesTempFilter.filter((c) => {
-      if (c.film.name.toLowerCase().match(text.toLowerCase())) return true;
+      if (c.film.film.name.toLowerCase().match(text.toLowerCase())) return true;
       return false;
     });
     if (this.state.inputTime !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.time === this.state.inputTime) return true;
+        if (c.startTime === this.state.inputTime) return true;
         return false;
       });
     }
@@ -288,7 +67,7 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
+    const movies = groupBy(moviesTempFilter, ["film.film.id", "date", "time"]);
     this.setState({
       inputName: text,
       moviesFilter: moviesTempFilter,
@@ -303,13 +82,14 @@ class MoviesScreening extends Component {
     if (e.length !== 0) {
       text = e[0];
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.film.name.toLowerCase().match(text.toLowerCase())) return true;
+        if (c.film.film.name.toLowerCase().match(text.toLowerCase()))
+          return true;
         return false;
       });
     }
     if (this.state.inputTime !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.time === this.state.inputTime) return true;
+        if (c.startTime === this.state.inputTime) return true;
         return false;
       });
     }
@@ -319,7 +99,11 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
+    const movies = groupBy(moviesTempFilter, [
+      "film.film.id",
+      "date",
+      "startTime",
+    ]);
     this.setState({
       inputName: text,
       moviesFilter: moviesTempFilter,
@@ -329,16 +113,21 @@ class MoviesScreening extends Component {
 
   handleChangeTime = (e) => {
     let time = e.target.value;
+
     let moviesTempFilter = [...this.state.movies];
     if (time !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.time === time) return true;
+        if (c.startTime === time) return true;
         return false;
       });
     }
     if (this.state.inputName !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.film.name.toLowerCase().match(this.state.inputName.toLowerCase()))
+        if (
+          c.film.film.name
+            .toLowerCase()
+            .match(this.state.inputName.toLowerCase())
+        )
           return true;
         return false;
       });
@@ -349,7 +138,11 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
+    const movies = groupBy(moviesTempFilter, [
+      "film.film.id",
+      "date",
+      "startTime",
+    ]);
     this.setState({
       inputTime: time,
       moviesFilter: moviesTempFilter,
@@ -361,14 +154,17 @@ class MoviesScreening extends Component {
     let date = e.target.value;
     let moviesTempFilter = [...this.state.movies];
     if (date !== "") {
-      moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.date === date) return true;
-        return false;
-      });
+      moviesTempFilter = moviesTempFilter.filter((c) =>
+        compareDates(formatDateRequest(c.date), date)
+      );
     }
     if (this.state.inputName !== "") {
       moviesTempFilter = moviesTempFilter.filter((c) => {
-        if (c.film.name.toLowerCase().match(this.state.inputName.toLowerCase()))
+        if (
+          c.film.film.name
+            .toLowerCase()
+            .match(this.state.inputName.toLowerCase())
+        )
           return true;
         return false;
       });
@@ -379,7 +175,11 @@ class MoviesScreening extends Component {
         return false;
       });
     }
-    const movies = groupBy(moviesTempFilter, ["film.id", "date", "time"]);
+    const movies = groupBy(moviesTempFilter, [
+      "film.film.id",
+      "date",
+      "startTime",
+    ]);
     this.setState({
       inputDate: date,
       moviesFilter: moviesTempFilter,
@@ -401,7 +201,7 @@ class MoviesScreening extends Component {
     let points = filmScreenings[0].points;
     let priceModifications = filmScreenings[0].priceModifications;
     filmScreenings.forEach((element) => {
-      roomTimes.push({ room: element.room, time: element.time });
+      roomTimes.push({ room: element.room, time: element.startTime });
     });
     this.props.history.push({
       pathname: "/filmScreeningForm",
@@ -432,16 +232,17 @@ class MoviesScreening extends Component {
                     <Card.Img
                       fluid
                       variant="top"
-                      src={`http://localhost:8000/${item.film.imgPath}`}
+                      src={`https://localhost:44313/${item.film.film.imgPath}`}
                     />
                   </Col>
                   <Col>
                     <Card.Body>
                       <Card.Title>
-                        {item.film.name} ({item.film.year})
+                        {item.film.film.name} ({item.film.film.year})
                       </Card.Title>
                       <Card.Subtitle>
-                        Género: {item.film.genre.name}
+                        Géneros:{" "}
+                        {item.film.genres.map((c) => c.name).join(", ")}.
                       </Card.Subtitle>
                     </Card.Body>
                     {item._items.map((date) => (
@@ -489,7 +290,9 @@ class MoviesScreening extends Component {
                                 </Popover>
                               }
                             >
-                              <Button variant="light">{date.date}</Button>
+                              <Button variant="light">
+                                {formatDateRequest(date.date)}
+                              </Button>
                             </OverlayTrigger>
                           </Col>
                           <Col>
@@ -504,7 +307,7 @@ class MoviesScreening extends Component {
                                   bsPrefix="my-button"
                                   className="my-button mb-2 ml-2"
                                 >
-                                  {time.time}
+                                  {time.startTime}
                                 </Button>
                               ))}
                             </Container>
@@ -526,7 +329,7 @@ class MoviesScreening extends Component {
               clearButton
               id="selections-example"
               options={this.state.movies
-                .map((item) => item.film)
+                .map((item) => item.film.film)
                 .map((item) => item.name)
                 .filter(onlyUnique)}
               placeholder="Elija una película..."
@@ -539,7 +342,7 @@ class MoviesScreening extends Component {
             >
               <option id={-1}></option>
               {this.state.movies
-                .map((item) => item.time)
+                .map((item) => item.startTime)
                 .filter(onlyUnique)
                 .map((time) => (
                   <option id={time}>{time}</option>

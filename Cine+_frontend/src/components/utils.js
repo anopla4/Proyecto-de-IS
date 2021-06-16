@@ -56,64 +56,13 @@ function compareList(m, n) {
   return true;
 }
 
-let moviesFilter = [
-  {
-    id: 1,
-    movie: {
-      id: 1,
-      name: "Cinema Paradiso",
-      year: "1988",
-      genre: { name: "Drama" },
-      country: "Italia",
-      imgPath: "src/images/cinemaParadiso.jpg",
-    },
-    date: "5/6/2021",
-    time: "9:00",
-  },
-  {
-    id: 2,
+function compareDates(d1, d2) {
+  let a = d1.split("-").map((a) => parseInt(a, 10));
+  let b = d2.split("-").map((b) => parseInt(b, 10));
 
-    movie: {
-      id: 1,
-      name: "Cinema Paradiso",
-      year: "1988",
-      genre: { name: "Drama" },
-      country: "Italia",
-      imgPath: "src/images/cinemaParadiso.jpg",
-    },
-    date: "5/6/2021",
-    time: "10:00",
-  },
-  {
-    id: 3,
-
-    movie: {
-      id: 2,
-      name: "Cinema",
-      year: "1988",
-      genre: { name: "Drama" },
-      country: "Italia",
-      imgPath: "src/images/cinemaParadiso.jpg",
-    },
-    date: "5/6/2021",
-    time: "10:00",
-  },
-];
-
-function a(moviesFilter) {
-  let moviesTemp = [
-    ...moviesFilter.filter((c) => {
-      if (c.movie.name.startsWith("Cinema")) return true;
-      return false;
-    }),
-  ];
-  return moviesTemp;
+  if (a[0] === b[0] && a[1] === b[1] && a[2] === b[2]) return true;
+  return false;
 }
-
-// console.log(a(moviesFilter));
-
-// module.exports.groupBy = groupBy;
-// module.exports.isLoggedIn = isLoggedIn;
 
 module.exports = {
   groupBy,
@@ -122,4 +71,5 @@ module.exports = {
   formatDate,
   formatDateRequest,
   compareList,
+  compareDates,
 };

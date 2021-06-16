@@ -296,6 +296,9 @@ class FilmScreeningForm extends Component {
       var formdata = new FormData();
       formdata.append("filmId", item.filmId);
       formdata.append("date", item.date);
+      formdata.append("price", item.price);
+      formdata.append("points", item.points);
+
       for (let i = 0; i < this.state.roomTimes.length; i++) {
         console.log(this.state.roomTimes);
         formdata.append(
@@ -390,7 +393,7 @@ class FilmScreeningForm extends Component {
                   {this.props.location.state.film ? (
                     <Container>
                       <h5>Película:</h5>
-                      <h6>{this.props.location.state.film.name}</h6>
+                      <h6>{this.props.location.state.film.film.name}</h6>
                     </Container>
                   ) : (
                     <Form.Group controlId="film">
@@ -408,7 +411,9 @@ class FilmScreeningForm extends Component {
                   {this.props.location.state.date ? (
                     <Container>
                       <h5>Fecha:</h5>
-                      <h6>{this.props.location.state.date}</h6>
+                      <h6>
+                        {formatDateRequest(this.props.location.state.date)}
+                      </h6>
                     </Container>
                   ) : (
                     <Form.Group style={{ width: "100%" }} controlId="date">
