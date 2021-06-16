@@ -15,29 +15,30 @@ import { formatDateRequest } from "../utils";
 
 class ClubMemberForm extends Component {
   state = {
-    genres: [
-      { name: "Drama", id: 1 },
-      { name: "Comedia", id: 2 },
-    ],
+    genres: [],
     selectedGenres: [],
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44313/api/Genre", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ genres: response});
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/Genre", {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ genres: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   }
 
   setFile = (e) => {
@@ -69,7 +70,7 @@ class ClubMemberForm extends Component {
       formdata.append(`genres[${i}].id`, this.state.selectedGenres[i].id);
       formdata.append(`genres[${i}].name`, this.state.selectedGenres[i].name);
     }
-    // let postUrl = `https://localhost:44313/api/ClubMember/${}`;
+    // let postUrl = `https://localhost:44313/api/ClubMember/${JSON.parse(localStorage.getItem("loggedUser")).userId}`;
     // fetch(postUrl, {
     //   mode: "cors",
     //   headers: {

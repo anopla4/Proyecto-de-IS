@@ -21,8 +21,15 @@ import WebMaster from "../../components/WebMaster/WebMaster";
 import Payment from "../../components/Payment/Payment";
 
 class App extends Component {
-  logginUserCallback = (email, password, roles, jwt_token, id, username) => {
-    console.log(jwt_token);
+  logginUserCallback = (
+    email,
+    password,
+    roles,
+    jwt_token,
+    id,
+    username,
+    isMember
+  ) => {
     localStorage.setItem(
       "loggedUser",
       JSON.stringify({
@@ -32,6 +39,7 @@ class App extends Component {
         userId: id,
         unsername: username,
         jwt_token: jwt_token,
+        isClubMember: isMember,
       })
     );
   };

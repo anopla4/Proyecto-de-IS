@@ -8,61 +8,17 @@ import {
   ListGroupItem,
   Button,
   Toast,
+  Modal,
 } from "react-bootstrap";
 import { TrashFill } from "react-bootstrap-icons";
 import Add from "../Add/Add";
 import { formatDateRequest } from "../utils";
+import { isLoggedIn } from "../utils";
 
 class FilmScreeningForm extends Component {
   state = {
     films: [],
-    // films: [
-    //   {
-    //     film: {
-    //       id: 1,
-    //       name: "Pulp Fiction",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/pulpFiction.jpg",
-    //       genres: [{ name: "Thriller" }],
-    //     },
-    //     staff: [
-    //       { rol: { name: "Actor" }, member: "John Travolta" },
-    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
-    //     ],
-    //   },
-    //   {
-    //     film: {
-    //       id: 2,
-    //       name: "Pulp Fiction",
-    //       year: "1988",
-    //       genre: { name: "Drama" },
-    //       country: "Italia",
-    //       imgPath: "src/images/pulpFiction.jpg",
-    //       genres: [{ name: "Thriller" }],
-    //     },
-    //     staff: [
-    //       { rol: { name: "Actor" }, member: "John Travolta" },
-    //       { rol: { name: "Director" }, member: "Quentin Tarantino" },
-    //     ],
-    //   },
-    // ],
-    // times: [],
-    // rooms: [
-    //   { id: "1", name: "Sala A" },
-    //   { id: "2", name: "Sala B" },
-    // ],
-    // priceModifications: [
-    //   {
-    //     id: "1",
-    //     name: "Día de las madres",
-    //     type: "Descuento",
-    //     value: 50,
-    //     description:
-    //       "Por el día de las madres el cine hará un descuento para todas las personas",
-    //   },
-    // ],
+    times: [],
     rooms: [],
     priceModifications: [],
     edit: false,
@@ -75,6 +31,8 @@ class FilmScreeningForm extends Component {
     addNewMod: false,
     AM_PM: "AM",
     optional: false,
+    error: "",
+    validated: false,
   };
 
   componentWillMount() {
@@ -301,86 +259,129 @@ class FilmScreeningForm extends Component {
   };
 
   onFormSubmit = (e) => {
-    let formElements = e.target.elements;
-    const price = formElements.price.value;
-    const points = formElements.points.value;
-    let filmId = this.props.location.state.film.id;
-    let date = this.props.location.state.date;
-    const roomTimes = this.state.roomTimes;
-    const priceModifications = this.state.selectedPriceMod;
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validated: true });
+    } else {
+      let formElements = e.target.elements;
+      const price = formElements.price.value;
+      const points = formElements.points.value;
+      let filmId = "";
+      let date = undefined;
+      if (this.state.edit) {
+        filmId = this.props.location.state.film.id;
+        date = this.props.location.state.date;
+      } else {
+        const film = formElements.film;
+        filmId = film.children[film.selectedIndex].id;
 
-    if (!this.state.edit) {
-      const film = formElements.film;
-      filmId = film.children[film.selectedIndex].id;
-      date = formElements.date.value;
-    }
+        date = formElements.date.value;
+      }
 
-    let item = {
-      filmId,
-      date,
-      price,
-      points,
-      roomTimes,
-      priceModifications,
-    };
+      const roomTimes = this.state.roomTimes;
+      const priceModifications = this.state.selectedPriceMod;
 
-    var formdata = new FormData();
-    formdata.append("film", item.filmId);
-    formdata.append("date", item.date);
-    for (let i = 0; i < this.state.roomTimes.length; i++) {
-      formdata.append(
-        `roomTimes[${i}].rol.id`,
-        this.state.roomTimes[i].room.id
-      );
-      formdata.append(
-        `roomTimes[${i}].room.name`,
-        this.state.roomTimes[i].room.name
-      );
-      formdata.append(`roomTimes[${i}].time`, this.state.roomTimes[i].time);
-    }
-    for (let i = 0; i < this.state.priceModifications.length; i++) {
-      formdata.append(
-        `priceModifications[${i}]`,
-        this.state.priceModifications[i].id
-      );
-    }
-    let postUrl =
-      "https://localhost:44313/api/FilmScreening" +
-      (this.state.edit
-        ? `/${this.state.filmId}/${formatDateRequest(date)}`
-        : "");
-    fetch(postUrl, {
-      mode: "cors",
-      headers: {
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: this.state.edit ? "PATCH" : "POST",
-      body: { item },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
+      let item = {
+        filmId,
+        date,
+        price,
+        points,
+        roomTimes,
+        priceModifications,
+      };
+
+      var formdata = new FormData();
+      formdata.append("filmId", item.filmId);
+      formdata.append("date", item.date);
+      for (let i = 0; i < this.state.roomTimes.length; i++) {
+        console.log(this.state.roomTimes);
+        formdata.append(
+          `roomTimes[${i}].room.id`,
+          this.state.roomTimes[i].room.id
+        );
+        formdata.append(
+          `roomTimes[${i}].room.name`,
+          this.state.roomTimes[i].room.name
+        );
+        formdata.append(`roomTimes[${i}].time`, this.state.roomTimes[i].time);
+      }
+      for (let i = 0; i < this.state.selectedPriceMod.length; i++) {
+        console.log(this.state.selectedPriceMod);
+        formdata.append(
+          `priceModifications[${i}].id`,
+          this.state.selectedPriceMod[i].priceModification.id
+        );
+        formdata.append(
+          `priceModifications[${i}].optional`,
+          this.state.selectedPriceMod[i].optional
+        );
+      }
+      let postUrl =
+        "https://localhost:44313/api/FilmScreening" +
+        (this.state.edit
+          ? `/${this.state.filmId}/${formatDateRequest(date)}`
+          : "");
+      fetch(postUrl, {
+        mode: "cors",
+        headers: {
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: this.state.edit ? "PATCH" : "POST",
+        body: formdata,
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 0) {
+            this.setState({ error: response.message });
+          }
+          return response;
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+      this.props.history.push({
+        pathname: "/filmScreenings",
+        state: { edited: true },
       });
-    this.props.history.push({
-      pathname: "/filmScreenings",
-      state: { edited: true },
-    });
+    }
   };
 
   render() {
-    console.log(this.state.rooms);
     return (
       <Container className="mt-5">
         <h1 className="mb-5 my-style-header">Puesta en escena</h1>
+        {this.state.error !== "" && (
+          <Modal.Dialog>
+            <Modal.Header>
+              <Modal.Title>Atención</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <p>{this.state.error}</p>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button
+                onClick={() => this.setState({ error: "" })}
+                variant="secondary"
+              >
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        )}
         <Row alignSelf="center" className="mt-4">
           <Col className="center">
             <Form
+              noValidate
+              validated={this.state.validated}
               onSubmit={this.onFormSubmit}
               style={{ width: "100%", alignItems: "center" }}
             >
@@ -394,7 +395,7 @@ class FilmScreeningForm extends Component {
                   ) : (
                     <Form.Group controlId="film">
                       <Form.Label>Película:</Form.Label>
-                      <Form.Control as="select" custom>
+                      <Form.Control required as="select" custom>
                         <option>{""}</option>
                         {this.state.films.map((film) => (
                           <option id={film.film.id}>{film.film.name}</option>
@@ -412,7 +413,7 @@ class FilmScreeningForm extends Component {
                   ) : (
                     <Form.Group style={{ width: "100%" }} controlId="date">
                       <Form.Label>Fecha:</Form.Label>
-                      <Form.Control type="date" />
+                      <Form.Control required type="date" />
                     </Form.Group>
                   )}
                 </Col>
@@ -420,12 +421,14 @@ class FilmScreeningForm extends Component {
                   <Form.Group style={{ width: "100%" }} controlId="price">
                     <Form.Label>Precio:</Form.Label>
                     <Form.Control
+                      required
                       defaultValue={
                         this.props.location.state.price
                           ? this.props.location.state.price
                           : 0
                       }
                       min={0}
+                      max={10000}
                       type="number"
                     />
                   </Form.Group>
@@ -434,12 +437,14 @@ class FilmScreeningForm extends Component {
                   <Form.Group style={{ width: "100%" }} controlId="points">
                     <Form.Label>Puntos:</Form.Label>
                     <Form.Control
+                      required
                       defaultValue={
                         this.props.location.state.points
                           ? this.props.location.state.points
                           : 0
                       }
                       min={0}
+                      max={100}
                       type="number"
                     />
                   </Form.Group>
@@ -488,8 +493,7 @@ class FilmScreeningForm extends Component {
                     {this.state.roomTimes.map((room, index) => (
                       <ListGroupItem>
                         {room.room.name}-{room.time}
-                        {
-                          // isLoggedIn() &&
+                        {isLoggedIn() && (
                           <Button
                             className="ml-3"
                             style={{ padding: "0px", float: "right" }}
@@ -498,7 +502,7 @@ class FilmScreeningForm extends Component {
                           >
                             <TrashFill style={{ width: "100%" }} />
                           </Button>
-                        }
+                        )}
                       </ListGroupItem>
                     ))}
                   </ListGroup>
@@ -569,6 +573,13 @@ class FilmScreeningForm extends Component {
                           <Form.Control as="textarea" rows={3} />
                         </Form.Group>
                         <Button type="submit">Aceptar</Button>
+                        <Button
+                          className="ml-3"
+                          onClick={() => this.setState({ addNewMod: false })}
+                          variant="secondary"
+                        >
+                          Cancelar
+                        </Button>
                       </Form>
                     )}
                   </Row>

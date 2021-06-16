@@ -6,6 +6,7 @@ class Register extends Component {
   state = { validated: false, error: "", test: "" };
 
   onFormSubmit = (e) => {
+    e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.preventDefault();
@@ -24,17 +25,17 @@ class Register extends Component {
         method: "POST",
         body: JSON.stringify(user),
       })
+        .then((response) => response.json())
         .then((response) => {
-          if (!response.ok) {
-            throw Error(response.message);
+          if (response.status === 0) {
+            this.setState({ error: response.message });
+          } else {
+            this.props.history.push("/");
           }
-          return response.json();
         })
         .catch((error) => {
-          this.setState({ error: error });
           console.log("Hubo un problema con la petición Fetch:" + error);
         });
-      this.props.history.push("/");
     }
   };
 
@@ -43,7 +44,7 @@ class Register extends Component {
       <Container className="mt-5">
         {this.state.error !== "" && (
           <Modal.Dialog>
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>Atención</Modal.Title>
             </Modal.Header>
 
@@ -52,7 +53,12 @@ class Register extends Component {
             </Modal.Body>
 
             <Modal.Footer>
-              <Button variant="secondary">Close</Button>
+              <Button
+                onClick={() => this.setState({ error: "" })}
+                variant="secondary"
+              >
+                Close
+              </Button>
             </Modal.Footer>
           </Modal.Dialog>
         )}
