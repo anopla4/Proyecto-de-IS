@@ -1,12 +1,11 @@
-﻿using Cine__backend.Authentication;
-using Cine__backend.Interfaces;
+﻿using Cine__backend.Interfaces;
 using Cine__backend.Models;
 using Cine__backend.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cine__backend.Context;
 
 namespace Cine__backend.Repositories
 {

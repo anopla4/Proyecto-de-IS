@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Cine__backend.Settings;
+using Cine__backend.Context;
 
 namespace Cine__backend
 {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
-namespace Cine__backend.Repositories
+namespace Cine__backend.Context
 {
     public class AppDbContext : IdentityDbContext<User>
     {
