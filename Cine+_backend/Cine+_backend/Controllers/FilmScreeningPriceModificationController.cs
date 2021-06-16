@@ -50,6 +50,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPost]
         public IActionResult AddFilmScreeningPriceModifications([FromForm]FilmScreening filmScreening, [FromForm] List<PriceModification> priceModifications)
@@ -64,6 +65,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpPatch("{filmScreeningId}")]
         public IActionResult UpdateFilmScreeningPriceModifications(Guid filmSreeningId, [FromForm] FilmScreening filmScreening, [FromForm] List<PriceModification> priceModifications)
@@ -78,6 +80,7 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
         [Authorize(Roles = "WebMaster,Admin")]
         [HttpDelete("{filmScreeningId}/{priceModificationId}")]
         public IActionResult RemoveFilmScreeningPriceModification(Guid filmScreeningId, Guid priceModificationId)
