@@ -309,9 +309,9 @@ class FilmScreeningForm extends Component {
         roomTimes,
         priceModifications,
       };
-
+      console.log(filmId);
       var formdata = new FormData();
-      if (this.state.edit) {
+      if (!this.state.edit) {
         formdata.append("filmId", item.filmId);
         formdata.append("date", item.date);
       }

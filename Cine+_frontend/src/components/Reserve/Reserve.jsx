@@ -11,6 +11,7 @@ import {
   Popover,
   OverlayTrigger,
   Tooltip,
+  Modal,
   Badge,
 } from "react-bootstrap";
 import "./Reserve.css";
@@ -31,6 +32,7 @@ class Reserve extends Component {
     points: [],
     paymentMethod: 0,
     await: false,
+    error: "",
   };
 
   componentWillMount() {
@@ -181,6 +183,8 @@ class Reserve extends Component {
   };
 
   onFormSubmit = (e) => {
+    e.preventDefault();
+
     let filmScreening = this.state.filmScreeningSelected.filter(
       (c) => c.room.id === this.state.selectedRoom
     )[0];
@@ -242,32 +246,52 @@ class Reserve extends Component {
     })
       .then((response) => {
         if (!response.ok) {
+          this.setState({ error: response.status });
           throw Error(response.statusText);
         } else {
           purchaseOrderId = response.id;
-          return response.json();
+          this.props.history.push({
+            pathname: "/purchaseOrder",
+            state: {
+              filmScreening,
+              takenSeats,
+              prices,
+              points,
+              modifiedPrice,
+              paymentMethod,
+              purchaseOrderId,
+            },
+          });
         }
       })
       .catch(function (error) {
         console.log("Hubo un problema con la petición Fetch:" + error.message);
       });
-
-    this.props.history.push({
-      pathname: "/purchaseOrder",
-      state: {
-        filmScreening,
-        takenSeats,
-        prices,
-        points,
-        modifiedPrice,
-        paymentMethod,
-      },
-    });
   };
 
   render() {
     return (
       <Container className="mt-5">
+        {this.state.error !== "" && (
+          <Modal.Dialog>
+            <Modal.Header>
+              <Modal.Title>Atención</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <p>{this.state.error}</p>
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button
+                onClick={() => this.setState({ error: "" })}
+                variant="secondary"
+              >
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        )}
         <Row>
           <Col>
             <h4>Reserva para la película {this.state.film.film.name}</h4>
@@ -353,7 +377,6 @@ class Reserve extends Component {
               </Col>
             )}
         </Row>
-
         <Row>
           <Col>
             <Row>
