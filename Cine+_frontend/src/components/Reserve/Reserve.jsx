@@ -383,14 +383,21 @@ class Reserve extends Component {
                         type="number"
                       />
                     </Form.Group>
-                    <Form.Group controlId="numberOfTickets">
-                      <Form.Label className="mb-0">Taquilla:</Form.Label>
-                      <Form.Control
-                        style={{ width: "30%" }}
-                        onChange={this.setBoxOffice}
-                        type="text"
-                      />
-                    </Form.Group>
+                    {(JSON.parse(
+                      localStorage.getItem("loggedUser")
+                    ).roles.includes("WebMaster") ||
+                      JSON.parse(
+                        localStorage.getItem("loggedUser")
+                      ).roles.includes("Admin")) && (
+                      <Form.Group controlId="numberOfTickets">
+                        <Form.Label className="mb-0">Taquilla:</Form.Label>
+                        <Form.Control
+                          style={{ width: "30%" }}
+                          onChange={this.setBoxOffice}
+                          type="text"
+                        />
+                      </Form.Group>
+                    )}
                   </Col>
                 </Form.Row>
               </Form>

@@ -23,7 +23,12 @@ class FilmScreenings extends Component {
             <MovieScreenings />
           </Col>
           <Col style={{ padding: "0px" }} md={1}>
-            <Add className="mr-0" onClick={this.handleOnAdd} />
+            {(JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "WebMaster"
+            ) ||
+              JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+                "Admin"
+              )) && <Add className="mr-0" onClick={this.handleOnAdd} />}
           </Col>
         </Row>
       </Container>

@@ -256,16 +256,24 @@ class MoviesScreening extends Component {
                         className="list-group-flush"
                       >
                         <Row>
-                          <Col md={1} style={{ padding: "0px" }}>
-                            <DeleteEdit
-                              edit={true}
-                              onEdit={() =>
-                                this.handleOnEdit(
-                                  date._items.map((c) => c._items)
-                                )
-                              }
-                            />
-                          </Col>
+                          {" "}
+                          {(JSON.parse(
+                            localStorage.getItem("loggedUser")
+                          ).roles.includes("WebMaster") ||
+                            JSON.parse(
+                              localStorage.getItem("loggedUser")
+                            ).roles.includes("Admin")) && (
+                            <Col md={1} style={{ padding: "0px" }}>
+                              <DeleteEdit
+                                edit={true}
+                                onEdit={() =>
+                                  this.handleOnEdit(
+                                    date._items.map((c) => c._items)
+                                  )
+                                }
+                              />
+                            </Col>
+                          )}
                           <Col md={4}>
                             <OverlayTrigger
                               key={`priceMod-${item.film.id}-${date.date}`}

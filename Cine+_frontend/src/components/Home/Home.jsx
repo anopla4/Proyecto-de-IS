@@ -3,6 +3,7 @@ import { Carousel, Row, Col, Card } from "react-bootstrap";
 import "./Home.css";
 import cinema from "../../static/cinema.jpg";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
+import { isLoggedIn } from "../utils";
 
 class Home extends Component {
   state = {
@@ -33,10 +34,17 @@ class Home extends Component {
   };
 
   render() {
+    console.log(JSON.parse(localStorage.getItem("loggedUser")).roles);
     return (
       <Row className="mt-5">
         <Col>
-          <DeleteEdit edit={true} onEdit={this.onEditTop10} />
+          {isLoggedIn() &&
+            (JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "WebMaster"
+            ) ||
+              JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+                "Admin"
+              )) && <DeleteEdit edit={true} onEdit={this.onEditTop10} />}
           <Carousel style={{ width: "80%" }} bsprefix="carousel" fade>
             {this.state.top10.map((film) => (
               <Carousel.Item bsPrefix="carousel-item">

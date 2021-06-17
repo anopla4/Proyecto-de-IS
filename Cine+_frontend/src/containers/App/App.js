@@ -19,6 +19,7 @@ import ClubMemberForm from "../../components/ClubMemberForm/ClubMemberForm";
 import BookEntry from "../../components/BookEntry/BookEntry";
 import WebMaster from "../../components/WebMaster/WebMaster";
 import Payment from "../../components/Payment/Payment";
+import { isLoggedIn } from "../../components/utils";
 
 class App extends Component {
   logginUserCallback = (
@@ -57,19 +58,175 @@ class App extends Component {
               )}
             />
             <Route path="/register" component={Register} />
-            <Route path="/reserve" component={Reserve} />
-            <Route path="/myReservations" component={MyReservations} />
-            <Route path="/filmScreenings" component={FilmScreenings} />
-            <Route path="/movieScreenings" component={MoviesScreening} />
-            <Route path="/films" component={Films} />
-            <Route path="/filmForm" component={FilmForm} />
-            <Route path="/filmScreeningForm" component={FilmScreeningForm} />
-            <Route path="/top10Form" component={Top10Form} />
-            <Route path="/purchaseOrder" component={PurchaseOrder} />
-            <Route path="/clubMemberForm" component={ClubMemberForm} />
-            <Route path="/bookEntry" component={BookEntry} />
-            <Route path="/webMaster" component={WebMaster} />
-            <Route path="/payment" component={Payment} />
+            <Route
+              path="/reserve"
+              component={
+                isLoggedIn()
+                  ? Reserve
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/myReservations"
+              component={
+                isLoggedIn()
+                  ? MyReservations
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/filmScreenings"
+              component={
+                isLoggedIn()
+                  ? FilmScreenings
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/movieScreenings"
+              component={
+                isLoggedIn()
+                  ? MoviesScreening
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/films"
+              component={
+                isLoggedIn()
+                  ? Films
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/filmForm"
+              component={
+                isLoggedIn()
+                  ? FilmForm
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/filmScreeningForm"
+              component={
+                isLoggedIn()
+                  ? FilmScreeningForm
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/top10Form"
+              component={
+                isLoggedIn()
+                  ? Top10Form
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/purchaseOrder"
+              component={
+                isLoggedIn()
+                  ? PurchaseOrder
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/clubMemberForm"
+              component={
+                isLoggedIn()
+                  ? ClubMemberForm
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/bookEntry"
+              component={
+                isLoggedIn()
+                  ? BookEntry
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/webMaster"
+              component={
+                isLoggedIn()
+                  ? WebMaster
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/payment"
+              component={
+                isLoggedIn()
+                  ? Payment
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
           </Switch>
         </Layout>
       </BrowserRouter>

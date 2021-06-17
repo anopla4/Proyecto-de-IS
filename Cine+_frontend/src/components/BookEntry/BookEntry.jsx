@@ -41,13 +41,10 @@ class BookEntry extends Component {
     e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-      console.log("aaaa");
       e.preventDefault();
       e.stopPropagation();
       this.setState({ validated: true });
     } else {
-      console.log("bbbb");
-
       let formElements = e.target.elements;
       const income =
         formElements.income.value === "" ? null : formElements.income.value;

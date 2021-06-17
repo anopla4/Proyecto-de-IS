@@ -228,15 +228,21 @@ class Films extends Component {
                           ))}
                         </ListGroup>
                       </Collapse>
-
-                      <DeleteEdit
-                        onDelete={() =>
-                          this.handleOnDelete(film.film.id, index)
-                        }
-                        onEdit={() => this.handleOnEdit(film)}
-                        delete={true}
-                        edit={true}
-                      />
+                      {(JSON.parse(
+                        localStorage.getItem("loggedUser")
+                      ).roles.includes("WebMaster") ||
+                        JSON.parse(
+                          localStorage.getItem("loggedUser")
+                        ).roles.includes("Admin")) && (
+                        <DeleteEdit
+                          onDelete={() =>
+                            this.handleOnDelete(film.film.id, index)
+                          }
+                          onEdit={() => this.handleOnEdit(film)}
+                          delete={true}
+                          edit={true}
+                        />
+                      )}
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -260,9 +266,16 @@ class Films extends Component {
               </Button>
             </OverlayTrigger>
           </Row>
-          <Row className="mt-3">
-            <Add onClick={this.handleAdd} />
-          </Row>
+          {(JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+            "WebMaster"
+          ) ||
+            JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "Admin"
+            )) && (
+            <Row className="mt-3">
+              <Add onClick={this.handleAdd} />
+            </Row>
+          )}
         </Col>
       </Row>
     );
