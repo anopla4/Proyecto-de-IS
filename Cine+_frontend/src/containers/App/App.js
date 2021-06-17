@@ -37,7 +37,7 @@ class App extends Component {
         password: password,
         roles: roles,
         userId: id,
-        unsername: username,
+        username: username,
         jwt_token: jwt_token,
         isClubMember: isMember,
       })

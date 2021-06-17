@@ -9,6 +9,8 @@ class Payment extends Component {
     points: [],
     modifiedPrice: undefined,
     purchaseOrderId: undefined,
+    validated: false,
+    error: "",
   };
 
   componentWillMount() {
@@ -17,6 +19,7 @@ class Payment extends Component {
       points: this.props.location.state.points,
       purchaseOrderId: this.props.location.state.purchaseOrderId,
       paymentMethod: this.props.location.state.paymentMethod,
+      state: this.props.location.state.statePayment,
     });
   }
   fixCreditCardNumber = (number) => {
@@ -26,33 +29,55 @@ class Payment extends Component {
       if (index % 4 === 0 && index !== 0) n = n + " " + element;
       else n = n + element;
     }
-    console.log(n);
     return n;
   };
+
   onFormSubmit = (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
     let formElements = e.target.elements;
-    let income = this.fixCreditCardNumber(formElements.creditCard.value);
-    let id = this.state.purchaseOrderId;
-    fetch(`https://localhost:44313/api/PurchaseOrder/${id}/${income}`, {
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-      },
-      method: "PATCH",
-      body: JSON.stringify({ purchaseOrderId: id, creditCard: income }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        this.props.history.push("/myReservations");
+    let income = formElements.creditCard.value;
+    if (
+      income.split(" ").length !== 4 ||
+      income[4] !== " " ||
+      income[9] !== " " ||
+      income[14] !== " "
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ error: "El número de tarjeta es incorrecto." });
+    }
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ validated: true });
+    } else {
+      let formElements = e.target.elements;
+      let income = formElements.creditCard.value;
+      let id = this.state.purchaseOrderId;
+      fetch(`https://localhost:44313/api/PurchaseOrder/${id}/${income}`, {
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+        method: "PATCH",
+        body: JSON.stringify({ purchaseOrderId: id, creditCard: income }),
       })
-      .catch(function (error) {
-        console.log("Hubo un problema con la petición Fetch:" + error.message);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          this.props.history.push("/myReservations");
+        })
+        .catch(function (error) {
+          console.log(
+            "Hubo un problema con la petición Fetch:" + error.message
+          );
+        });
+    }
   };
 
   render() {
@@ -70,15 +95,28 @@ class Payment extends Component {
         </Row>
 
         <Row className="center-col" style={{ width: "100%" }}>
-          <Form onSubmit={this.onFormSubmit} className="mt-3">
+          <Form
+            noValidate
+            validated={this.state.validated}
+            onSubmit={this.onFormSubmit}
+            className="mt-3"
+          >
             <Col>
               <Form.Group controlId="creditCard">
                 <Form.Label>Número de tarjeta:</Form.Label>
                 <Form.Control
-                  disabled={this.state.paymentMethod === "1" ? false : true}
+                  required
+                  disabled={
+                    this.state.paymentMethod === "1" || this.state.state === 0
+                      ? false
+                      : true
+                  }
                   type="text"
                   name="creditCard"
                 />
+                <Form.Control.Feedback>
+                  {this.state.error}
+                </Form.Control.Feedback>
                 <Form.Text muted>El formato es XXXX XXXX XXXX XXXX.</Form.Text>
               </Form.Group>
             </Col>

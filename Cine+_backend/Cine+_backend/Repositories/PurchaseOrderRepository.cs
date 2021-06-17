@@ -155,7 +155,23 @@ namespace Cine__backend.Repositories
             var user = _context.Users.SingleOrDefault(c => c.UserName == username);
             if (user == null)
                 throw new KeyNotFoundException("No se encuentra el usuario especificado");
-            return _context.PurchaseOrders.Include(c => c.Items).ThenInclude(d => ((Reservation)d).FilmScreening).Include(c => c.Items).ThenInclude(d => ((Reservation)d).Seat).Where(c => c.UserId == user.Id).ToList();
+            return _context.PurchaseOrders
+                .Include(c => c.Items)
+                .ThenInclude(d => ((Reservation)d).FilmScreening)
+                .ThenInclude(e=>e.Film)
+                .Include(c => c.Items)
+                .ThenInclude(d => ((Reservation)d).Seat)
+                .ThenInclude(s=>s.Seat)
+                .Include(c => c.Items)
+                .ThenInclude(d => ((Reservation)d).Seat)
+                .ThenInclude(s => s.Section)
+                .Include(c => c.Items)
+                .ThenInclude(d => ((Reservation)d).Seat)
+                .ThenInclude(s => s.Level)
+                .Include(c => c.Items)
+                .ThenInclude(d => ((Reservation)d).Seat)
+                .ThenInclude(s => s.Room)
+                .Where(c => c.UserId == user.Id).ToList();
         }
 
         public PurchaseOrder GetPurchaseOrder(Guid purchaseOrderId)

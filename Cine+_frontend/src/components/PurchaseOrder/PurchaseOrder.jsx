@@ -44,15 +44,19 @@ class PurchaseOrder extends Component {
   };
 
   pay = () => {
-    this.props.history.push({
-      pathname: "/payment",
-      state: {
-        points: this.state.points,
-        modifiedPrice: this.props.location.state.modifiedPrice,
-        purchaseOrderId: this.props.location.state.purchaseOrderId,
-        paymentMethod: this.state.paymentMethod,
-      },
-    });
+    if (this.state.paymentMethod === 0)
+      this.props.history.push("/myReservations");
+    else {
+      this.props.history.push({
+        pathname: "/payment",
+        state: {
+          points: this.state.points,
+          modifiedPrice: this.props.location.state.modifiedPrice,
+          purchaseOrderId: this.props.location.state.purchaseOrderId,
+          paymentMethod: this.state.paymentMethod,
+        },
+      });
+    }
   };
 
   render() {

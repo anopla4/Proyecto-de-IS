@@ -11,129 +11,51 @@ import {
   Table,
 } from "react-bootstrap";
 import { CreditCard2BackFill, XLg, ThreeDots } from "react-bootstrap-icons";
+import { formatDateRequest } from "../utils";
 
 class MyReservations extends Component {
   state = {
-    reservations: [
-      {
-        id: "1",
-        date: "2021-06-05",
-        state: "pending",
-        paidByPoints: false,
-        creditCard: null,
-        boxOffice: null,
-        items: [
-          {
-            filmScreening: {
-              film: { name: "Cinema Paradiso" },
-              price: 20,
-              points: 20,
-              room: { id: "1", name: "Sala A" },
-              time: "8:00 AM",
-              date: "2021-06-13",
-            },
-            seat: {
-              room: { id: "1", name: "Sala A" },
-              level: { id: "1", name: "Platea Baja" },
-              section: { id: "1", name: "A" },
-              seat: { id: "1" },
-              time: "8:00 AM",
-            },
-            price: 20,
-            points: 20,
-          },
-          {
-            filmScreening: {
-              film: { name: "Cinema Paradiso" },
-              price: 20,
-              points: 20,
-              room: { id: "1", name: "Sala A" },
-              time: "8:00 AM",
-              date: "2021-06-13",
-            },
-            seat: {
-              room: { id: "1", name: "Sala A" },
-              level: { id: "1", name: "Platea Baja" },
-              section: { id: "1", name: "A" },
-              seat: { id: "2" },
-            },
-            price: 20,
-            points: 20,
-          },
-        ],
-      },
-      {
-        id: "2",
-        date: "2021-06-05",
-        state: "completed",
-        paidByPoints: false,
-        creditCard: "55544542861",
-        boxOffice: null,
-        items: [],
-      },
-      {
-        id: "3",
-        date: "2021-06-05",
-        state: "completed",
-        paidByPoints: true,
-        creditCard: null,
-        boxOffice: null,
-        items: [],
-      },
-      {
-        id: "4",
-        date: "2021-06-05",
-        state: "completed",
-        paidByPoints: false,
-        creditCard: null,
-        boxOffice: "Taquilla A",
-        items: [],
-      },
-      {
-        id: "5",
-        date: "2021-06-05",
-        state: "canceled",
-        paidByPoints: false,
-        creditCard: null,
-        boxOffice: null,
-        items: [],
-      },
-    ],
+    reservations: [],
     canBeCanceled: false,
   };
 
-  //   componentWillMount() {
-  //     fetch(
-  //       `https://localhost:44313/api/PurchaseOrder/${
-  //         JSON.parse(localStorage.getItem("loggedUser")).username
-  //       }`,
-  //       {
-  //         mode: "cors",
-  //       }
-  //     )
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           throw Error(response.statusText);
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((response) => {
-  //         this.setState({ reservations: response });
-  //       })
-  //       .catch(function (error) {
-  //         console.log("Hubo un problema con la petición Fetch:" + error.message);
-  //       });
-  //   }
+  componentWillMount() {
+    fetch(
+      `https://localhost:44313/api/PurchaseOrder/byUser/${
+        JSON.parse(localStorage.getItem("loggedUser")).username
+      }`,
+      {
+        mode: "cors",
+        headers: {
+          Authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ reservations: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+  }
 
   statePurchaseOrder = (st) => {
-    if (st === "completed") return "Completada";
-    if (st === "pending") return "Pendiente";
+    if (st === 1) return "Completada";
+    if (st === 0) return "Pendiente";
     return "Cancelada";
   };
 
   variantState = (st) => {
-    if (st === "completed") return "success";
-    if (st === "pending") return "warning";
+    if (st === 1) return "success";
+    if (st === 0) return "warning";
     return "danger";
   };
 
@@ -143,12 +65,14 @@ class MyReservations extends Component {
     return "Crédito";
   };
 
-  payPurchaseOrder = (id, price) => {
+  payPurchaseOrder = (id, price, paymentMethod) => {
+    console.log(paymentMethod);
     this.props.history.push({
       pathname: "/payment",
       state: {
         modifiedPrice: price,
         purchaseOrderId: id,
+        statePayment: paymentMethod,
       },
     });
   };
@@ -170,71 +94,69 @@ class MyReservations extends Component {
     let month = parseInt(tempDate[1], 10);
     let day = parseInt(tempDate[2], 10);
 
-    if (currentYear <= year) {
-      if (currentMonth <= month) {
-        if (currentDay <= day) {
+    if (currentYear === year) {
+      if (currentMonth === month) {
+        if (currentDay === day) {
           if (currentHour <= hour) {
             if (currentMinutes <= minutes) return true;
             return false;
-          }
+          } else if (currentHour < hour) return true;
           return false;
-        }
+        } else if (currentDay < day) return true;
         return false;
-      }
+      } else if (currentMonth < month) return true;
       return false;
-    }
+    } else if (currentYear < year) return true;
     return false;
   };
 
   cancelPurchaseOrder = (id) => {
-    // fetch(`https://localhost:44313/api/PurchaseOrder/${id}`, {
-    //   mode: "cors",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    //   method: "DELETE",
-    //   body: JSON.stringify(formdata),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     } else {
-    //       purchaseOrderId = response.id;
-    //       return response.json();
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch(`https://localhost:44313/api/PurchaseOrder/${id}`, {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   };
 
   cancelReservation = (purchaseOrderId, reservation) => {
     var formdata = new FormData();
-    // formdata.append("purchaseOrderId", purchaseOrderId);
-    formdata.append("items[0].id", reservation.id);
-
-    // fetch(`https://localhost:44313/api/PurchaseOrder/${purchaseOrderId}`, {
-    //   mode: "cors",
-    //   headers: {
-    //     Authorization:
-    //       "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
-    //   },
-    //   method: "PATCH",
-    //   body: JSON.stringify(formdata),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     } else {
-    //       purchaseOrderId = response.id;
-    //       return response.json();
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    console.log(reservation.id);
+    formdata.append(`itemsIds[${0}]`, reservation.id);
+    console.log(formdata);
+    fetch(`https://localhost:44313/api/PurchaseOrder/${purchaseOrderId}`, {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "PATCH",
+      body: formdata,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   };
 
   render() {
@@ -248,7 +170,9 @@ class MyReservations extends Component {
             <Card border="secondary" style={{ width: "80%" }} className="mt-3">
               <Row className="mt-3">
                 <Col>
-                  <Card.Title className="ml-3 ">Fecha: {po.date}</Card.Title>
+                  <Card.Title className="ml-3 ">
+                    Fecha: {formatDateRequest(po.date)}
+                  </Card.Title>
                   <Card.Subtitle className="ml-3">
                     <Row className="ml-3">
                       Estado del pago:
@@ -261,7 +185,7 @@ class MyReservations extends Component {
                     </Row>
                     <Row className="ml-3">
                       Método de pago:{" "}
-                      {po.state === "completed"
+                      {po.state === 1
                         ? this.paymentMethod(po)
                         : this.statePurchaseOrder(po.state)}
                     </Row>
@@ -289,18 +213,18 @@ class MyReservations extends Component {
                               <tr>
                                 <td>
                                   {item.seat.room.name}-{item.seat.level.name}-
-                                  {item.seat.section.name}-{item.seat.seat.id}
+                                  {item.seat.section.name}-{item.seat.seat.code}
                                 </td>
-                                {po.state === "completed" && item.price && (
+                                {po.state === 1 && item.price && (
                                   <td>Precio: {item.price}</td>
                                 )}
-                                {po.state === "completed" && item.points && (
+                                {po.state === 1 && item.points && (
                                   <td>Puntos: {item.points}</td>
                                 )}
-                                {po.state !== "completed" && (
+                                {po.state !== 1 && (
                                   <td>Precio: {item.price}</td>
                                 )}
-                                {!po.state !== "completed" && (
+                                {!po.state !== 1 && (
                                   <td>Puntos: {item.points}</td>
                                 )}
                                 <td>
@@ -314,7 +238,7 @@ class MyReservations extends Component {
                                       </Tooltip>
                                     }
                                   >
-                                    {po.state !== "canceled" && (
+                                    {po.state !== 2 && (
                                       <Button
                                         size="sm"
                                         onClick={() =>
@@ -324,8 +248,10 @@ class MyReservations extends Component {
                                         disabled={
                                           this.compareTimes(
                                             po.items[0].filmScreening.time,
-                                            po.items[0].filmScreening.date
-                                          )
+                                            formatDateRequest(
+                                              po.items[0].filmScreening.date
+                                            )
+                                          ) && po.state === 1
                                             ? false
                                             : true
                                         }
@@ -344,45 +270,50 @@ class MyReservations extends Component {
                   )}
                 </Col>
                 <Col md={1}>
-                  <Row>
-                    <OverlayTrigger
-                      key="pay"
-                      placement="top"
-                      overlay={<Tooltip id={`pay`}>Pagar reservas.</Tooltip>}
-                    >
-                      <Button
-                        onClick={() =>
-                          this.payPurchaseOrder(
-                            po.id,
-                            po.items
-                              .map((c) => c.price)
-                              .reduce(function (acc, val) {
-                                return acc + val;
-                              }, 0)
-                          )
+                  {po.state === 0 && (
+                    <Row>
+                      <OverlayTrigger
+                        key="pay"
+                        placement="top"
+                        overlay={<Tooltip id={`pay`}>Pagar reservas.</Tooltip>}
+                      >
+                        <Button
+                          onClick={() =>
+                            this.payPurchaseOrder(
+                              po.id,
+                              po.items
+                                .map((c) => c.price)
+                                .reduce(function (acc, val) {
+                                  return acc + val;
+                                }, 0),
+                              po.state
+                            )
+                          }
+                          variant="outline-success"
+                        >
+                          <CreditCard2BackFill />
+                        </Button>
+                      </OverlayTrigger>
+                    </Row>
+                  )}
+                  {po.state === 1 && (
+                    <Row className="mt-2 mb-2">
+                      <OverlayTrigger
+                        key="cancel"
+                        placement="top"
+                        overlay={
+                          <Tooltip id={`cancel`}>Cancelar reservas.</Tooltip>
                         }
-                        variant="outline-success"
                       >
-                        <CreditCard2BackFill />
-                      </Button>
-                    </OverlayTrigger>
-                  </Row>
-                  <Row className="mt-2 mb-2">
-                    <OverlayTrigger
-                      key="cancel"
-                      placement="top"
-                      overlay={
-                        <Tooltip id={`cancel`}>Cancelar reservas.</Tooltip>
-                      }
-                    >
-                      <Button
-                        onClick={() => this.cancelPurchaseOrder(po.id)}
-                        variant="outline-danger"
-                      >
-                        <XLg />
-                      </Button>
-                    </OverlayTrigger>
-                  </Row>
+                        <Button
+                          onClick={() => this.cancelPurchaseOrder(po.id)}
+                          variant="outline-danger"
+                        >
+                          <XLg />
+                        </Button>
+                      </OverlayTrigger>
+                    </Row>
+                  )}
                 </Col>
               </Row>
             </Card>

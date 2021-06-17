@@ -57,9 +57,9 @@ function compareList(m, n) {
 }
 
 function compareDates(d1, d2) {
-  let a = d1.split("-").map((a) => parseInt(a, 10));
-  let b = d2.split("-").map((b) => parseInt(b, 10));
-
+  let a = this.formatDateRequest(d1.split("-").map((a) => parseInt(a, 10)));
+  let b = this.formatDateRequest(d2.split("-").map((b) => parseInt(b, 10)));
+  console.log(a, b);
   if (a[0] === b[0] && a[1] === b[1] && a[2] === b[2]) return true;
   return false;
 }
