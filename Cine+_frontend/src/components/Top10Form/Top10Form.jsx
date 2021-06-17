@@ -21,7 +21,10 @@ class Top10Form extends Component {
   };
 
   componentWillMount() {
-    this.setState({ top10: this.props.location.state.top10 });
+    let top10 = this.props.location.state.top10
+      ? this.props.location.state.top10.map((film) => film.film)
+      : this.props.location.state.top10;
+    this.setState({ top10: top10 });
   }
 
   componentDidMount() {
