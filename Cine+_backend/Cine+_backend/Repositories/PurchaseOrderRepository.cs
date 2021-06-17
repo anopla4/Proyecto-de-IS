@@ -32,7 +32,10 @@ namespace Cine__backend.Repositories
                     _context.Items.Add(reservation);
                     income += (double)reservation.Price;
                 }
-                _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Income = (double)income, Date = purchaseOrder.Date, Expense = 0, PaymentMethod = PaymentMethod.efectivo, Description = purchaseOrder.BoxOffice });
+                _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Income = (double)income, 
+                    Date = DateTime.Today, Expense = 0,
+                    PaymentMethod = PaymentMethod.efectivo,
+                    Description = "Taquilla " + purchaseOrder.BoxOffice });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
                     var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
@@ -210,7 +213,10 @@ namespace Cine__backend.Repositories
             }
             if (purchaseOrder.CreditCard.Count() == 19)//Ver cantidad del números de una tarjeta
             {
-                _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = 0, Date = purchaseOrder.Date, Income = price, PaymentMethod = PaymentMethod.crédito, Description = purchaseOrder.CreditCard });
+                _context.BookEntries.Add(new BookEntry { Id = Guid.NewGuid(), Expense = 0, 
+                    Date = DateTime.Today, Income = price, 
+                    PaymentMethod = PaymentMethod.crédito, 
+                    Description = "Tarjeta de crédito " + purchaseOrder.CreditCard });
                 if (_context.ClubMembers.Any(c => c.UserId == purchaseOrder.UserId))
                 {
                     var currMember = _context.ClubMembers.SingleOrDefault(c => c.UserId == purchaseOrder.UserId);
