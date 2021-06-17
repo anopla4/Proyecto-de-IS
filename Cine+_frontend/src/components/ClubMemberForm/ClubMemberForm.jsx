@@ -52,6 +52,29 @@ class ClubMemberForm extends Component {
     });
   };
 
+  changeIsClubMember = () => {
+    let email = JSON.parse(localStorage.getItem("loggedUser")).email;
+    let password = JSON.parse(localStorage.getItem("loggedUser")).password;
+    let roles = JSON.parse(localStorage.getItem("loggedUser")).roles;
+    let userId = JSON.parse(localStorage.getItem("loggedUser")).userId;
+    let username = JSON.parse(localStorage.getItem("loggedUser")).username;
+    let jwt_token = JSON.parse(localStorage.getItem("loggedUser")).jwt_token;
+    let isClubMember = true;
+    localStorage.removeItem("loggedUser");
+    localStorage.setItem(
+      "loggedUser",
+      JSON.stringify({
+        email: email,
+        password: password,
+        roles: roles,
+        userId: userId,
+        username: username,
+        jwt_token: jwt_token,
+        isClubMember: isClubMember,
+      })
+    );
+  };
+
   onFormSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -102,6 +125,7 @@ class ClubMemberForm extends Component {
           if (!response.ok) {
             this.setState({ error: `${response.status}` });
           } else {
+            this.changeIsClubMember();
             this.props.history.push("/");
           }
         })

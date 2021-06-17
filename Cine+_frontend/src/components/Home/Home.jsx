@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-  Carousel,
-  Row,
-  Col,
-  Card,
-  ListGroupItem,
-  ListGroup,
-} from "react-bootstrap";
+import { Carousel, Row, Col, Card } from "react-bootstrap";
 import "./Home.css";
 import cinema from "../../static/cinema.jpg";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
@@ -49,16 +42,16 @@ class Home extends Component {
               <Carousel.Item bsPrefix="carousel-item">
                 <img
                   width="50%"
-                  src={`http://localhost:8000/${film.imgPath}`}
+                  src={`https://localhost:44313/${film.film.imgPath}`}
                   alt=""
                 />
                 <Carousel.Caption
                   style={{ textAlign: "right", fontSize: "15px" }}
                 >
                   <h5>
-                    {film.name} ({film.year})
+                    {film.film.name} ({film.film.year})
                   </h5>
-                  <p>{film.country}</p>
+                  <p>{film.film.country}</p>
                 </Carousel.Caption>
               </Carousel.Item>
             ))}

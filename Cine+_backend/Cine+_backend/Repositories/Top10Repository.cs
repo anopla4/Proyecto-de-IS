@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cine__backend.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cine__backend.Repositories
 {
@@ -37,7 +38,7 @@ namespace Cine__backend.Repositories
 
         public List<Top10Film> GetTop10()
         {
-            return _context.Top10.ToList();
+            return _context.Top10.Include(c=>c.Film).ToList();
         }
 
         public Top10Film GetTop10Film(Guid filmId)

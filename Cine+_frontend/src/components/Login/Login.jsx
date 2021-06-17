@@ -33,7 +33,8 @@ class Login extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          if (response.status === 0) {
+          if (response.message !== null) {
+            console.log(response.message);
             this.setState({ error: response.message });
           } else {
             this.props.onLoginCallback(
@@ -53,7 +54,6 @@ class Login extends Component {
             "Hubo un problema con la petición Fetch:" + error.message
           );
         });
-      this.props.history.push("/");
     }
   };
 

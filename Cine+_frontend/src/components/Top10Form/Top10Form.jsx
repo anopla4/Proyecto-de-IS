@@ -68,8 +68,8 @@ class Top10Form extends Component {
 
   onFormSubmit = () => {
     var formdata = new FormData();
-    for (let i = 0; i < this.state.roomTimes.length; i++) {
-      formdata.append(`films[${i}].id`, this.state.top10[i].id);
+    for (let i = 0; i < this.state.top10.length; i++) {
+      formdata.append(`filmsIds[${i}]`, this.state.top10[i].id);
     }
     fetch("https://localhost:44313/api/Top10", {
       mode: "cors",
