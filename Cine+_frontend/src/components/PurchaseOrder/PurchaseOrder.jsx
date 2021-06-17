@@ -71,6 +71,29 @@ class PurchaseOrder extends Component {
         >
           <Printer />
         </Button>
+        {JSON.parse(localStorage.getItem("loggedUser")) &&
+          (JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+            "Worker"
+          ) ||
+            JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "WebMaster"
+            )) &&
+          this.props.location.state.boxOffice && (
+            <Col className="center-counter" md={2}>
+              <Button
+                onClick={() =>
+                  this.props.history.push({
+                    pathname: "/filmScreenings",
+                    state: this.props.location.state.modifiedPrice,
+                  })
+                }
+                style={{ float: "right" }}
+                variant="secondary"
+              >
+                Continuar
+              </Button>
+            </Col>
+          )}
         <CardDeck ref={(el) => (this.componentRef = el)} id="tickets">
           <Col>
             {this.state.takenSeats.map((seat, index) => (

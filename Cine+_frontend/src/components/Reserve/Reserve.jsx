@@ -195,6 +195,7 @@ class Reserve extends Component {
     let modifiedPrice = this.modifiedPrice();
     let userId = JSON.parse(localStorage.getItem("loggedUser")).userId;
     let purchaseOrderId = undefined;
+    let boxOffice = this.state.boxOffice;
     var formdata = new FormData();
     formdata.append("purchaseOrder.userId", userId);
     formdata.append("purchaseOrder.date", this.state.date);
@@ -263,6 +264,7 @@ class Reserve extends Component {
             modifiedPrice,
             paymentMethod,
             purchaseOrderId,
+            boxOffice,
           },
         });
       })
@@ -357,27 +359,6 @@ class Reserve extends Component {
               </Button>
             </OverlayTrigger>
           </Col>
-          {JSON.parse(localStorage.getItem("loggedUser")) &&
-            (JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
-              "Worker"
-            ) ||
-              JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
-                "WebMaster"
-              )) && (
-              <Col className="center-counter" md={2}>
-                <Button
-                  onClick={() =>
-                    this.props.history.push({
-                      pathname: "/bookEntry",
-                      state: this.modifiedPrice(),
-                    })
-                  }
-                  variant="secondary"
-                >
-                  Agregar ingreso
-                </Button>
-              </Col>
-            )}
         </Row>
         <Row>
           <Col>

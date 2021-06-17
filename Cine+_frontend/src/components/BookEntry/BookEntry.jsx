@@ -41,10 +41,13 @@ class BookEntry extends Component {
     e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
+      console.log("aaaa");
       e.preventDefault();
       e.stopPropagation();
-      this.setState({ validatedGenre: true });
+      this.setState({ validated: true });
     } else {
+      console.log("bbbb");
+
       let formElements = e.target.elements;
       const income =
         formElements.income.value === "" ? null : formElements.income.value;
@@ -174,15 +177,16 @@ class BookEntry extends Component {
                   type="number"
                   min={0}
                   max={10000}
+                  step={0.1}
                 />
               </Form.Group>
               <Form.Group controlId="paymentMethod">
                 <Form.Label>Método de pago:</Form.Label>
                 <Form.Control required as="select">
-                  {" "}
                   <option id={0}>Efectivo</option>
                   <option id={1}>Crédito</option>
                 </Form.Control>
+                <Form.Text muted>Este campo es requerido.</Form.Text>
               </Form.Group>
               <Form.Group controlId="description">
                 <Form.Label>Descripción:</Form.Label>
