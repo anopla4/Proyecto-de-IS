@@ -182,6 +182,29 @@ class Reserve extends Component {
     this.setState({ selectedPriceModifications: nPriceModifications });
   };
 
+  checkPending = (id) => {
+    console.log("aaaa");
+    fetch(`https://localhost:44313/api/PurchaseOrder/${id}/check`, {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "PATCH",
+      body: {},
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        this.props.history.push("/myReservations");
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
+  };
+
   onFormSubmit = (e) => {
     e.preventDefault();
 
@@ -254,6 +277,10 @@ class Reserve extends Component {
       })
       .then((response) => {
         purchaseOrderId = response.id;
+        if (paymentMethod !== 0)
+          setTimeout(() => {
+            this.checkPending(purchaseOrderId);
+          }, 600000);
         this.props.history.push({
           pathname: "/purchaseOrder",
           state: {

@@ -34,7 +34,6 @@ class Home extends Component {
   };
 
   render() {
-    console.log(JSON.parse(localStorage.getItem("loggedUser")).roles);
     return (
       <Row className="mt-5">
         <Col>

@@ -16,6 +16,7 @@
     "react-credit-cards": "^0.8.3",
     "react-cron-jobs": "^1.0.6",
     "react-dom": "^17.0.2",
+    "react-native-background-timer": "^2.4.1",
     "react-payment-inputs": "^1.1.8",
     "react-rating": "^2.0.5",
     "react-rating-stars-component": "^2.2.0",

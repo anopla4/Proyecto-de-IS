@@ -33,6 +33,8 @@ class PurchaseOrder extends Component {
     });
   }
 
+  componentDidMount() {}
+
   print = () => {
     const input = document.getElementById("tickets");
     html2canvas(input).then((canvas) => {
