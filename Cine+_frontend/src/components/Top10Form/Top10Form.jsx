@@ -6,36 +6,39 @@ import {
   ListGroupItem,
   ListGroup,
   Toast,
+  Button,
 } from "react-bootstrap";
 import Add from "../Add/Add";
 import DeleteEdit from "../DeleteEdit/DeleteEdit";
 
 class Top10Form extends Component {
   state = {
-    films: [
-      {
-        id: "1",
-        name: "Pulp Fiction",
-        country: "Estados Unidos",
-        year: "1994",
-        timesSeen: 30,
-        rating: 4,
-      },
-      {
-        id: "2",
-        name: "Cinema Paradiso",
-        country: "Italia",
-        year: "1988",
-        timesSeen: 40,
-        rating: 5,
-      },
-    ],
+    films: [],
     top10: [],
     showToast: false,
+    error: "",
   };
 
   componentWillMount() {
     this.setState({ top10: this.props.location.state.top10 });
+  }
+
+  componentDidMount() {
+    fetch("https://localhost:44313/api/UserFilm/allFilmsRatings", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ films: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   }
 
   onDeleteFilm = (index) => {
@@ -60,6 +63,31 @@ class Top10Form extends Component {
   };
   handleCloseToast = () => {
     this.setState({ showToast: false });
+  };
+
+  onFormSubmit = () => {
+    var formdata = new FormData();
+    for (let i = 0; i < this.state.roomTimes.length; i++) {
+      formdata.append(`films[${i}].id`, this.state.top10[i].id);
+    }
+    fetch("https://localhost:44313/api/Top10", {
+      mode: "cors",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("loggedUser")).jwt_token,
+      },
+      method: "POST",
+      body: formdata,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   };
 
   render() {
@@ -117,6 +145,11 @@ class Top10Form extends Component {
             ))}
           </ListGroup>
         </Col>
+        <Button
+          onClick={this.onFormSubmit}
+          style={{ float: "right" }}
+          className="mt-3"
+        ></Button>
       </Row>
     );
   }

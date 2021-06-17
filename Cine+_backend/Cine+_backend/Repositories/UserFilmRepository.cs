@@ -87,12 +87,13 @@ namespace Cine__backend.Repositories
                     timesSeen += _context.Reservations.Where(r => r.FilmScreeningId == f_s.Id).Count();
                 }
                 films_statics.Add(new DTOFilmStatics {
+                    Id = film.Id,
                     Country = film.Country,
                     Img = film.Img,
                     ImgPath = film.ImgPath,
                     Name = film.Name,
                     Year = film.Year,
-                    Rating = (int)(rating / count),
+                    Rating = count == 0 ? 0 : (int)(rating / count),
                     TimesSeen = timesSeen,
                 });
             }

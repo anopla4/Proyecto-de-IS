@@ -13,40 +13,25 @@ import DeleteEdit from "../DeleteEdit/DeleteEdit";
 
 class Home extends Component {
   state = {
-    top10: [
-      {
-        id: "1",
-        name: "Pulp Fiction",
-        year: "1994",
-        country: "Estados Unidos",
-        imgPath: "src/images/pulpFiction.jpg",
-      },
-      {
-        id: "2",
-        name: "Cinema Paradiso",
-        year: "1988",
-        country: "Italia",
-        imgPath: "src/images/cinemaParadiso.jpg",
-      },
-    ],
+    top10: [],
   };
 
   componentWillMount() {
-    // fetch("https://localhost:44313/api/Top10", {
-    //   mode: "cors",
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw Error(response.statusText);
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     this.setState({ top10: response });
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Hubo un problema con la petición Fetch:" + error.message);
-    //   });
+    fetch("https://localhost:44313/api/Top10", {
+      mode: "cors",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({ top10: response });
+      })
+      .catch(function (error) {
+        console.log("Hubo un problema con la petición Fetch:" + error.message);
+      });
   }
 
   onEditTop10 = () => {

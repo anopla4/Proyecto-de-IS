@@ -8,6 +8,7 @@ namespace Cine__backend.Models.DTOs
 {
     public class DTOFilmStatics
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Year { get; set; }
         public string Country { get; set; }
