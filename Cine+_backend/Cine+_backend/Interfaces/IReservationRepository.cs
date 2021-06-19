@@ -1,4 +1,5 @@
 ﻿using Cine__backend.Models;
+using Cine__backend.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Cine__backend.Interfaces
         IList<Reservation> GetReservationsFromFilmScreening(Guid filmScreeningId);
         void AddReservation(Reservation reservation);
         void RemoveReservation(Guid reservationId);
+        Task<IList<DTOReservationStatistics>> GetStatistics();
     }
 }

@@ -3,6 +3,7 @@ using Cine__backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Cine__backend.Controllers
 {
@@ -50,5 +51,8 @@ namespace Cine__backend.Controllers
                 return NotFound(e.Message);
             }
         }
+
+        [HttpGet("statistics")]
+        public async Task<IActionResult> GetStatistics() => Ok(await _reservationRep.GetStatistics());
     }
 }
