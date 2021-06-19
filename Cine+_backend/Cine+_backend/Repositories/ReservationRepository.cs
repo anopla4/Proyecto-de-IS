@@ -88,6 +88,7 @@ namespace Cine__backend.Repositories
                 dtoSt.Genres = await _context.FilmGenres.Include(c => c.Genre)
                         .Where(c => c.FilmId == film.Id)
                         .Select(c => c.Genre).ToListAsync();
+                statistics.Add(dtoSt);
             }
             return statistics;
         }
