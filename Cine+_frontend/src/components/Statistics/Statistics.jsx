@@ -143,7 +143,7 @@ class Statistics extends Component {
                   clearButton
                   id="selections-example"
                   options={this.state.options}
-                  placeholder="Elija una película..."
+                  placeholder="Elija un filtro..."
                 />
               </Col>
             </Row>
