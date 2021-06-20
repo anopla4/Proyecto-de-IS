@@ -3,8 +3,9 @@ import "./NavBar.css";
 import { Navbar, Nav, NavItem } from "react-bootstrap";
 import { isLoggedIn } from "../utils";
 import logo from "../../static/logo.png";
+import { useState } from "react";
 
-const navigation = (props) => {
+const Navigation = (props) => {
   return (
     <Navbar fixed="top" bg="dark" variant="dark" expand="lg">
       <Navbar.Brand className="my-brand" href="/">
@@ -52,6 +53,17 @@ const navigation = (props) => {
                 <Nav.Link href="/webMaster">Modificar roles</Nav.Link>
               </NavItem>
             )}
+          {JSON.parse(localStorage.getItem("loggedUser")) &&
+            (JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+              "WebMaster"
+            ) ||
+              JSON.parse(localStorage.getItem("loggedUser")).roles.includes(
+                "Admin"
+              )) && (
+              <NavItem>
+                <Nav.Link href="/statistics">Estadísticas</Nav.Link>
+              </NavItem>
+            )}
         </Nav>
         <Nav className="ml-auto">
           <Nav.Item>
@@ -80,4 +92,4 @@ const navigation = (props) => {
   );
 };
 
-export default navigation;
+export default Navigation;

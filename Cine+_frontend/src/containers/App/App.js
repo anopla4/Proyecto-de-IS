@@ -19,6 +19,8 @@ import ClubMemberForm from "../../components/ClubMemberForm/ClubMemberForm";
 import BookEntry from "../../components/BookEntry/BookEntry";
 import WebMaster from "../../components/WebMaster/WebMaster";
 import Payment from "../../components/Payment/Payment";
+import Statistics from "../../components/Statistics/Statistics";
+
 import { isLoggedIn } from "../../components/utils";
 
 class App extends Component {
@@ -219,6 +221,19 @@ class App extends Component {
               component={
                 isLoggedIn()
                   ? Payment
+                  : (props) => (
+                      <Login
+                        {...props}
+                        onLoginCallback={this.logginUserCallback}
+                      />
+                    )
+              }
+            />
+            <Route
+              path="/statistics"
+              component={
+                isLoggedIn()
+                  ? Statistics
                   : (props) => (
                       <Login
                         {...props}

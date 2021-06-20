@@ -8,6 +8,7 @@ namespace Cine__backend.Models.DTOs
 {
     public class DTOReservationStatistics
     {
+        public Guid FilmId { get; set; }
         public string FilmName { get; set; }
         public string Year { get; set; }
         public string Country { get; set; }

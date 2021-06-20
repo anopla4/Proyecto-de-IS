@@ -69,6 +69,7 @@ namespace Cine__backend.Repositories
                 dtoSt.Country = film.Country;
                 dtoSt.Year = film.Year;
                 dtoSt.FilmName = film.Name;
+                dtoSt.FilmId = film.Id;
                 dtoSt.Img = film.Img;
                 dtoSt.ImgPath = film.ImgPath;
                 dtoSt.Actors = new List<string>();
